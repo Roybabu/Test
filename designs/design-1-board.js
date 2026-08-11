@@ -52,16 +52,17 @@ function render(){
     return;
   }
   rowsEl.innerHTML = list.map(w => {
-    const tags = [`<span class="tag">${esc(w.emirate)}</span>`]
+    const locationTags = [`<span class="tag">${esc(w.emirate)}</span>`]
       .concat(w.makes.map(m => `<span class="tag">${esc(m)}</span>`))
-      .concat(w.insurers.map(i => `<span class="tag is-panel">${esc(i)}</span>`))
       .join('');
+    const insuranceTags = w.insurers.map(i => `<span class="tag is-panel">${esc(i)}</span>`).join('');
     return `<article class="row ${w.type === 'nonagency' ? 'is-nonagency' : ''}">
       <div class="row-flag"></div>
       <div class="row-main">
         <h2 class="row-name">${esc(w.name)}</h2>
         <p class="row-addr"><a class="maplink" href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(w.address)}</a></p>
-        <div class="tags">${tags}</div>
+        <div class="meta-line meta-location"><span class="meta-label">Location</span><div class="tags">${locationTags}</div></div>
+        <div class="meta-line meta-insurance"><span class="meta-label">Insurance</span><div class="tags">${insuranceTags || '<span class="tag is-panel">Not specified</span>'}</div></div>
       </div>
       <div class="row-side">
         <span class="kind">${w.type === 'agency' ? 'Agency' : 'Non-agency'}</span>
