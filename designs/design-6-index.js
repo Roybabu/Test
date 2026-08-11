@@ -13,6 +13,7 @@ window.GF_DESIGNS["index"] = {
   html: "<div class=\"book\">\n  <header class=\"title\">\n    <p class=\"eyebrow\">United Arab Emirates · Edition 9</p>\n    <h1>The Workshop Index</h1>\n    <p>Agency and non-agency repair workshops, listed by name, with the emirate and insurer panels each one sits on.</p>\n    <div class=\"figures\">\n      <div class=\"fig\"><strong id=\"f-total\">6</strong><span>Entries</span></div>\n      <div class=\"fig\"><strong id=\"f-agency\">3</strong><span>Agency</span></div>\n      <div class=\"fig\"><strong id=\"f-non\">3</strong><span>Non-agency</span></div>\n      <div class=\"fig\"><strong id=\"f-em\">3</strong><span>Emirates</span></div>\n    </div>\n  </header>\n\n  <div class=\"find\">\n    <input id=\"q\" type=\"search\" placeholder=\"Look up a name, area or make…\" autocomplete=\"off\">\n  </div>\n\n  <div class=\"filters\">\n    <div class=\"fset\">\n      <span class=\"fset-label\">Type</span>\n      <span id=\"types\">\n        <button class=\"link\" type=\"button\" data-type=\"all\" aria-pressed=\"true\">All</button>\n        <button class=\"link\" type=\"button\" data-type=\"agency\" aria-pressed=\"false\">Agency</button>\n        <button class=\"link\" type=\"button\" data-type=\"nonagency\" aria-pressed=\"false\">Non-agency</button>\n      </span>\n    </div>\n    <div class=\"fset\">\n      <span class=\"fset-label\">Emirate</span>\n      <span id=\"em\"></span>\n    </div>\n    <div class=\"fset\">\n      <span class=\"fset-label\">Panel</span>\n      <select id=\"ins\"></select>\n    </div>\n  </div>\n\n  <div id=\"list\"></div>\n  <p class=\"colophon\"></p>\n</div>\n\n<nav class=\"rail\" id=\"rail\" aria-label=\"Jump to letter\"></nav>",
   start: function(){
 const GF = window.GF || {};
+const cleanup = GF.createCleanup();
 const esc = GF.esc || window.GF_esc || function(s){
   return String(s == null ? '' : s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -85,26 +86,34 @@ function render(){
   });
   listEl.innerHTML = html;
 }
-railEl.addEventListener('click', e => {
+function onRailelClick1(e){
   const b = e.target.closest('button'); if(!b || b.disabled) return;
   const t = document.getElementById('L-' + b.dataset.letter);
   if (t) t.scrollIntoView({block:'start'});
-});
-document.getElementById('types').addEventListener('click', e => {
+}
+cleanup.listen(railEl, 'click', onRailelClick1);
+function onGetelementbyidTypesClick2(e){
   const b = e.target.closest('.link'); if(!b) return;
   state.type = b.dataset.type;
   document.querySelectorAll('#types .link').forEach(x => x.setAttribute('aria-pressed', x===b));
   render();
-});
-emEl.addEventListener('click', e => {
+}
+cleanup.listen(document.getElementById('types'), 'click', onGetelementbyidTypesClick2);
+function onEmelClick3(e){
   const b = e.target.closest('.link'); if (!b) return;
   state.emirate = b.dataset.em;
   emEl.querySelectorAll('.link').forEach(x => x.setAttribute('aria-pressed', x === b));
   render();
-});
-insEl.addEventListener('change', e => { state.insurer = e.target.value; render(); });
-document.getElementById('q').addEventListener('input', e => { state.q = e.target.value; render(); });
-GF.wireCopy(listEl, WORKSHOPS);
+}
+cleanup.listen(emEl, 'click', onEmelClick3);
+function onInsurerChange(e){ state.insurer = e.target.value; render(); }
+cleanup.listen(insEl, 'change', onInsurerChange);
+function onQueryInput(e){ state.q = e.target.value; render(); }
+cleanup.listen(document.getElementById('q'), 'input', onQueryInput);
+cleanup.add(GF.wireCopy(listEl, WORKSHOPS));
 render();
+  },
+  destroy: function(){
+    cleanup.destroy();
   }
 };

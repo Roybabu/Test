@@ -13,6 +13,7 @@ window.GF_DESIGNS["board"] = {
   html: "<div class=\"masthead\">\n  <div class=\"masthead-in\">\n    <h1 class=\"wordmark\">Garage<em>.</em>Finder</h1>\n    <span class=\"masthead-note\">UAE \u00b7 Agency &amp; Non-Agency</span>\n  </div>\n</div>\n\n<div class=\"shell\">\n  <p class=\"strip-label\">Select emirate</p>\n  <div class=\"plates\" id=\"plates\"></div>\n\n  <div class=\"controls\">\n    <div class=\"field\">\n      <label class=\"field-label\" for=\"q\">Search name, area or make</label>\n      <input id=\"q\" type=\"search\" placeholder=\"e.g. Al Quoz, Nissan, Gargash\" autocomplete=\"off\">\n    </div>\n    <div class=\"field\">\n      <label class=\"field-label\" for=\"ins\">Insurer panel</label>\n      <select id=\"ins\"></select>\n    </div>\n  </div>\n  <div class=\"segrow\" id=\"segrow\">\n    <button class=\"seg\" type=\"button\" data-type=\"all\" aria-pressed=\"true\">All</button>\n    <button class=\"seg\" type=\"button\" data-type=\"agency\" aria-pressed=\"false\">Agency</button>\n    <button class=\"seg\" type=\"button\" data-type=\"nonagency\" aria-pressed=\"false\">Non-agency</button>\n  </div>\n\n  <p class=\"tally\" id=\"tally\">6 workshops</p>\n  <div class=\"rows\" id=\"rows\"></div>\n\n  <p class=\"foot\"></p>\n</div>",
   start: function(){
 const GF = window.GF || {};
+const cleanup = GF.createCleanup();
 const esc = GF.esc || window.GF_esc || function(s){
   return String(s == null ? '' : s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -52,17 +53,16 @@ function render(){
     return;
   }
   rowsEl.innerHTML = list.map(w => {
-    const locationTags = [`<span class="tag">${esc(w.emirate)}</span>`]
+    const tags = [`<span class="tag">${esc(w.emirate)}</span>`]
       .concat(w.makes.map(m => `<span class="tag">${esc(m)}</span>`))
+      .concat(w.insurers.map(i => `<span class="tag is-panel">${esc(i)}</span>`))
       .join('');
-    const insuranceTags = w.insurers.map(i => `<span class="tag is-panel">${esc(i)}</span>`).join('');
     return `<article class="row ${w.type === 'nonagency' ? 'is-nonagency' : ''}">
       <div class="row-flag"></div>
       <div class="row-main">
         <h2 class="row-name">${esc(w.name)}</h2>
         <p class="row-addr"><a class="maplink" href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(w.address)}</a></p>
-        <div class="meta-line meta-location"><span class="meta-label">Location</span><div class="tags">${locationTags}</div></div>
-        <div class="meta-line meta-insurance"><span class="meta-label">Insurance</span><div class="tags">${insuranceTags || '<span class="tag is-panel">Not specified</span>'}</div></div>
+        <div class="tags">${tags}</div>
       </div>
       <div class="row-side">
         <span class="kind">${w.type === 'agency' ? 'Agency' : 'Non-agency'}</span>
@@ -79,20 +79,28 @@ function render(){
   }).join('');
 }
 
-platesEl.addEventListener('click', e => {
+function onPlateselClick1(e){
   const b = e.target.closest('.plate'); if (!b) return;
   state.emirate = b.dataset.emirate; render();
-});
-document.getElementById('segrow').addEventListener('click', e => {
+}
+
+cleanup.listen(platesEl, 'click', onPlateselClick1);
+function onGetelementbyidSegrowClick2(e){
   const b = e.target.closest('.seg'); if (!b) return;
   state.type = b.dataset.type;
   document.querySelectorAll('.seg').forEach(s => s.setAttribute('aria-pressed', s === b));
   render();
-});
-insEl.addEventListener('change', e => { state.insurer = e.target.value; render(); });
-document.getElementById('q').addEventListener('input', e => { state.q = e.target.value; render(); });
+}
+cleanup.listen(document.getElementById('segrow'), 'click', onGetelementbyidSegrowClick2);
+function onInsurerChange(e){ state.insurer = e.target.value; render(); }
+cleanup.listen(insEl, 'change', onInsurerChange);
+function onQueryInput(e){ state.q = e.target.value; render(); }
+cleanup.listen(document.getElementById('q'), 'input', onQueryInput);
 
-GF.wireCopy(rowsEl, WORKSHOPS);
+cleanup.add(GF.wireCopy(rowsEl, WORKSHOPS));
 render();
+  },
+  destroy: function(){
+    cleanup.destroy();
   }
 };

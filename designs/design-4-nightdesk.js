@@ -13,6 +13,7 @@ window.GF_DESIGNS["nightdesk"] = {
   html: "<div class=\"layout\">\n  <aside class=\"rail\">\n    <div class=\"logo\"><span class=\"dot\"></span><h1>Garage Finder</h1></div>\n    <p class=\"logo-sub\">UAE workshop desk</p>\n\n    <div class=\"rail-group\">\n      <p class=\"rail-title\">Type</p>\n      <div id=\"types\">\n        <button class=\"opt\" type=\"button\" data-type=\"all\" aria-pressed=\"true\"><span class=\"bar\"></span>All workshops<span class=\"n\" data-n=\"all\"></span></button>\n        <button class=\"opt t-agency\" type=\"button\" data-type=\"agency\" aria-pressed=\"false\"><span class=\"bar\"></span>Agency<span class=\"n\" data-n=\"agency\"></span></button>\n        <button class=\"opt t-nonagency\" type=\"button\" data-type=\"nonagency\" aria-pressed=\"false\"><span class=\"bar\"></span>Non-agency<span class=\"n\" data-n=\"nonagency\"></span></button>\n      </div>\n    </div>\n\n    <div class=\"rail-group\">\n      <p class=\"rail-title\">Emirate</p>\n      <div id=\"emirates\"></div>\n    </div>\n\n    <div class=\"rail-group\">\n      <p class=\"rail-title\">Insurer panel</p>\n      <select id=\"ins\"></select>\n    </div>\n  </aside>\n\n  <main class=\"main\">\n    <div class=\"searchbar\">\n      <svg viewBox=\"0 0 24 24\" stroke-linecap=\"round\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"M20 20l-3.5-3.5\"/></svg>\n      <input id=\"q\" type=\"search\" placeholder=\"Search name, area or make\" autocomplete=\"off\">\n    </div>\n    <div class=\"headline\">\n      <h2 id=\"title\">All workshops</h2>\n      <span id=\"tally\">6 results</span>\n    </div>\n    <div id=\"list\"></div>\n    <p class=\"foot\"></p>\n  </main>\n</div>",
   start: function(){
 const GF = window.GF || {};
+const cleanup = GF.createCleanup();
 const esc = GF.esc || window.GF_esc || function(s){
   return String(s == null ? '' : s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -66,21 +67,28 @@ function render(){
     </article>`;
   }).join('');
 }
-document.getElementById('types').addEventListener('click', e => {
+function onGetelementbyidTypesClick1(e){
   const b = e.target.closest('.opt'); if(!b) return;
   state.type = b.dataset.type;
   document.querySelectorAll('#types .opt').forEach(o => o.setAttribute('aria-pressed', o===b));
   render();
-});
-emEl.addEventListener('click', e => {
+}
+cleanup.listen(document.getElementById('types'), 'click', onGetelementbyidTypesClick1);
+function onEmelClick2(e){
   const b = e.target.closest('.opt'); if(!b) return;
   state.emirate = b.dataset.emirate;
   document.querySelectorAll('#emirates .opt').forEach(o => o.setAttribute('aria-pressed', o===b));
   render();
-});
-insEl.addEventListener('change', e => { state.insurer = e.target.value; render(); });
-document.getElementById('q').addEventListener('input', e => { state.q = e.target.value; render(); });
-GF.wireCopy(listEl, WORKSHOPS);
+}
+cleanup.listen(emEl, 'click', onEmelClick2);
+function onInsurerChange(e){ state.insurer = e.target.value; render(); }
+cleanup.listen(insEl, 'change', onInsurerChange);
+function onQueryInput(e){ state.q = e.target.value; render(); }
+cleanup.listen(document.getElementById('q'), 'input', onQueryInput);
+cleanup.add(GF.wireCopy(listEl, WORKSHOPS));
 render();
+  },
+  destroy: function(){
+    cleanup.destroy();
   }
 };

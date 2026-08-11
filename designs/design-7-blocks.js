@@ -13,6 +13,7 @@ window.GF_DESIGNS["blocks"] = {
   html: "<div class=\"frame\">\n  <header class=\"mast\">\n    <h1>Garage<br>Finder<span>.</span></h1>\n    <div class=\"mast-side\">United Arab<br>Emirates<br>Workshops</div>\n  </header>\n\n  <div class=\"band\">\n    <div class=\"band-row\">\n      <span class=\"band-label\">Search</span>\n      <div class=\"band-body\"><input id=\"q\" type=\"search\" placeholder=\"Name, area or make\" autocomplete=\"off\"></div>\n    </div>\n    <div class=\"band-row\">\n      <span class=\"band-label\">Type</span>\n      <div class=\"band-body\" id=\"types\">\n        <button class=\"blk\" type=\"button\" data-type=\"all\" aria-pressed=\"true\">All</button>\n        <button class=\"blk\" type=\"button\" data-type=\"agency\" aria-pressed=\"false\">Agency</button>\n        <button class=\"blk\" type=\"button\" data-type=\"nonagency\" aria-pressed=\"false\">Non-agency</button>\n      </div>\n    </div>\n    <div class=\"band-row\">\n      <span class=\"band-label\">Emirate</span>\n      <div class=\"band-body\" id=\"emirates\"></div>\n    </div>\n    <div class=\"band-row\">\n      <span class=\"band-label\">Panel</span>\n      <div class=\"band-body\"><select id=\"ins\"></select></div>\n    </div>\n  </div>\n\n  <p class=\"count\" id=\"count\">6 workshops</p>\n  <div class=\"grid\" id=\"grid\"></div>\n  <p class=\"foot\"></p>\n</div>",
   start: function(){
 const GF = window.GF || {};
+const cleanup = GF.createCleanup();
 const esc = GF.esc || window.GF_esc || function(s){
   return String(s == null ? '' : s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -64,21 +65,28 @@ function render(){
     </article>`;
   }).join('');
 }
-document.getElementById('types').addEventListener('click', e => {
+function onGetelementbyidTypesClick1(e){
   const b = e.target.closest('.blk'); if(!b) return;
   state.type = b.dataset.type;
   document.querySelectorAll('#types .blk').forEach(x => x.setAttribute('aria-pressed', x===b));
   render();
-});
-emEl.addEventListener('click', e => {
+}
+cleanup.listen(document.getElementById('types'), 'click', onGetelementbyidTypesClick1);
+function onEmelClick2(e){
   const b = e.target.closest('.blk'); if(!b) return;
   state.emirate = b.dataset.emirate;
   document.querySelectorAll('#emirates .blk').forEach(x => x.setAttribute('aria-pressed', x===b));
   render();
-});
-insEl.addEventListener('change', e => { state.insurer = e.target.value; render(); });
-document.getElementById('q').addEventListener('input', e => { state.q = e.target.value; render(); });
+}
+cleanup.listen(emEl, 'click', onEmelClick2);
+function onInsurerChange(e){ state.insurer = e.target.value; render(); }
+cleanup.listen(insEl, 'change', onInsurerChange);
+function onQueryInput(e){ state.q = e.target.value; render(); }
+cleanup.listen(document.getElementById('q'), 'input', onQueryInput);
 GF.wireCopy(gridEl, WORKSHOPS);
 render();
+  },
+  destroy: function(){
+    cleanup.destroy();
   }
 };

@@ -13,6 +13,7 @@ window.GF_DESIGNS["clay"] = {
   html: "<div class=\"pit\">\n  <header class=\"hero\">\n    <span class=\"blob\">GF</span>\n    <div>\n      <h1>Garage Finder</h1>\n      <p>Agency &amp; non-agency workshops across the UAE</p>\n    </div>\n  </header>\n\n  <div class=\"pods\">\n    <div class=\"pod v\"><b id=\"p-total\">6</b><span>Workshops</span></div>\n    <div class=\"pod m\"><b id=\"p-ag\">3</b><span>Agency</span></div>\n    <div class=\"pod c\"><b id=\"p-non\">3</b><span>Non-agency</span></div>\n    <div class=\"pod v\"><b id=\"p-em\">3</b><span>Emirates</span></div>\n  </div>\n\n  <div class=\"panel\">\n    <div class=\"seek\">\n      <svg viewBox=\"0 0 24 24\" stroke-linecap=\"round\"><circle cx=\"11\" cy=\"11\" r=\"7\"/><path d=\"M20 20l-3.5-3.5\"/></svg>\n      <input id=\"q\" type=\"search\" placeholder=\"Search name, area or make\" autocomplete=\"off\">\n    </div>\n\n    <div class=\"group\">\n      <p class=\"glabel\">Type</p>\n      <div class=\"blobs\" id=\"types\">\n        <button class=\"pill\" type=\"button\" data-type=\"all\" aria-pressed=\"true\">All</button>\n        <button class=\"pill t-agency\" type=\"button\" data-type=\"agency\" aria-pressed=\"false\">Agency</button>\n        <button class=\"pill t-nonagency\" type=\"button\" data-type=\"nonagency\" aria-pressed=\"false\">Non-agency</button>\n      </div>\n    </div>\n\n    <div class=\"group\">\n      <p class=\"glabel\">Emirate</p>\n      <div class=\"blobs\" id=\"emirates\"></div>\n    </div>\n\n    <div class=\"group\">\n      <p class=\"glabel\">Insurer panel</p>\n      <select class=\"drop\" id=\"ins\"></select>\n    </div>\n  </div>\n\n  <p class=\"tally\" id=\"tally\">6 workshops</p>\n  <div id=\"list\"></div>\n  <p class=\"foot\"></p>\n</div>",
   start: function(){
 const GF = window.GF || {};
+const cleanup = GF.createCleanup();
 const esc = GF.esc || window.GF_esc || function(s){
   return String(s == null ? '' : s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -73,21 +74,28 @@ function render(){
     </article>`;
   }).join('');
 }
-document.getElementById('types').addEventListener('click', e => {
+function onGetelementbyidTypesClick1(e){
   const b = e.target.closest('.pill'); if(!b) return;
   state.type = b.dataset.type;
   document.querySelectorAll('#types .pill').forEach(x => x.setAttribute('aria-pressed', x===b));
   render();
-});
-emEl.addEventListener('click', e => {
+}
+cleanup.listen(document.getElementById('types'), 'click', onGetelementbyidTypesClick1);
+function onEmelClick2(e){
   const b = e.target.closest('.pill'); if(!b) return;
   state.emirate = b.dataset.emirate;
   document.querySelectorAll('#emirates .pill').forEach(x => x.setAttribute('aria-pressed', x===b));
   render();
-});
-insEl.addEventListener('change', e => { state.insurer = e.target.value; render(); });
-document.getElementById('q').addEventListener('input', e => { state.q = e.target.value; render(); });
-GF.wireCopy(listEl, WORKSHOPS);
+}
+cleanup.listen(emEl, 'click', onEmelClick2);
+function onInsurerChange(e){ state.insurer = e.target.value; render(); }
+cleanup.listen(insEl, 'change', onInsurerChange);
+function onQueryInput(e){ state.q = e.target.value; render(); }
+cleanup.listen(document.getElementById('q'), 'input', onQueryInput);
+cleanup.add(GF.wireCopy(listEl, WORKSHOPS));
 render();
+  },
+  destroy: function(){
+    cleanup.destroy();
   }
 };

@@ -13,6 +13,7 @@ window.GF_DESIGNS["signpost"] = {
   html: "<div class=\"road\">\n\n  <div class=\"gantry\">\n    <div class=\"gantry-in\">\n      <span class=\"arrow\">\u2794</span>\n      <h1>Garage Finder</h1>\n      <span class=\"sub\">Approved workshops \u00b7 UAE</span>\n    </div>\n  </div>\n\n  <div class=\"controls\">\n    <div class=\"lookup\">\n      <span class=\"tag\">Find</span>\n      <input id=\"q\" type=\"search\" placeholder=\"Workshop, area or make\" autocomplete=\"off\">\n    </div>\n\n    <p class=\"ctrl-label\" style=\"margin-top:18px;\">Emirate</p>\n    <div class=\"exits\" id=\"exits\"></div>\n\n    <div class=\"route\" id=\"route\">\n      <button class=\"route-btn\" type=\"button\" data-type=\"all\" aria-pressed=\"true\">All</button>\n      <button class=\"route-btn\" type=\"button\" data-type=\"agency\" aria-pressed=\"false\">Agency</button>\n      <button class=\"route-btn\" type=\"button\" data-type=\"nonagency\" aria-pressed=\"false\">Non-agency</button>\n      <select id=\"ins\"></select>\n    </div>\n  </div>\n\n  <p class=\"milepost\" id=\"milepost\">6 workshops ahead</p>\n  <div id=\"list\"></div>\n  <p class=\"foot\"></p>\n</div>",
   start: function(){
 const GF = window.GF || {};
+const cleanup = GF.createCleanup();
 const esc = GF.esc || window.GF_esc || function(s){
   return String(s == null ? '' : s)
     .replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;')
@@ -68,21 +69,28 @@ function render(){
     </article>`;
   }).join('');
 }
-exitsEl.addEventListener('click', e => {
+function onExitselClick1(e){
   const b = e.target.closest('.exit'); if(!b) return;
   state.emirate = b.dataset.emirate;
   document.querySelectorAll('.exit').forEach(x => x.setAttribute('aria-pressed', x===b));
   render();
-});
-document.getElementById('route').addEventListener('click', e => {
+}
+cleanup.listen(exitsEl, 'click', onExitselClick1);
+function onGetelementbyidRouteClick2(e){
   const b = e.target.closest('.route-btn'); if(!b) return;
   state.type = b.dataset.type;
   document.querySelectorAll('.route-btn').forEach(x => x.setAttribute('aria-pressed', x===b));
   render();
-});
-insEl.addEventListener('change', e => { state.insurer = e.target.value; render(); });
-document.getElementById('q').addEventListener('input', e => { state.q = e.target.value; render(); });
-GF.wireCopy(listEl, WORKSHOPS);
+}
+cleanup.listen(document.getElementById('route'), 'click', onGetelementbyidRouteClick2);
+function onInsurerChange(e){ state.insurer = e.target.value; render(); }
+cleanup.listen(insEl, 'change', onInsurerChange);
+function onQueryInput(e){ state.q = e.target.value; render(); }
+cleanup.listen(document.getElementById('q'), 'input', onQueryInput);
+cleanup.add(GF.wireCopy(listEl, WORKSHOPS));
 render();
+  },
+  destroy: function(){
+    cleanup.destroy();
   }
 };

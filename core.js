@@ -165,10 +165,54 @@
 
   function known(id){ return ORDER.indexOf(id) !== -1 && window.GF_DESIGNS && window.GF_DESIGNS[id]; }
 
+  var mountSeq = 0;
+  var currentDesign = null;
+  var destroyActiveInsurerPicker = null;
+  var cancelPendingMount = null;
+
   function mount(id, remember){
     if (!known(id)) id = known(DEFAULT_DESIGN) ? DEFAULT_DESIGN : ORDER[0];
     var d = window.GF_DESIGNS[id];
     if (!d) return;
+
+    var previous = currentDesign;
+    var seq = ++mountSeq;
+
+    /* Invalidate/cancel any asynchronous CSS callback belonging to the
+       previous mount before starting this one. */
+    if (cancelPendingMount){
+      cancelPendingMount();
+      cancelPendingMount = null;
+    }
+
+    /* Lifecycle order:
+       1. destroy old design
+       2. remove old DOM
+       3. activate/load new CSS
+       4. render new DOM
+       5. start new design
+    */
+    if (previous && typeof previous.destroy === 'function'){
+      try {
+        previous.destroy();
+      } catch (err) {
+        console.error('Design "' + previous.id + '" failed to destroy:', err);
+      }
+    }
+
+    /* The insurer picker is core-owned and lives outside #stage.
+       Destroy it before replacing the current design so its document
+       listener can never survive a mount. */
+    if (destroyActiveInsurerPicker){
+      try {
+        destroyActiveInsurerPicker();
+      } catch (err) {
+        console.error('Insurer picker cleanup failed:', err);
+      }
+      destroyActiveInsurerPicker = null;
+    }
+
+    currentDesign = d;
     current = id;
     pendingRemember = !!remember;
 
@@ -176,36 +220,67 @@
     document.body.className = '';
     document.documentElement.removeAttribute('style');
 
-    /* Clear first, so the outgoing design's rules are never seen wearing
-       the incoming design's markup. */
     stage.className = '';
     stage.innerHTML = '';
 
     var rec = sheetFor(id);
 
     function paint(){
+      /* A later mount has superseded this pending CSS load. */
+      if (seq !== mountSeq || currentDesign !== d) return;
+
       activate(id);
       stage.innerHTML = d.html;
 
-      try { d.start(); }
-      catch (err) { console.error('Design "' + id + '" failed to start:', err); }
+      try {
+        d.start();
+      } catch (err) {
+        console.error('Design "' + id + '" failed to start:', err);
+      }
 
       finish();
     }
 
-    /* Almost always ready already, because every sheet is preloaded. The
-       wait only bites on a cold first visit or a slow connection. */
     if (!rec || rec.ready || (rec.el && rec.el.sheet)){
       paint();
     } else {
       var done = false;
-      var go = function(){ if (!done){ done = true; paint(); } };
+      var timer = null;
+
+      function go(){
+        /* Every asynchronous callback must verify that its mount is still
+           current before changing state or touching the UI. */
+        if (seq !== mountSeq || currentDesign !== d){
+          return;
+        }
+
+        if (done) return;
+        done = true;
+        rec.el.removeEventListener('load', go);
+        rec.el.removeEventListener('error', go);
+        if (timer !== null) clearTimeout(timer);
+
+        cancelPendingMount = null;
+        paint();
+      }
+
       rec.el.addEventListener('load', go);
       rec.el.addEventListener('error', go);
-      setTimeout(go, 700);                  // never hang on a failed file
-      return;
+      timer = setTimeout(go, 700);
+
+      cancelPendingMount = function(){
+        if (done) return;
+        done = true;
+        rec.el.removeEventListener('load', go);
+        rec.el.removeEventListener('error', go);
+        if (timer !== null) clearTimeout(timer);
+        if (cancelPendingMount === cancelThisMount) cancelPendingMount = null;
+      };
+
+      var cancelThisMount = cancelPendingMount;
     }
   }
+
 
   function finish(){
     var d = window.GF_DESIGNS[current];
@@ -468,16 +543,52 @@
   /* Wire [data-copy="<index>"] buttons inside a container.
      index refers into the array passed as list (usually the filtered list). */
   function wireCopy(container, list){
-    if (!container || container.getAttribute('data-gf-copy')) return;
+    if (!container || container.getAttribute('data-gf-copy')) return function(){};
     container.setAttribute('data-gf-copy', '1');
-    container.addEventListener('click', function(e){
+
+    function onCopyClick(e){
       var b = e.target.closest('[data-copy]');
       if (!b) return;
       e.preventDefault();
       var idx = Number(b.getAttribute('data-copy'));
       var src = list || window.GF_DATA.workshops;
       if (src[idx]) copyDetails(b, src[idx]);
-    });
+    }
+
+    container.addEventListener('click', onCopyClick);
+    return function(){
+      container.removeEventListener('click', onCopyClick);
+      container.removeAttribute('data-gf-copy');
+    };
+  }
+
+  /* ---------- lifecycle cleanup helper ---------- */
+  function createCleanup(){
+    var cleanups = [];
+
+    return {
+      listen: function(target, event, handler, options){
+        target.addEventListener(event, handler, options);
+        cleanups.push(function(){
+          target.removeEventListener(event, handler, options);
+        });
+      },
+
+      add: function(fn){
+        if (typeof fn === 'function') cleanups.push(fn);
+      },
+
+      destroy: function(){
+        while (cleanups.length){
+          var cleanup = cleanups.pop();
+          try {
+            cleanup();
+          } catch (err) {
+            console.error('Cleanup failed:', err);
+          }
+        }
+      }
+    };
   }
 
   window.GF = {
@@ -496,7 +607,8 @@
     countInEmirate: countInEmirate,
     detailsText:   detailsText,
     copyDetails:   copyDetails,
-    wireCopy:      wireCopy
+    wireCopy:      wireCopy,
+    createCleanup: createCleanup
   };
 
   /* ---------- what the search box can suggest ---------- */
@@ -735,21 +847,51 @@
       close();
     }
 
-    trigger.addEventListener('click', open);
-    search.addEventListener('input', draw);
-    sheet.addEventListener('click', function(e){
+    var cleanup = createCleanup();
+
+    function onTriggerClick(){ open(); }
+    function onSearchInput(){ draw(); }
+    function onSheetClick(e){
       if (e.target.closest('[data-close]')){ close(); return; }
       var r = e.target.closest('.gf-ins-row');
       if (r) pick(r.getAttribute('data-v'));
-    });
-    document.addEventListener('keydown', function(e){
+    }
+    function onPickerKeyDown(e){
       if (e.key === 'Escape' && !sheet.hidden) close();
-    });
+    }
+
+    cleanup.listen(trigger, 'click', onTriggerClick);
+    cleanup.listen(search, 'input', onSearchInput);
+    cleanup.listen(sheet, 'click', onSheetClick);
+    cleanup.listen(document, 'keydown', onPickerKeyDown);
+
+    /* The picker is core-owned and is recreated for each mounted design.
+       Keep exactly one cleanup handle so repeated mounts cannot accumulate
+       document Escape listeners. */
+    function destroyPicker(){
+      cleanup.destroy();
+      if (sheet.parentNode) sheet.parentNode.removeChild(sheet);
+      if (trigger.parentNode) trigger.parentNode.removeChild(trigger);
+      sel.dataset.gfPicker = '';
+      if (destroyActiveInsurerPicker === destroyPicker) {
+        destroyActiveInsurerPicker = null;
+      }
+    }
+
+    destroyActiveInsurerPicker = destroyPicker;
   }
 
   /* Called after every mount, on whatever markup the design produced. */
   function enhanceControls(){
     hideSuggest();
+    if (destroyActiveInsurerPicker){
+      try {
+        destroyActiveInsurerPicker();
+      } catch (err) {
+        console.error('Insurer picker cleanup failed:', err);
+      }
+      destroyActiveInsurerPicker = null;
+    }
     [].forEach.call(document.querySelectorAll('.gf-ins-sheet'), function(s){ s.remove(); });
     attachInsurerPicker(stage.querySelector('#ins'));
   }
