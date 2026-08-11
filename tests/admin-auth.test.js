@@ -1,0 +1,21 @@
+const fs = require('fs');
+const assert = require('assert');
+const php = fs.readFileSync('submit.php','utf8');
+const admin = fs.readFileSync('admin/admin.js','utf8');
+const html = fs.readFileSync('admin.html','utf8');
+
+assert(php.includes("hash_equals($configured, $secret)"), 'login must validate the configured secret with hash_equals');
+assert(php.includes("session_regenerate_id(true)"), 'login must regenerate the session ID');
+assert(php.includes("session_name('gf_admin_session')"), 'admin session must have a dedicated name');
+assert(php.includes("'secure' => true"), 'session cookie must be Secure');
+assert(php.includes("'httponly' => true"), 'session cookie must be HttpOnly');
+assert(php.includes("'samesite' => 'Strict'"), 'session cookie must use SameSite=Strict');
+assert(php.includes("bin2hex(random_bytes(32))"), 'CSRF token must be cryptographically random');
+assert(php.includes("hash_equals($expected, $token)"), 'CSRF validation must use hash_equals');
+assert(php.includes("out(['ok' => false, 'error' => 'Invalid or missing CSRF token.'], 403)"), 'invalid CSRF must return 403');
+assert(admin.includes("credentials:'same-origin'"), 'admin requests must use the server session cookie');
+assert(admin.includes("X-CSRF-Token"), 'admin mutations must send the CSRF token');
+assert(!admin.includes('sessionStorage'), 'admin key must not use sessionStorage');
+assert(!admin.includes('gf_admin_key'), 'long-term admin key storage must be removed');
+assert(html.includes('The admin secret is sent only to the server'), 'admin page must explain that the key is not stored');
+console.log('PASS admin session authentication and CSRF static audit');

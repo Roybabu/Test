@@ -99,13 +99,93 @@ const ALLOWED_INSURERS = [
     "Yas Takaful (formerly Hilal Takaful)"
 ];
 
+// ---- HTTP/session security ------------------------------------------------
+// The admin secret is server-side only. Prefer GF_ADMIN_SECRET in production.
+function configuredAdminSecret(): string {
+    $env = getenv('GF_ADMIN_SECRET');
+    if (is_string($env) && $env !== '') return $env;
+    return ADMIN_KEY;
+}
+
+
+function startAdminSession(): void {
+    if (session_status() === PHP_SESSION_ACTIVE) return;
+    session_name('gf_admin_session');
+    session_set_cookie_params([
+        'lifetime' => 0,
+        'path' => '/',
+        'secure' => true,
+        'httponly' => true,
+        'samesite' => 'Strict',
+    ]);
+    ini_set('session.use_strict_mode', '1');
+    ini_set('session.use_only_cookies', '1');
+    session_start();
+}
+
 header('Content-Type: application/json; charset=utf-8');
 header('X-Content-Type-Options: nosniff');
+header('Cache-Control: no-store');
 
 function out(array $data, int $code = 200): void {
     http_response_code($code);
     echo json_encode($data, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
     exit;
+}
+
+function requirePost(): void {
+    if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
+        out(['ok' => false, 'error' => 'This operation requires POST.'], 405);
+    }
+}
+
+function requireAdminSession(): void {
+    startAdminSession();
+    if (empty($_SESSION['gf_admin_authenticated'])) {
+        out(['ok' => false, 'error' => 'Authentication required.'], 401);
+    }
+}
+
+function requireCsrf(): void {
+    requireAdminSession();
+    $token = $_SERVER['HTTP_X_CSRF_TOKEN'] ?? '';
+    $expected = $_SESSION['gf_admin_csrf'] ?? '';
+    if (!is_string($token) || !is_string($expected) || $token === '' || $expected === '' || !hash_equals($expected, $token)) {
+        out(['ok' => false, 'error' => 'Invalid or missing CSRF token.'], 403);
+    }
+}
+
+function loginAdmin(string $secret): void {
+    startAdminSession();
+    $configured = configuredAdminSecret();
+    if ($configured === 'CHANGE-ME-BEFORE-UPLOADING' || $configured === '') {
+        out(['ok' => false, 'error' => 'Configure the server-side admin secret before using the admin page.'], 403);
+    }
+    if (!hash_equals($configured, $secret)) {
+        out(['ok' => false, 'error' => 'Invalid admin credentials.'], 403);
+    }
+    session_regenerate_id(true);
+    $_SESSION['gf_admin_authenticated'] = true;
+    $_SESSION['gf_admin_csrf'] = bin2hex(random_bytes(32));
+    $_SESSION['gf_admin_login_at'] = time();
+    out(['ok' => true, 'csrfToken' => $_SESSION['gf_admin_csrf']]);
+}
+
+function logoutAdmin(): void {
+    $_SESSION = [];
+    if (ini_get('session.use_cookies')) {
+        $params = session_get_cookie_params();
+        setcookie(session_name(), '', [
+            'expires' => time() - 42000,
+            'path' => $params['path'] ?? '/',
+            'domain' => $params['domain'] ?? '',
+            'secure' => true,
+            'httponly' => true,
+            'samesite' => 'Strict',
+        ]);
+    }
+    session_destroy();
+    out(['ok' => true]);
 }
 
 function validationError(string $message, string $field = ''): void {
@@ -115,91 +195,98 @@ function validationError(string $message, string $field = ''): void {
 }
 
 function ensureStore(): void {
-    if (!is_dir(STORE_DIR)) {
-        @mkdir(STORE_DIR, 0755, true);
-    }
-    if (!file_exists(STORE_FILE)) {
-        @file_put_contents(STORE_FILE, "[]");
-    }
-}
-
-function readAll(): array {
-    ensureStore();
-    $raw = @file_get_contents(STORE_FILE);
-    if ($raw === false || trim($raw) === '') return [];
-    $rows = json_decode($raw, true);
-    return is_array($rows) ? $rows : [];
-}
-
-function readVerification(): array {
-    if (!file_exists(VERIFICATION_FILE)) return [];
-    $raw = @file_get_contents(VERIFICATION_FILE);
-    if ($raw === false || trim($raw) === '') return [];
-    $rows = json_decode($raw, true);
-    return is_array($rows) ? $rows : [];
-}
-
-function writeVerification(array $rows): bool {
     if (!is_dir(STORE_DIR)) @mkdir(STORE_DIR, 0755, true);
-    $fp = @fopen(VERIFICATION_FILE, 'c+');
-    if (!$fp) return false;
-    $ok = false;
-    if (flock($fp, LOCK_EX)) {
-        ftruncate($fp, 0);
-        rewind($fp);
-        $ok = fwrite($fp, json_encode($rows, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES)) !== false;
-        fflush($fp);
-        flock($fp, LOCK_UN);
+    foreach ([STORE_FILE, VERIFICATION_FILE, PUBLISHED_FILE, AUDIT_FILE] as $file) {
+        if (!file_exists($file)) @file_put_contents($file, "[]");
     }
-    fclose($fp);
-    return $ok;
 }
 
-function writeAll(array $rows): bool {
-    ensureStore();
-    $fp = @fopen(STORE_FILE, 'c+');
-    if (!$fp) return false;
-    $ok = false;
-    if (flock($fp, LOCK_EX)) {
-        ftruncate($fp, 0);
-        rewind($fp);
-        $ok = fwrite($fp, json_encode(
-            $rows,
-            JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES
-        )) !== false;
-        fflush($fp);
-        flock($fp, LOCK_UN);
-    }
-    fclose($fp);
-    return $ok;
-}
-
-
-function readPublished(): array {
-    if (!file_exists(PUBLISHED_FILE)) return [];
-    $raw = @file_get_contents(PUBLISHED_FILE);
+function readJsonFile(string $file): array {
+    if (!file_exists($file)) return [];
+    $raw = @file_get_contents($file);
     if ($raw === false || trim($raw) === '') return [];
     $rows = json_decode($raw, true);
     return is_array($rows) ? $rows : [];
 }
-function writePublished(array $rows): bool {
+
+function writeJsonFileUnlocked(string $file, array $rows): bool {
     if (!is_dir(STORE_DIR)) @mkdir(STORE_DIR, 0755, true);
-    $fp=@fopen(PUBLISHED_FILE,'c+'); if(!$fp)return false; $ok=false;
-    if(flock($fp,LOCK_EX)){ftruncate($fp,0);rewind($fp);$ok=fwrite($fp,json_encode($rows,JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES))!==false;fflush($fp);flock($fp,LOCK_UN);}
-    fclose($fp); return $ok;
+    $json = json_encode($rows, JSON_PRETTY_PRINT | JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
+    if ($json === false) return false;
+    $tmp = $file . '.tmp-' . bin2hex(random_bytes(6));
+    $fp = @fopen($tmp, 'wb');
+    if (!$fp) return false;
+    $ok = fwrite($fp, $json) !== false;
+    if ($ok && function_exists('fsync')) $ok = fsync($fp);
+    fflush($fp);
+    fclose($fp);
+    if (!$ok) { @unlink($tmp); return false; }
+    if (!@rename($tmp, $file)) { @unlink($tmp); return false; }
+    $verify = @file_get_contents($file);
+    if ($verify === false || json_decode($verify, true) !== $rows) return false;
+    return true;
 }
-function readAudit(): array {
-    if (!file_exists(AUDIT_FILE)) return [];
-    $raw=@file_get_contents(AUDIT_FILE); if($raw===false||trim($raw)==='')return [];
-    $rows=json_decode($raw,true); return is_array($rows)?$rows:[];
+
+function stateLockHandle() {
+    ensureStore();
+    $lock = @fopen(STORE_DIR . '/.state.lock', 'c');
+    if (!$lock || !flock($lock, LOCK_EX)) {
+        if ($lock) fclose($lock);
+        out(['ok' => false, 'error' => 'Could not acquire the data store lock.'], 503);
+    }
+    return $lock;
 }
-function writeAudit(array $rows): bool {
-    if(!is_dir(STORE_DIR))@mkdir(STORE_DIR,0755,true);
-    $rows=array_slice($rows,-10000);
-    $fp=@fopen(AUDIT_FILE,'c+'); if(!$fp)return false; $ok=false;
-    if(flock($fp,LOCK_EX)){ftruncate($fp,0);rewind($fp);$ok=fwrite($fp,json_encode($rows,JSON_PRETTY_PRINT|JSON_UNESCAPED_UNICODE|JSON_UNESCAPED_SLASHES))!==false;fflush($fp);flock($fp,LOCK_UN);}
-    fclose($fp); return $ok;
+
+function writeTransactionJournal(array $journal): bool {
+    $file = STORE_DIR . '/state-transaction.json';
+    return writeJsonFileUnlocked($file, $journal);
 }
+
+function restorePublicationStateUnlocked(array $pending, array $published): bool {
+    $okPending = writeJsonFileUnlocked(STORE_FILE, $pending);
+    $okPublished = writeJsonFileUnlocked(PUBLISHED_FILE, $published);
+    if (!$okPending || !$okPublished) return false;
+    return readJsonFile(STORE_FILE) === $pending && readJsonFile(PUBLISHED_FILE) === $published;
+}
+
+function recoverPublicationTransactionUnlocked(): void {
+    $file = STORE_DIR . '/state-transaction.json';
+    if (!file_exists($file)) return;
+    $journal = readJsonFile($file);
+    if (!$journal || ($journal['type'] ?? '') !== 'publication') return;
+    $phase = (string)($journal['phase'] ?? 'prepared');
+    $pending = is_array($journal['pending'] ?? null) ? $journal['pending'] : null;
+    $published = is_array($journal['published'] ?? null) ? $journal['published'] : null;
+    $pendingAfter = is_array($journal['pendingAfter'] ?? null) ? $journal['pendingAfter'] : null;
+    $publishedAfter = is_array($journal['publishedAfter'] ?? null) ? $journal['publishedAfter'] : null;
+    if ($pending === null || $published === null || $pendingAfter === null || $publishedAfter === null) return;
+    $ok = $phase === 'committed'
+        ? restorePublicationStateUnlocked($pendingAfter, $publishedAfter)
+        : restorePublicationStateUnlocked($pending, $published);
+    if ($ok) @unlink($file);
+}
+
+function withStateLock(callable $callback): mixed {
+    $lock = stateLockHandle();
+    try {
+        recoverPublicationTransactionUnlocked();
+        return $callback();
+    } finally {
+        flock($lock, LOCK_UN);
+        fclose($lock);
+    }
+}
+
+function readAll(): array { ensureStore(); return readJsonFile(STORE_FILE); }
+function readVerification(): array { ensureStore(); return readJsonFile(VERIFICATION_FILE); }
+function readPublished(): array { ensureStore(); return readJsonFile(PUBLISHED_FILE); }
+function readAudit(): array { ensureStore(); return readJsonFile(AUDIT_FILE); }
+
+function writeAll(array $rows): bool { return writeJsonFileUnlocked(STORE_FILE, $rows); }
+function writeVerification(array $rows): bool { return writeJsonFileUnlocked(VERIFICATION_FILE, $rows); }
+function writePublished(array $rows): bool { return writeJsonFileUnlocked(PUBLISHED_FILE, $rows); }
+function writeAudit(array $rows): bool { return writeJsonFileUnlocked(AUDIT_FILE, array_slice($rows, -10000)); }
+
 function auditMetadata(mixed $value): mixed {
     $blocked=['password','passwd','pass','admin_key','adminkey','authorization','cookie','token','secret','credential','credentials','api_key','apikey'];
     if(is_array($value)){ $out=[]; foreach($value as $k=>$v){$lk=strtolower((string)$k); foreach($blocked as $b){if($lk===$b||str_contains($lk,$b))continue 2;} $out[$k]=auditMetadata($v);} return $out; }
@@ -207,20 +294,61 @@ function auditMetadata(mixed $value): mixed {
     if(is_string($value) && strlen($value)>500) return substr($value,0,500).'…';
     return $value;
 }
-function recordAudit(string $submissionId,string $actionType,string $previousStatus,string $newStatus,array $metadata=[]): void {
+function recordAuditUnlocked(string $submissionId,string $actionType,string $previousStatus,string $newStatus,array $metadata=[]): bool {
     $rows=readAudit();
     $rows[]=['administrator'=>'admin','submissionId'=>$submissionId,'actionType'=>$actionType,'timestamp'=>date('c'),'previousStatus'=>$previousStatus,'newStatus'=>$newStatus,'metadata'=>auditMetadata($metadata)];
-    writeAudit($rows);
+    return writeAudit($rows);
+}
+function recordAudit(string $submissionId,string $actionType,string $previousStatus,string $newStatus,array $metadata=[]): bool {
+    return withStateLock(fn() => recordAuditUnlocked($submissionId,$actionType,$previousStatus,$newStatus,$metadata));
 }
 
-function requireAdmin(string $key): void {
-    if (ADMIN_KEY === 'CHANGE-ME-BEFORE-UPLOADING') {
-        out(['ok' => false, 'error' => 'Set ADMIN_KEY in submit.php before using the admin page.'], 403);
+function publishAtomically(array $pendingBefore, array $pendingAfter, array $publishedBefore, array $publishedAfter): bool {
+    $journalFile = STORE_DIR . '/state-transaction.json';
+    $journal = [
+        'type' => 'publication',
+        'phase' => 'prepared',
+        'createdAt' => date('c'),
+        'pending' => $pendingBefore,
+        'published' => $publishedBefore,
+        'pendingAfter' => $pendingAfter,
+        'publishedAfter' => $publishedAfter,
+    ];
+    if (!writeTransactionJournal($journal)) return false;
+
+    if (!writeJsonFileUnlocked(PUBLISHED_FILE, $publishedAfter)) {
+        if (restorePublicationStateUnlocked($pendingBefore, $publishedBefore)) @unlink($journalFile);
+        return false;
     }
-    if (!hash_equals(ADMIN_KEY, $key)) {
-        out(['ok' => false, 'error' => 'Wrong admin key.'], 403);
+    $journal['phase'] = 'published';
+    if (!writeTransactionJournal($journal)) {
+        if (restorePublicationStateUnlocked($pendingBefore, $publishedBefore)) @unlink($journalFile);
+        return false;
     }
+
+    if (getenv('GF_TEST_FAIL_AFTER_PUBLISHED_WRITE') === '1') {
+        if (restorePublicationStateUnlocked($pendingBefore, $publishedBefore)) @unlink($journalFile);
+        return false;
+    }
+
+    if (!writeJsonFileUnlocked(STORE_FILE, $pendingAfter)) {
+        if (restorePublicationStateUnlocked($pendingBefore, $publishedBefore)) @unlink($journalFile);
+        return false;
+    }
+    $journal['phase'] = 'committed';
+    if (!writeTransactionJournal($journal)) {
+        if (restorePublicationStateUnlocked($pendingBefore, $publishedBefore)) @unlink($journalFile);
+        return false;
+    }
+
+    if (readJsonFile(PUBLISHED_FILE) !== $publishedAfter || readJsonFile(STORE_FILE) !== $pendingAfter) {
+        if (restorePublicationStateUnlocked($pendingBefore, $publishedBefore)) @unlink($journalFile);
+        return false;
+    }
+    @unlink($journalFile);
+    return true;
 }
+
 
 /**
  * Validate and normalize a scalar string. Never silently truncates input.
@@ -433,18 +561,29 @@ function uncertainWorkshopMatch(array $a, array $b): bool {
 
 function ipHash(): string {
     $ip = $_SERVER['REMOTE_ADDR'] ?? 'unknown';
-    return substr(hash('sha256', $ip . '|' . ADMIN_KEY), 0, 16);
+    return substr(hash('sha256', $ip . '|' . configuredAdminSecret()), 0, 16);
+}
+
+if (getenv('GF_TEST_LIBRARY_ONLY') === '1') {
+    return;
 }
 
 // ---- request parsing ------------------------------------------------------
-$raw = file_get_contents('php://input');
-if ($raw === false || trim($raw) === '') {
-    validationError('A JSON request body is required.');
-}
-
-$decoded = json_decode($raw, true);
-if (!is_array($decoded) || json_last_error() !== JSON_ERROR_NONE) {
-    validationError('Malformed JSON request body.');
+$method = strtoupper((string)($_SERVER['REQUEST_METHOD'] ?? 'GET'));
+$decoded = [];
+if ($method === 'POST') {
+    $raw = file_get_contents('php://input');
+    if ($raw === false || trim($raw) === '') {
+        validationError('A JSON request body is required.');
+    }
+    $decoded = json_decode($raw, true);
+    if (!is_array($decoded) || json_last_error() !== JSON_ERROR_NONE) {
+        validationError('Malformed JSON request body.');
+    }
+} elseif ($method === 'GET') {
+    $decoded = [];
+} else {
+    out(['ok' => false, 'error' => 'Method not allowed.'], 405);
 }
 
 $allowedTopLevelFields = ['action', 'key', 'workshop', 'id', 'status'];
@@ -454,17 +593,41 @@ if ($unknownTopLevel) {
 }
 
 $action = $decoded['action'] ?? $_GET['action'] ?? '';
-$key    = $decoded['key'] ?? $_GET['key'] ?? '';
+$key = $decoded['key'] ?? '';
 
 if (!is_string($action) || $action === '') {
     validationError('Action is required.', 'action');
 }
-if (!in_array($action, ['submit', 'published', 'list', 'status', 'delete', 'clear-handled', 'clear', 'approve', 'reject', 'publish', 'edit', 'audit-list', 'verification-list', 'verification'], true)) {
+$allowedActions = ['login', 'session', 'logout', 'submit', 'published', 'list', 'delete', 'clear-handled', 'clear', 'approve', 'reject', 'publish', 'edit', 'audit-list', 'verification-list', 'verification'];
+if (!in_array($action, $allowedActions, true)) {
     validationError('Unknown action.', 'action');
+}
+if ($action !== 'login' && array_key_exists('key', $decoded)) {
+    validationError('Admin credentials must only be supplied to the login endpoint.', 'key');
+}
+
+if ($action === 'login') {
+    requirePost();
+    if (!is_string($key) || $key === '') validationError('Admin secret is required.', 'key');
+    loginAdmin($key);
+}
+
+if ($action === 'session') {
+    if ($method !== 'GET') requirePost();
+    startAdminSession();
+    if (empty($_SESSION['gf_admin_authenticated'])) out(['ok' => false, 'authenticated' => false], 401);
+    out(['ok' => true, 'authenticated' => true, 'csrfToken' => (string)($_SESSION['gf_admin_csrf'] ?? '')]);
+}
+
+if ($action === 'logout') {
+    requirePost();
+    requireCsrf();
+    logoutAdmin();
 }
 
 // ---- PUBLIC: submit a workshop -------------------------------------------
 if ($action === 'submit') {
+    requirePost();
     if (!array_key_exists('workshop', $decoded) || !is_array($decoded['workshop'])) {
         validationError('Workshop data is required.', 'workshop');
     }
@@ -563,84 +726,64 @@ if ($action === 'submit') {
         ALLOWED_INSURERS
     );
 
-    $rows = readAll();
+    $result = withStateLock(function() use ($kind, $target, $workshop) {
+        $rows = readAll();
 
-    // Light abuse guard.
-    $mine = 0;
-    $me   = ipHash();
-    $cut  = time() - 3600;
-    foreach ($rows as $r) {
-        if (($r['by'] ?? '') === $me && (int)($r['ts'] ?? 0) > $cut) $mine++;
-    }
-    if ($mine >= MAX_PER_IP) {
-        out(['ok' => false, 'error' => 'Too many submissions from this connection. Try again later.'], 429);
-    }
-
-    if (count($rows) >= MAX_PENDING) {
-        out(['ok' => false, 'error' => 'The submissions file is full. Contact the site owner.'], 507);
-    }
-
-    $workshop = [
-        'name'     => $name,
-        'lastVerified' => '',
-        'verificationStatus' => 'review',
-        'source'   => 'User submission',
-        'type'     => $type,
-        'makes'    => $makes,
-        'emirate'  => $emirate,
-        'address'  => $address,
-        'phone'    => $phone,
-        'hours'    => $hours,
-        'insurers' => $type === 'nonagency' ? $insurers : [],
-        'notes'    => $notes,
-    ];
-    if ($email !== '') {
-        $workshop['email'] = $email;
-    }
-
-    // The server is authoritative: derive the stable workshop id from the
-    // normalized identity fields instead of trusting a browser-supplied id.
-    $workshop['id'] = stableWorkshopId($workshop);
-    $workshop['duplicateReview'] = false;
-
-    foreach ($rows as $existing) {
-        $existingWorkshop = is_array($existing['workshop'] ?? null) ? $existing['workshop'] : [];
-        if (exactWorkshopMatch($existingWorkshop, $workshop)) {
-            validationError('A submission for this normalized workshop already exists.', 'workshop');
+        // Light abuse guard, calculated while the same exclusive state lock is held.
+        $mine = 0;
+        $me = ipHash();
+        $cut = time() - 3600;
+        foreach ($rows as $r) {
+            if (($r['by'] ?? '') === $me && (int)($r['ts'] ?? 0) > $cut) $mine++;
         }
-        if (uncertainWorkshopMatch($existingWorkshop, $workshop)) {
-            $workshop['duplicateReview'] = true;
+        if ($mine >= MAX_PER_IP) {
+            return ['ok' => false, 'status' => 429, 'error' => 'Too many submissions from this connection. Try again later.'];
         }
-    }
+        if (count($rows) >= MAX_PENDING) {
+            return ['ok' => false, 'status' => 507, 'error' => 'The submissions file is full. Contact the site owner.'];
+        }
 
-    $entry = [
-        'id'       => 'sub-' . date('Ymd-His') . '-' . substr(bin2hex(random_bytes(4)), 0, 6),
-        'status'   => 'pending',
-        'kind'     => $kind,
-        'target'   => $target,
-        'ts'       => time(),
-        'received' => date('c'),
-        'by'       => $me,
-        'workshop' => $workshop,
-    ];
+        $workshop['duplicateReview'] = false;
+        foreach ($rows as $existing) {
+            $existingWorkshop = is_array($existing['workshop'] ?? null) ? $existing['workshop'] : [];
+            if (exactWorkshopMatch($existingWorkshop, $workshop)) {
+                validationError('A submission for this normalized workshop already exists.', 'workshop');
+            }
+            if (uncertainWorkshopMatch($existingWorkshop, $workshop)) {
+                $workshop['duplicateReview'] = true;
+            }
+        }
 
-    $rows[] = $entry;
-    if (!writeAll($rows)) {
-        out(['ok' => false, 'error' => 'Could not write to data/pending-submissions.json — check folder permissions.'], 500);
-    }
-    out(['ok' => true, 'id' => $entry['id'], 'pending' => count($rows)]);
+        $entry = [
+            'id'       => 'sub-' . date('Ymd-His') . '-' . substr(bin2hex(random_bytes(4)), 0, 6),
+            'status'   => 'pending',
+            'kind'     => $kind,
+            'target'   => $target,
+            'ts'       => time(),
+            'received' => date('c'),
+            'by'       => ipHash(),
+            'workshop' => $workshop,
+        ];
+        $rows[] = $entry;
+        if (!writeAll($rows)) {
+            return ['ok' => false, 'status' => 500, 'error' => 'Could not write to data/pending-submissions.json — check folder permissions.'];
+        }
+        return ['ok' => true, 'id' => $entry['id'], 'pending' => count($rows)];
+    });
+    if (!($result['ok'] ?? false)) out(['ok' => false, 'error' => $result['error']], (int)($result['status'] ?? 500));
+    out($result);
 }
 
 // ---- PUBLIC: published dataset -------------------------------------------
 if ($action === 'published') {
+    if ($method !== 'GET') requirePost();
     $rows = readPublished();
     out(['ok' => true, 'workshops' => $rows, 'count' => count($rows)]);
 }
 
 // ---- ADMIN: list everything ----------------------------------------------
 if ($action === 'list') {
-    if (!is_string($key)) validationError('Admin key must be a string.', 'key');
-    requireAdmin($key);
+    requireAdminSession();
     $rows = readAll();
     foreach ($rows as &$r) unset($r['by']);
     unset($r);
@@ -650,105 +793,135 @@ if ($action === 'list') {
 
 // ---- ADMIN: audit log ----------------------------------------------------
 if ($action === 'audit-list') {
-    if (!is_string($key)) validationError('Admin key must be a string.', 'key');
-    requireAdmin($key);
+    requireAdminSession();
     out(['ok' => true, 'rows' => array_reverse(readAudit())]);
 }
 
 // ---- ADMIN: list verification metadata ----------------------------------
 if ($action === 'verification-list') {
-    if (!is_string($key)) validationError('Admin key must be a string.', 'key');
-    requireAdmin($key);
+    requireAdminSession();
     out(['ok' => true, 'workshops' => readPublished(), 'verification' => readVerification()]);
 }
 
 // ---- ADMIN: update workshop verification --------------------------------
 if ($action === 'verification') {
-    if (!is_string($key)) validationError('Admin key must be a string.', 'key');
-    requireAdmin($key);
+    requirePost(); requireCsrf();
     $id=$decoded['id']??''; $status=$decoded['status']??'';
     if(!is_string($id)||!preg_match('/^ws_[a-f0-9]{8}$/',$id))validationError('Invalid workshop ID.','id');
     if(!is_string($status)||!in_array($status,['verified','outdated','review'],true))validationError('Verification status must be verified, outdated, or review.','status');
-    $pub=readPublished(); $found=false; $old='review'; $oldDate=''; $source='Existing directory data';
-    foreach($pub as &$w){if(($w['id']??'')===$id){$found=true;$old=(string)($w['verificationStatus']??'review');$oldDate=(string)($w['lastVerified']??'');$source=(string)($w['source']??$source);$w['verificationStatus']=$status;if($status==='verified')$w['lastVerified']=date('Y-m-d');else $w['lastVerified']=$oldDate;break;}} unset($w);
-    if(!$found)out(['ok'=>false,'error'=>'Published workshop not found.'],404);
-    if(!writePublished($pub))out(['ok'=>false,'error'=>'Could not save published workshop.'],500);
-    $registry=readVerification(); $registry[$id]=['lastVerified'=>$status==='verified'?date('Y-m-d'):$oldDate,'verificationStatus'=>$status,'source'=>$source]; writeVerification($registry);
-    recordAudit($id,'edit',$old,$status,['operation'=>'verification','verificationStatus'=>$status]);
-    out(['ok'=>true,'id'=>$id,'metadata'=>$registry[$id]]);
+    $result=withStateLock(function() use($id,$status){
+        $pub=readPublished(); $oldPub=$pub; $registry=readVerification(); $oldRegistry=$registry;
+        $found=false; $old='review'; $oldDate=''; $source='Existing directory data';
+        foreach($pub as &$w){if(($w['id']??'')===$id){$found=true;$old=(string)($w['verificationStatus']??'review');$oldDate=(string)($w['lastVerified']??'');$source=(string)($w['source']??$source);$w['verificationStatus']=$status;$w['lastVerified']=$status==='verified'?date('Y-m-d'):$oldDate;break;}} unset($w);
+        if(!$found)return ['ok'=>false,'status'=>404,'error'=>'Published workshop not found.'];
+        $registry[$id]=['lastVerified'=>$status==='verified'?date('Y-m-d'):$oldDate,'verificationStatus'=>$status,'source'=>$source];
+        if(!writePublished($pub) || !writeVerification($registry)){writePublished($oldPub);writeVerification($oldRegistry);return ['ok'=>false,'status'=>500,'error'=>'Could not save verification state; changes were rolled back.'];}
+        if(!recordAuditUnlocked($id,'edit',$old,$status,['operation'=>'verification','verificationStatus'=>$status]))return ['ok'=>false,'status'=>500,'error'=>'Verification changed but audit log could not be written.'];
+        return ['ok'=>true,'id'=>$id,'metadata'=>$registry[$id]];
+    });
+    out($result,(int)($result['status']??200));
 }
 
 // ---- ADMIN: approve ------------------------------------------------------
 if ($action === 'approve') {
-    if (!is_string($key)) validationError('Admin key must be a string.', 'key'); requireAdmin($key);
+    requirePost(); requireCsrf();
     $id=$decoded['id']??''; if(!is_string($id)||!preg_match('/^sub-\d{8}-\d{6}-[a-f0-9]{6}$/',$id))validationError('Invalid submission ID.','id');
-    $rows=readAll(); $found=false;
-    $kind='new';
-    foreach($rows as &$r){if(($r['id']??'')===$id){$found=true;$prev=(string)($r['status']??'pending');$kind=(string)($r['kind']??'new');if($prev!=='pending')validationError('Only pending submissions can be approved.','id');$r['status']='approved';break;}}unset($r);
-    if(!$found)out(['ok'=>false,'error'=>'Submission not found.'],404); if(!writeAll($rows))out(['ok'=>false,'error'=>'Could not save.'],500);
-    recordAudit($id,'approve',$prev,'approved',['kind'=>$kind]); out(['ok'=>true]);
+    $result=withStateLock(function() use($id){
+        $rows=readAll(); $found=false; $prev='pending'; $kind='new';
+        foreach($rows as &$r){if(($r['id']??'')===$id){$found=true;$prev=(string)($r['status']??'pending');$kind=(string)($r['kind']??'new');if($prev!=='pending')return ['ok'=>false,'status'=>422,'error'=>'Only pending submissions can be approved.'];$r['status']='approved';break;}} unset($r);
+        if(!$found)return ['ok'=>false,'status'=>404,'error'=>'Submission not found.'];
+        if(!writeAll($rows))return ['ok'=>false,'status'=>500,'error'=>'Could not save.'];
+        if(!recordAuditUnlocked($id,'approve',$prev,'approved',['kind'=>$kind]))return ['ok'=>false,'status'=>500,'error'=>'Approval saved but audit log could not be written.'];
+        return ['ok'=>true];
+    });
+    out($result,(int)($result['status']??200));
 }
 
 // ---- ADMIN: reject -------------------------------------------------------
 if ($action === 'reject') {
-    if (!is_string($key)) validationError('Admin key must be a string.', 'key'); requireAdmin($key);
+    requirePost(); requireCsrf();
     $id=$decoded['id']??''; if(!is_string($id)||!preg_match('/^sub-\d{8}-\d{6}-[a-f0-9]{6}$/',$id))validationError('Invalid submission ID.','id');
-    $rows=readAll(); $found=false;
-    foreach($rows as &$r){if(($r['id']??'')===$id){$found=true;$prev=(string)($r['status']??'pending');$r['status']='rejected';break;}}unset($r);
-    if(!$found)out(['ok'=>false,'error'=>'Submission not found.'],404); if(!writeAll($rows))out(['ok'=>false,'error'=>'Could not save.'],500);
-    recordAudit($id,'reject',$prev,'rejected',[]); out(['ok'=>true]);
+    $result=withStateLock(function() use($id){
+        $rows=readAll(); $found=false; $prev='pending';
+        foreach($rows as &$r){if(($r['id']??'')===$id){$found=true;$prev=(string)($r['status']??'pending');$r['status']='rejected';break;}} unset($r);
+        if(!$found)return ['ok'=>false,'status'=>404,'error'=>'Submission not found.'];
+        if(!writeAll($rows))return ['ok'=>false,'status'=>500,'error'=>'Could not save.'];
+        if(!recordAuditUnlocked($id,'reject',$prev,'rejected',[]))return ['ok'=>false,'status'=>500,'error'=>'Rejection saved but audit log could not be written.'];
+        return ['ok'=>true];
+    });
+    out($result,(int)($result['status']??200));
 }
 
 // ---- ADMIN: edit ---------------------------------------------------------
 if ($action === 'edit') {
-    if (!is_string($key)) validationError('Admin key must be a string.', 'key'); requireAdmin($key);
+    requirePost(); requireCsrf();
     $id=$decoded['id']??''; $incoming=$decoded['workshop']??null;
-    if(!is_string($id)||!preg_match('/^sub-\d{8}-\d{6}-[a-f0-9]{6}$/',$id))validationError('Invalid submission ID.','id');
+    if(!is_string($id)||!preg_match('/^sub-\d{8}-\d{6}$/',$id))validationError('Invalid submission ID.','id');
     if(!is_array($incoming))validationError('Workshop data is required.','workshop');
-    $rows=readAll(); $idx=null; foreach($rows as $i=>$r)if(($r['id']??'')===$id){$idx=$i;break;}
-    if($idx===null)out(['ok'=>false,'error'=>'Submission not found.'],404);
-    $old=$rows[$idx]; $base=$old['workshop']??[]; $merged=array_merge($base,$incoming); $decoded['workshop']=$merged;
-    // Reuse the same field validation contract used for public submissions.
-    $name=validateString($merged['name']??null,'Workshop name',MAX_LENGTHS['name'],true,'/^[\p{L}\p{N}][\p{L}\p{N}\p{M}\s&().,\-\/+\'’]*$/u');
-    $type=validateString($merged['type']??null,'Workshop type',20,true,'/^[a-z]+$/'); if(!in_array($type,WORKSHOP_TYPES,true))validationError('Invalid workshop type.','type');
-    $emirate=validateString($merged['emirate']??null,'Emirate',30,true,'/^[\p{L}\s-]+$/u'); if(!in_array($emirate,EMIRATES,true))validationError('Invalid UAE emirate.','emirate');
-    $address=validateString($merged['address']??null,'Address',MAX_LENGTHS['address'],false,'/^[\p{L}\p{N}\p{M}\s#&().,\-\/+:;\'’]*$/u');
-    $phone=normalizePhone($merged['phone']??null,false); $hours=validateString($merged['hours']??null,'Hours',MAX_LENGTHS['hours'],false,'/^[\p{L}\p{N}\p{M}\s#&().,\-\/+:;\'’]*$/u'); $notes=validateString($merged['notes']??null,'Notes',MAX_LENGTHS['notes'],false,'/^[\p{L}\p{N}\p{M}\s#&().,\-\/+:;!?%\'’]*$/u'); $email=validateEmail($merged['email']??null,false);
-    $makes=validateList($merged['makes']??null,'Makes',MAX_LENGTHS['list'],25,$type==='agency',ALLOWED_MAKES); $insurers=validateList($merged['insurers']??null,'Insurers',MAX_LENGTHS['insurer'],25,$type==='nonagency',ALLOWED_INSURERS);
-    $updated=['id'=>stableWorkshopId(['id'=>$base['id']??null,'name'=>$name,'emirate'=>$emirate,'phone'=>$phone,'address'=>$address]),'name'=>$name,'type'=>$type,'makes'=>$makes,'insurers'=>$type==='nonagency'?$insurers:[],'emirate'=>$emirate,'address'=>$address,'phone'=>$phone,'hours'=>$hours,'notes'=>$notes,'lastVerified'=>(string)($base['lastVerified']??''),'verificationStatus'=>(string)($base['verificationStatus']??'review'),'source'=>(string)($base['source']??'User submission'),'duplicateReview'=>false]; if($email!=='')$updated['email']=$email;
-    $rows[$idx]['workshop']=$updated; if(!writeAll($rows))out(['ok'=>false,'error'=>'Could not save.'],500);
-    $changed=[]; foreach(['name','type','emirate','address','phone','hours','notes','makes','insurers','email'] as $f){if(($base[$f]??null)!==($updated[$f]??null))$changed[]=$f;}
-    recordAudit($id,'edit',(string)($old['status']??'pending'),(string)($old['status']??'pending'),['changedFields'=>$changed]); out(['ok'=>true,'workshop'=>$updated]);
+    $result=withStateLock(function() use($id,$incoming){
+        $rows=readAll(); $idx=null; foreach($rows as $i=>$r)if(($r['id']??'')===$id){$idx=$i;break;}
+        if($idx===null)return ['ok'=>false,'status'=>404,'error'=>'Submission not found.'];
+        $old=$rows[$idx]; $base=$old['workshop']??[]; $merged=array_merge($base,$incoming);
+        $name=validateString($merged['name']??null,'Workshop name',MAX_LENGTHS['name'],true,'/^[\p{L}\p{N}][\p{L}\p{N}\p{M}\s&().,\-\/+\'’]*$/u');
+        $type=validateString($merged['type']??null,'Workshop type',20,true,'/^[a-z]+$/'); if(!in_array($type,WORKSHOP_TYPES,true))validationError('Invalid workshop type.','type');
+        $emirate=validateString($merged['emirate']??null,'Emirate',30,true,'/^[\p{L}\s-]+$/u'); if(!in_array($emirate,EMIRATES,true))validationError('Invalid UAE emirate.','emirate');
+        $address=validateString($merged['address']??null,'Address',MAX_LENGTHS['address'],false,'/^[\p{L}\p{N}\p{M}\s#&().,\-\/+::;\'’]*$/u');
+        $phone=normalizePhone($merged['phone']??null,false); $hours=validateString($merged['hours']??null,'Hours',MAX_LENGTHS['hours'],false,'/^[\p{L}\p{N}\p{M}\s#&().,\-\/+::;\'’]*$/u'); $notes=validateString($merged['notes']??null,'Notes',MAX_LENGTHS['notes'],false,'/^[\p{L}\p{N}\p{M}\s#&().,\-\/+::;!?%\'’]*$/u'); $email=validateEmail($merged['email']??null,false);
+        $makes=validateList($merged['makes']??null,'Makes',MAX_LENGTHS['list'],25,$type==='agency',ALLOWED_MAKES); $insurers=validateList($merged['insurers']??null,'Insurers',MAX_LENGTHS['insurer'],25,$type==='nonagency',ALLOWED_INSURERS);
+        $updated=['id'=>stableWorkshopId(['id'=>$base['id']??null,'name'=>$name,'emirate'=>$emirate,'phone'=>$phone,'address'=>$address]),'name'=>$name,'type'=>$type,'makes'=>$makes,'insurers'=>$type==='nonagency'?$insurers:[],'emirate'=>$emirate,'address'=>$address,'phone'=>$phone,'hours'=>$hours,'notes'=>$notes,'lastVerified'=>(string)($base['lastVerified']??''),'verificationStatus'=>(string)($base['verificationStatus']??'review'),'source'=>(string)($base['source']??'User submission'),'duplicateReview'=>false]; if($email!=='')$updated['email']=$email;
+        $rows[$idx]['workshop']=$updated;
+        if(!writeAll($rows))return ['ok'=>false,'status'=>500,'error'=>'Could not save.'];
+        $changed=[]; foreach(['name','type','emirate','address','phone','hours','notes','makes','insurers','email'] as $f){if(($base[$f]??null)!==($updated[$f]??null))$changed[]=$f;}
+        if(!recordAuditUnlocked($id,'edit',(string)($old['status']??'pending'),(string)($old['status']??'pending'),['changedFields'=>$changed]))return ['ok'=>false,'status'=>500,'error'=>'Edit saved but audit log could not be written.'];
+        return ['ok'=>true,'workshop'=>$updated];
+    });
+    out($result,(int)($result['status']??200));
 }
 
 // ---- ADMIN: publish ------------------------------------------------------
 if ($action === 'publish') {
-    if (!is_string($key)) validationError('Admin key must be a string.', 'key'); requireAdmin($key);
+    requirePost(); requireCsrf();
     $id=$decoded['id']??''; if(!is_string($id)||!preg_match('/^sub-\d{8}-\d{6}-[a-f0-9]{6}$/',$id))validationError('Invalid submission ID.','id');
-    $rows=readAll(); $idx=null; foreach($rows as $i=>$r)if(($r['id']??'')===$id){$idx=$i;break;}
-    if($idx===null)out(['ok'=>false,'error'=>'Submission not found.'],404);
-    $r=$rows[$idx]; if(($r['status']??'')!=='approved')validationError('Submission must be manually approved before publication.','id');
-    $w=$r['workshop']??[]; if(!is_array($w))validationError('Submission workshop data is invalid.','workshop');
-    $pub=readPublished(); foreach($pub as $existing){if(exactWorkshopMatch($existing,$w))validationError('An exact normalized workshop already exists in the published dataset.','workshop'); if(uncertainWorkshopMatch($existing,$w))validationError('This workshop resembles a published record and requires additional review before publication.','workshop');}
-    $w['id']=stableWorkshopId($w); $w['publishedAt']=date('c'); $w['source']=$w['source']??'Approved submission'; $w['verificationStatus']=$w['verificationStatus']??'review'; $pub[]=$w;
-    if(!writePublished($pub))out(['ok'=>false,'error'=>'Could not write published dataset.'],500);
-    $rows[$idx]['status']='published'; $rows[$idx]['publishedAt']=date('c'); if(!writeAll($rows))out(['ok'=>false,'error'=>'Published record was written but submission state could not be updated.'],500);
-    recordAudit($id,'publish','approved','published',['workshopId'=>$w['id']]); out(['ok'=>true,'workshop'=>$w]);
+    $result=withStateLock(function() use($id){
+        $rows=readAll(); $idx=null; foreach($rows as $i=>$r)if(($r['id']??'')===$id){$idx=$i;break;}
+        if($idx===null)return ['ok'=>false,'status'=>404,'error'=>'Submission not found.'];
+        $r=$rows[$idx]; if(($r['status']??'')!=='approved')return ['ok'=>false,'status'=>422,'error'=>'Submission must be manually approved before publication.'];
+        $w=$r['workshop']??[]; if(!is_array($w))validationError('Submission workshop data is invalid.','workshop');
+        $pubBefore=readPublished(); foreach($pubBefore as $existing){if(exactWorkshopMatch($existing,$w))validationError('An exact normalized workshop already exists in the published dataset.','workshop'); if(uncertainWorkshopMatch($existing,$w))validationError('This workshop resembles a published record and requires additional review before publication.','workshop');}
+        $w['id']=stableWorkshopId($w); $w['publishedAt']=date('c'); $w['source']=$w['source']??'Approved submission'; $w['verificationStatus']=$w['verificationStatus']??'review'; $pubAfter=$pubBefore; $pubAfter[]=$w;
+        $pendingAfter=$rows; $pendingAfter[$idx]['status']='published'; $pendingAfter[$idx]['publishedAt']=$w['publishedAt'];
+        if(!publishAtomically($rows,$pendingAfter,$pubBefore,$pubAfter))return ['ok'=>false,'status'=>500,'error'=>'Publication failed; no success was reported and the datasets were rolled back.'];
+        if(!recordAuditUnlocked($id,'publish','approved','published',['workshopId'=>$w['id']]))return ['ok'=>false,'status'=>500,'error'=>'Publication saved but audit log could not be written.'];
+        return ['ok'=>true,'workshop'=>$w];
+    });
+    out($result,(int)($result['status']??200));
 }
 
 // ---- ADMIN: delete one ---------------------------------------------------
 if ($action === 'delete') {
-    if (!is_string($key)) validationError('Admin key must be a string.', 'key'); requireAdmin($key);
+    requirePost(); requireCsrf();
     $id=$decoded['id']??''; if(!is_string($id)||!preg_match('/^sub-\d{8}-\d{6}-[a-f0-9]{6}$/',$id))validationError('Invalid submission ID.','id');
-    $rows=readAll();$found=null;$new=[];foreach($rows as $r){if(($r['id']??'')===$id)$found=$r;else$new[]=$r;}if($found===null)out(['ok'=>false,'error'=>'Submission not found.'],404);if(!writeAll($new))out(['ok'=>false,'error'=>'Could not save.'],500);
-    recordAudit($id,'delete',(string)($found['status']??'unknown'),'deleted',[]);out(['ok'=>true,'remaining'=>count($new)]);
+    $result=withStateLock(function() use($id){
+        $rows=readAll();$found=null;$new=[];foreach($rows as $r){if(($r['id']??'')===$id)$found=$r;else$new[]=$r;}
+        if($found===null)return ['ok'=>false,'status'=>404,'error'=>'Submission not found.'];
+        if(!writeAll($new))return ['ok'=>false,'status'=>500,'error'=>'Could not save.'];
+        if(!recordAuditUnlocked($id,'delete',(string)($found['status']??'unknown'),'deleted',[]))return ['ok'=>false,'status'=>500,'error'=>'Delete saved but audit log could not be written.'];
+        return ['ok'=>true,'remaining'=>count($new)];
+    });
+    out($result,(int)($result['status']??200));
 }
 
 // ---- ADMIN: clear --------------------------------------------------------
 if ($action === 'clear' || $action === 'clear-handled') {
-    if (!is_string($key)) validationError('Admin key must be a string.', 'key'); requireAdmin($key);
-    $rows=readAll();$kept=[];$removed=[];foreach($rows as $r){if(in_array(($r['status']??''),['rejected','published'],true))$removed[]=$r;else$kept[]=$r;}if(!writeAll($kept))out(['ok'=>false,'error'=>'Could not save.'],500);
-    recordAudit('','clear','mixed','cleared',['removedCount'=>count($removed),'removedSubmissionIds'=>array_values(array_map(fn($r)=>(string)($r['id']??''),$removed))]);out(['ok'=>true,'removed'=>count($removed),'remaining'=>count($kept)]);
+    requirePost(); requireCsrf();
+    $result=withStateLock(function(){
+        $rows=readAll();$kept=[];$removed=[];foreach($rows as $r){if(in_array(($r['status']??''),['rejected','published'],true))$removed[]=$r;else$kept[]=$r;}
+        if(!writeAll($kept))return ['ok'=>false,'status'=>500,'error'=>'Could not save.'];
+        $ids=array_values(array_map(fn($r)=>(string)($r['id']??''),$removed));
+        if(!recordAuditUnlocked('','clear','mixed','cleared',['removedCount'=>count($removed),'removedSubmissionIds'=>$ids]))return ['ok'=>false,'status'=>500,'error'=>'Clear saved but audit log could not be written.'];
+        return ['ok'=>true,'removed'=>count($removed),'remaining'=>count($kept)];
+    });
+    out($result,(int)($result['status']??200));
 }
 
 validationError('Unknown action.', 'action');
