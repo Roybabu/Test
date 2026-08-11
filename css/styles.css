@@ -1,0 +1,827 @@
+  :root{
+    --ink:#1A1A1A;
+    --ink-soft:#767676;
+    --ink-faint:#A3A3A3;
+    --bg:#FFFFFF;
+    --surface:#FAFAFA;
+    --border:#E7E7E7;
+    --border-strong:#D4D4D4;
+    --agency:#166F4C;
+    --nonagency:#A15E0A;
+    --danger:#B33A3A;
+    --focus:#2563EB;
+    --on-ink:#FFFFFF;
+    --agency-tint:rgba(22,111,76,0.08);
+    --nonagency-tint:rgba(161,94,10,0.08);
+    font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Inter,Roboto,Helvetica,Arial,sans-serif;
+  }
+  :root[data-theme="dark"]{
+    --ink:#EDEDED;
+    --ink-soft:#A0A0A0;
+    --ink-faint:#6E6E6E;
+    --bg:#121212;
+    --surface:#1A1A1A;
+    --border:#2A2A2A;
+    --border-strong:#3A3A3A;
+    --agency:#3FCB93;
+    --nonagency:#E0993D;
+    --danger:#E0716E;
+    --focus:#5B8DEF;
+    --on-ink:#121212;
+    --agency-tint:rgba(63,203,147,0.14);
+    --nonagency-tint:rgba(224,153,61,0.14);
+  }
+  *{box-sizing:border-box;}
+  body{
+    margin:0;
+    background:var(--surface);
+    transition:background .15s ease, color .15s ease;
+    color:var(--ink);
+    padding:56px 24px 100px;
+    min-height:100vh;
+  }
+  .wrap{max-width:1180px;margin:0 auto;}
+  header{
+    margin-bottom:20px;
+  }
+  header h1{
+    font-size:22px;
+    font-weight:600;
+    margin:0 0 6px;
+    letter-spacing:-0.01em;
+  }
+  header p{
+    margin:0;
+    color:var(--ink-soft);
+    font-size:14px;
+    line-height:1.5;
+  }
+  .stamp{
+    font-size:12.5px;
+    color:var(--ink-faint);
+    display:none;
+  }
+  .stats-row{
+    display:grid;
+    grid-template-columns:repeat(4,1fr);
+    gap:14px;
+    margin-bottom:14px;
+  }
+  @media (max-width:700px){
+    .stats-row{grid-template-columns:1fr 1fr;}
+  }
+  .stat-cell{
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:18px 20px;
+  }
+  .stat-num{
+    font-size:28px;
+    font-weight:700;
+    letter-spacing:-0.02em;
+    line-height:1;
+    margin-bottom:6px;
+  }
+  .stat-cell.agency .stat-num{color:var(--agency);}
+  .stat-cell.nonagency .stat-num{color:var(--nonagency);}
+  .stat-label{
+    font-size:12.5px;
+    color:var(--ink-soft);
+    font-weight:500;
+  }
+  .panel{
+    padding:20px 22px;
+    margin-bottom:14px;
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:16px;
+  }
+  .filters{
+    display:grid;
+    grid-template-columns:1.3fr 1fr 1fr 1.2fr auto;
+    gap:12px;
+    align-items:end;
+  }
+  @media (max-width:760px){
+    .filters{grid-template-columns:1fr 1fr;}
+  }
+  .field label{
+    display:block;
+    font-size:12px;
+    font-weight:500;
+    color:var(--ink-soft);
+    margin-bottom:6px;
+  }
+  input,select{
+    width:100%;
+    height:38px;
+    border:1px solid var(--border-strong);
+    border-radius:6px;
+    padding:0 12px;
+    font-size:14px;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:inherit;
+    transition:border-color .12s ease, background .15s ease;
+  }
+  input:focus,select:focus,button:focus{
+    outline:none;
+    border-color:var(--focus);
+    box-shadow:0 0 0 3px rgba(37,99,235,0.1);
+  }
+  .type-toggle{display:flex;flex-direction:column;gap:2px;}
+  .type-toggle button{
+    height:38px;
+    border:none;
+    border-radius:8px;
+    background:transparent;
+    font-size:13.5px;
+    font-weight:500;
+    cursor:pointer;
+    color:var(--ink-soft);
+    text-align:left;
+    padding:0 12px;
+    transition:all .12s ease;
+  }
+  .type-toggle button:hover{background:var(--surface);}
+  .type-toggle button.active[data-t="all"]{background:var(--ink);color:var(--on-ink);}
+  .type-toggle button.active[data-t="agency"]{background:var(--agency);color:var(--on-ink);}
+  .type-toggle button.active[data-t="nonagency"]{background:var(--nonagency);color:var(--on-ink);}
+  .btn-primary{
+    height:38px;
+    padding:0 18px;
+    background:var(--ink);
+    color:var(--on-ink);
+    border:none;
+    border-radius:6px;
+    font-size:13.5px;
+    font-weight:500;
+    cursor:pointer;
+    white-space:nowrap;
+    transition:opacity .12s ease;
+  }
+  .btn-primary:hover{opacity:0.85;}
+  .btn-ghost{
+    height:38px;
+    padding:0 16px;
+    background:var(--bg);
+    color:var(--ink);
+    border:1px solid var(--border-strong);
+    border-radius:6px;
+    font-size:13.5px;
+    font-weight:500;
+    cursor:pointer;
+    transition:background .12s ease;
+  }
+  .btn-ghost:hover{background:var(--surface);}
+  .theme-toggle{
+    height:38px;
+    width:38px;
+    padding:0;
+    background:var(--bg);
+    color:var(--ink-soft);
+    border:1px solid var(--border-strong);
+    border-radius:6px;
+    cursor:pointer;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    transition:background .12s ease, color .12s ease;
+    flex-shrink:0;
+  }
+  .theme-toggle:hover{background:var(--surface);color:var(--ink);}
+  .theme-toggle svg{width:17px;height:17px;}
+  .mega-bar{
+    display:flex;
+    align-items:stretch;
+    background:var(--bg);
+    border:1px solid var(--border-strong);
+    border-radius:14px;
+    box-shadow:0 1px 3px rgba(0,0,0,0.04);
+    margin-bottom:12px;
+    position:relative;
+  }
+  .mega-bar:focus-within{border-color:var(--focus);box-shadow:0 0 0 3px rgba(37,99,235,0.1);}
+  .mega-seg{position:relative;display:flex;align-items:center;}
+  .mega-divider{width:1px;background:var(--border);margin:10px 0;}
+  .mega-trigger{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    height:52px;
+    padding:0 16px;
+    border:none;
+    background:none;
+    cursor:pointer;
+    font-size:13.5px;
+    font-weight:500;
+    color:var(--ink);
+    white-space:nowrap;
+    border-radius:14px 0 0 14px;
+    transition:background .12s ease;
+  }
+  #insurer-seg .mega-trigger{border-radius:0;}
+  .mega-trigger:hover{background:var(--surface);}
+  .mega-trigger-icon{font-size:14px;}
+  .chevron{width:14px;height:14px;flex-shrink:0;color:var(--ink-faint);transition:transform .15s ease;}
+  .mega-seg.open .chevron{transform:rotate(180deg);}
+  .mega-make-seg{
+    flex:1;
+    min-width:0;
+    display:flex;
+    align-items:center;
+    gap:8px;
+    padding:0 16px;
+  }
+  .search-icon{width:16px;height:16px;flex-shrink:0;color:var(--ink-faint);}
+  .mega-make-seg input{
+    border:none;
+    height:52px;
+    padding:0;
+    font-size:14px;
+    background:transparent;
+    flex:1;
+    min-width:0;
+  }
+  .mega-make-seg input:focus{outline:none;box-shadow:none;}
+  .mega-panel{
+    display:none;
+    position:absolute;
+    top:calc(100% + 8px);
+    left:0;
+    min-width:200px;
+    background:var(--bg);
+    border:1px solid var(--border-strong);
+    border-radius:12px;
+    box-shadow:0 12px 32px rgba(0,0,0,0.14);
+    padding:8px;
+    z-index:20;
+  }
+  .mega-panel-wide{min-width:280px;padding:10px;}
+  .mega-seg.open .mega-panel{display:block;}
+  .mega-panel-search{
+    width:100%;
+    height:36px;
+    margin-bottom:8px;
+    border:1px solid var(--border-strong);
+    border-radius:8px;
+    padding:0 10px;
+    font-size:13px;
+    background:var(--bg);
+    color:var(--ink);
+    font-family:inherit;
+  }
+  .mega-panel-search:focus{outline:none;border-color:var(--focus);}
+  .mega-panel-list{max-height:280px;overflow-y:auto;display:flex;flex-direction:column;gap:2px;}
+  .mega-panel-item{
+    display:block;
+    width:100%;
+    text-align:left;
+    padding:8px 10px;
+    border:none;
+    background:none;
+    border-radius:7px;
+    font-size:13px;
+    color:var(--ink);
+    cursor:pointer;
+  }
+  .mega-panel-item:hover{background:var(--surface);}
+  .mega-panel-item.active{background:var(--ink);color:var(--on-ink);}
+  .mega-panel-empty{padding:10px;font-size:12.5px;color:var(--ink-faint);text-align:center;}
+  .secondary-row{
+    display:flex;
+    justify-content:flex-end;
+    margin-bottom:20px;
+  }
+  @media (max-width:700px){
+    .mega-bar{flex-direction:column;}
+    .mega-divider{display:none;}
+    .mega-trigger, .mega-make-seg{border-radius:0;}
+    .mega-panel{left:0;right:0;min-width:0;}
+    .secondary-row{flex-wrap:wrap;}
+    .secondary-row .btn-primary{margin-left:0;width:100%;}
+  }
+  .results-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:baseline;
+    margin:6px 0 14px;
+  }
+  .results-head h2{
+    font-size:14px;
+    font-weight:600;
+    margin:0;
+    color:var(--ink-soft);
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+  }
+  .count{font-size:12.5px;color:var(--ink-faint);}
+  .grid{
+    display:grid;
+    grid-template-columns:repeat(auto-fill, minmax(300px, 1fr));
+    gap:14px;
+    align-items:start;
+  }
+  .card{
+    display:flex;
+    flex-direction:column;
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:16px;
+    padding:16px 18px 14px;
+    position:relative;
+    overflow:hidden;
+    transition:box-shadow .15s ease, transform .15s ease, border-color .15s ease;
+  }
+  .card::before{
+    content:'';
+    position:absolute;
+    top:0; left:0; right:0;
+    height:4px;
+    border-radius:16px 16px 0 0;
+  }
+  .card.agency::before{background:var(--agency);}
+  .card.nonagency::before{background:var(--nonagency);}
+  .card:hover{
+    box-shadow:0 8px 24px rgba(0,0,0,0.08);
+    transform:translateY(-2px);
+    border-color:var(--border-strong);
+  }
+  .card .stub{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+    font-size:10.5px;
+    font-weight:700;
+    letter-spacing:0.02em;
+    color:#fff;
+    border-radius:6px;
+    padding:3px 8px;
+    width:fit-content;
+    margin-bottom:10px;
+  }
+  .card.agency .stub{background:var(--agency);}
+  .card.nonagency .stub{background:var(--nonagency);}
+  .card-body{flex:1;min-width:0;display:flex;flex-direction:column;}
+  .card-top{
+    display:flex;
+    justify-content:space-between;
+    align-items:flex-start;
+    gap:10px;
+    margin-bottom:6px;
+  }
+  .card-top h3{
+    font-size:15px;
+    font-weight:600;
+    margin:0;
+    line-height:1.35;
+  }
+  .badge{
+    font-size:10.5px;
+    font-weight:600;
+    padding:2px 9px;
+    border-radius:20px;
+    white-space:nowrap;
+    flex-shrink:0;
+  }
+  .badge.agency{color:var(--agency);background:var(--agency-tint);}
+  .badge.nonagency{color:var(--nonagency);background:var(--nonagency-tint);}
+  .meta-row{
+    display:flex;
+    flex-wrap:wrap;
+    gap:4px 12px;
+    font-size:12.5px;
+    color:var(--ink-soft);
+    margin-bottom:8px;
+  }
+  .meta-row span{display:flex;align-items:center;gap:5px;}
+  .tags{display:flex;flex-wrap:wrap;gap:6px;margin-top:6px;}
+  .tag{
+    font-size:11px;
+    padding:3px 9px;
+    border-radius:6px;
+    background:var(--surface);
+    color:var(--ink-soft);
+  }
+  .tag.make{font-family:ui-monospace,SFMono-Regular,Menlo,monospace;}
+  .card-actions{display:flex;gap:14px;margin-top:12px;padding-top:12px;border-top:1px solid var(--border);}
+  .card-actions button{
+    font-size:12px;
+    padding:0;
+    border:none;
+    background:none;
+    cursor:pointer;
+    color:var(--ink-faint);
+    font-weight:500;
+    transition:color .12s ease;
+  }
+  .card-actions button:hover{color:var(--ink);}
+  .card-actions button.del:hover{color:var(--danger);}
+  .empty{
+    grid-column:1 / -1;
+    text-align:center;
+    padding:56px 20px;
+    color:var(--ink-soft);
+    font-size:14px;
+    background:var(--bg);
+    border:1px solid var(--border);
+    border-radius:16px;
+  }
+  .empty b{color:var(--ink);}
+  .source-note{
+    font-size:12px;
+    color:var(--ink-faint);
+    margin-top:5px;
+  }
+  dialog{
+    border:none;
+    border-radius:10px;
+    padding:0;
+    width:min(480px,92vw);
+    background:var(--bg);
+    color:var(--ink);
+    box-shadow:0 12px 36px rgba(0,0,0,0.14);
+  }
+  dialog::backdrop{background:rgba(0,0,0,0.35);}
+  .modal-head{
+    display:flex;
+    justify-content:space-between;
+    align-items:center;
+    padding:18px 22px;
+    border-bottom:1px solid var(--border);
+  }
+  .modal-head h3{margin:0;font-size:16px;font-weight:600;}
+  .modal-head button{background:none;border:none;font-size:18px;cursor:pointer;color:var(--ink-soft);}
+  .modal-body{padding:20px 22px;display:flex;flex-direction:column;gap:14px;max-height:70vh;overflow-y:auto;}
+  .modal-foot{
+    padding:16px 22px;
+    border-top:1px solid var(--border);
+    display:flex;
+    justify-content:flex-end;
+    gap:8px;
+  }
+  .radio-row{display:flex;gap:16px;}
+  .radio-row label{
+    display:flex;align-items:center;gap:6px;
+    font-size:13.5px;font-weight:500;color:var(--ink-soft);
+  }
+  .hint{font-size:12px;color:var(--ink-faint);margin-top:-6px;}
+
+  /* Shown only when one of the data-*.js files fails to load (usually a typo). */
+  .data-warning{
+    border:1px solid var(--danger);
+    border-left:4px solid var(--danger);
+    background:var(--surface);
+    color:var(--ink);
+    padding:14px 16px;
+    margin:0 0 18px;
+    font-size:13.5px;
+    line-height:1.6;
+  }
+  .data-warning code{
+    font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
+    font-size:12.5px;
+    background:var(--bg);
+    border:1px solid var(--border);
+    padding:1px 5px;
+  }
+
+  /* Feedback strip after a visitor submits a workshop. */
+  .toast{
+    border:1px solid var(--border-strong);
+    border-left:4px solid var(--focus);
+    background:var(--surface);
+    color:var(--ink);
+    padding:14px 16px;
+    margin:0 0 18px;
+    font-size:13.5px;
+    line-height:1.6;
+  }
+  .toast.warn{ border-left-color:var(--nonagency); }
+
+  /* Marks a card the visitor added that hasn't been merged into the data files yet. */
+  .pending-flag{
+    display:inline-block;
+    border:1px dashed var(--focus);
+    color:var(--focus);
+    font-size:11.5px;
+    line-height:1.4;
+    padding:4px 9px;
+    margin:0 0 10px;
+  }
+
+  /* Tap-to-call and open-in-maps links on the workshop cards. */
+  .meta-row a.meta-link{
+    color:var(--ink-soft);
+    text-decoration:underline;
+    text-decoration-color:var(--border-strong);
+    text-underline-offset:3px;
+    transition:color .12s ease, text-decoration-color .12s ease;
+  }
+  .meta-row a.meta-link:hover{
+    color:var(--ink);
+    text-decoration-color:var(--ink);
+  }
+  .card-actions a.act{
+    font-size:12px;
+    font-weight:500;
+    color:var(--ink-faint);
+    text-decoration:none;
+    transition:color .12s ease;
+  }
+  .card-actions a.act:hover{ color:var(--ink); }
+  .card-actions a.act.call{ color:var(--agency); }
+  .card-actions a.act.call:hover{ opacity:.75; }
+
+  /* On touch screens the two primary actions get a bigger tap target. */
+  @media (hover:none){
+    .card-actions{gap:10px;flex-wrap:wrap;}
+    .card-actions a.act{
+      border:1px solid var(--border-strong);
+      padding:7px 14px;
+      color:var(--ink);
+    }
+    .card-actions a.act.call{
+      border-color:var(--agency);
+      color:var(--agency);
+    }
+  }
+
+  /* "Copy details" shares the .act look with Call and Directions. */
+  .card-actions button.act{
+    border:none;
+    background:none;
+    font-size:12px;
+    font-weight:500;
+    color:var(--ink-faint);
+    cursor:pointer;
+    padding:0;
+    transition:color .12s ease;
+  }
+  .card-actions button.act:hover{ color:var(--ink); }
+  @media (hover:none){
+    .card-actions button.act{
+      border:1px solid var(--border-strong);
+      padding:7px 14px;
+      color:var(--ink);
+    }
+  }
+
+  /* ==========================================================================
+     PHONE LAYOUT
+     Everything below 640px. The rules above are tuned for tablets and up.
+     ========================================================================== */
+  @media (max-width:640px){
+    body{padding:18px 13px 80px;}
+
+    header{margin-bottom:14px;}
+    header h1{font-size:19px;}
+    header p{font-size:13px;line-height:1.45;}
+
+    /* Tighter stat cells — four big boxes ate half the first screen. */
+    .stats-row{gap:8px;margin-bottom:10px;}
+    .stat-cell{padding:12px 13px;border-radius:12px;}
+    .stat-num{font-size:22px;margin-bottom:3px;}
+    .stat-label{font-size:11.5px;}
+
+    .panel{padding:14px;border-radius:12px;}
+    .filters{grid-template-columns:1fr;gap:10px;}
+
+    /* One card per row: 300px minimum columns left no breathing room. */
+    .grid{grid-template-columns:1fr;gap:10px;}
+    .card{padding:14px 15px 12px;border-radius:12px;}
+    .card-top h3{font-size:15.5px;}
+    .meta-row{font-size:13px;gap:5px 12px;}
+    .results-head{margin:4px 0 10px;}
+
+    /* 16px is the threshold below which iOS Safari zooms in on focus. */
+    input,select{height:44px;font-size:16px;}
+    .mega-trigger{height:50px;font-size:14px;}
+    .mega-make-seg input{height:50px;}
+  }
+
+  /* Long workshop names, addresses and insurer names can't push the layout
+     sideways on a narrow screen. */
+  .card-top h3, .meta-row, .tag, .source-note, .sub-fields dd{overflow-wrap:anywhere;}
+
+  /* Keep the filter bar reachable while scrolling a long result list. */
+  @media (max-width:640px){
+    .mega-bar{
+      position:sticky;
+      top:0;
+      z-index:40;
+      margin-left:-13px;
+      margin-right:-13px;
+      border-radius:0;
+      border-left:none;
+      border-right:none;
+    }
+  }
+
+  /* Touch devices: no hover effects, and real tap targets on every action. */
+  @media (hover:none){
+    .card:hover{box-shadow:none;transform:none;border-color:var(--border);}
+    .card-actions{gap:8px;flex-wrap:wrap;}
+    .card-actions button:not(.act){
+      border:1px solid var(--border-strong);
+      border-radius:8px;
+      padding:8px 14px;
+      color:var(--ink);
+      min-height:38px;
+    }
+    .card-actions a.act, .card-actions button.act{
+      border-radius:8px;
+      min-height:38px;
+      display:inline-flex;
+      align-items:center;
+    }
+    .card-actions button.del{color:var(--danger);}
+  }
+
+  /* The add/edit form becomes a bottom sheet — reachable with a thumb, and it
+     doesn't fight with the on-screen keyboard. */
+  @media (max-width:640px){
+    dialog{
+      width:100vw;
+      max-width:100vw;
+      margin:0;
+      position:fixed;
+      left:0;
+      right:0;
+      bottom:0;
+      top:auto;
+      max-height:92vh;
+      border-radius:16px 16px 0 0;
+    }
+    .modal-head{padding:16px;}
+    .modal-body{padding:16px;max-height:none;gap:13px;}
+    .modal-foot{
+      padding:12px 16px calc(12px + env(safe-area-inset-bottom));
+      position:sticky;
+      bottom:0;
+      background:var(--bg);
+      gap:10px;
+    }
+    .modal-foot button{flex:1;min-height:46px;font-size:15px;}
+    .radio-row{gap:12px;}
+    .radio-row label{min-height:38px;}
+  }
+
+  /* Jump back to the filters after scrolling through a few hundred cards. */
+  .to-top{
+    position:fixed;
+    right:14px;
+    bottom:calc(16px + env(safe-area-inset-bottom));
+    z-index:50;
+    width:46px;
+    height:46px;
+    border-radius:50%;
+    border:1px solid var(--border-strong);
+    background:var(--bg);
+    color:var(--ink);
+    font-size:17px;
+    line-height:1;
+    cursor:pointer;
+    box-shadow:0 4px 14px rgba(0,0,0,0.16);
+    opacity:0;
+    pointer-events:none;
+    transition:opacity .18s ease;
+  }
+  .to-top.show{opacity:1;pointer-events:auto;}
+  @media (min-width:641px){ .to-top{display:none;} }
+
+  /* ==========================================================================
+     CAR MAKE LOGOS
+     Real logo files live in the logos/ folder. Makes with no file get a
+     lettered badge in the brand colour, so nothing ever renders broken.
+     ========================================================================== */
+  .make-logo{
+    width:26px;
+    height:26px;
+    flex-shrink:0;
+    object-fit:contain;
+    border-radius:5px;
+    background:var(--surface);
+  }
+  .make-logo.fallback{
+    display:inline-flex;
+    align-items:center;
+    justify-content:center;
+    font-size:10px;
+    font-weight:700;
+    letter-spacing:0.02em;
+    color:#fff;
+    font-family:ui-monospace,SFMono-Regular,Menlo,monospace;
+  }
+  .make-logo.fallback.all{background:var(--ink-faint);font-size:8.5px;}
+  /* Applies to both the make list and the insurer list — scoping this under
+     .make-panel-list meant insurer rows lost their flex layout and the logo
+     sat flush against the name. */
+  .mega-panel-item.make-item{
+    display:flex;
+    align-items:center;
+    gap:12px;
+    text-align:left;
+  }
+  .make-name{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;}
+  .mega-make-seg{position:relative;}
+  #make-panel{left:auto;right:0;min-width:280px;}
+  @media (max-width:700px){ #make-panel{left:0;right:0;min-width:0;} }
+
+  /* ==========================================================================
+     CALL PICKER
+     ========================================================================== */
+  .call-intro{
+    margin:0 0 4px;
+    font-size:13px;
+    color:var(--ink-soft);
+    line-height:1.5;
+  }
+  .call-option{
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    gap:14px;
+    padding:14px 16px;
+    border:1px solid var(--border-strong);
+    border-radius:10px;
+    text-decoration:none;
+    color:var(--ink);
+    transition:border-color .12s ease, background .12s ease;
+  }
+  .call-option:hover{border-color:var(--focus);background:var(--surface);}
+  .call-number{
+    font-size:15px;
+    font-weight:600;
+    font-variant-numeric:tabular-nums;
+    overflow-wrap:anywhere;
+  }
+  .call-go{
+    flex-shrink:0;
+    font-size:12.5px;
+    font-weight:600;
+    color:var(--agency);
+    border:1px solid var(--agency);
+    border-radius:20px;
+    padding:5px 14px;
+  }
+  #call-modal .modal-body{gap:10px;}
+
+  /* ==========================================================================
+     TYPE TOGGLE
+     One button that cycles: all -> agency (green) -> non-agency (yellow).
+     Colours match the accent stripe on the cards.
+     ========================================================================== */
+  .type-cycle{
+    gap:9px;
+    min-width:158px;
+    justify-content:flex-start;
+    border-radius:14px 0 0 14px;
+    transition:background .16s ease, color .16s ease;
+  }
+  .type-dot{
+    width:11px;
+    height:11px;
+    border-radius:50%;
+    flex-shrink:0;
+    border:2px solid var(--ink-faint);
+    background:transparent;
+    transition:background .16s ease, border-color .16s ease, box-shadow .16s ease;
+  }
+  .type-cycle[data-state="agency"]{
+    background:var(--agency-tint);
+    color:var(--agency);
+  }
+  .type-cycle[data-state="agency"] .type-dot{
+    background:var(--agency);
+    border-color:var(--agency);
+    box-shadow:0 0 0 3px var(--agency-tint);
+  }
+  .type-cycle[data-state="nonagency"]{
+    background:var(--nonagency-tint);
+    color:var(--nonagency);
+  }
+  .type-cycle[data-state="nonagency"] .type-dot{
+    background:var(--nonagency);
+    border-color:var(--nonagency);
+    box-shadow:0 0 0 3px var(--nonagency-tint);
+  }
+  .type-cycle[data-state="agency"]:hover,
+  .type-cycle[data-state="nonagency"]:hover{filter:brightness(0.97);}
+  @media (max-width:700px){
+    .type-cycle{border-radius:0;width:100%;min-width:0;}
+  }
+
+  /* Insurer rows reuse the make-item layout, but names run long. */
+  #insurer-panel-list .make-name{
+    white-space:normal;
+    line-height:1.35;
+    font-size:13px;
+  }
+  #insurer-panel-list .mega-panel-item.make-item{
+    align-items:center;
+    gap:12px;
+    padding:9px 12px;
+  }

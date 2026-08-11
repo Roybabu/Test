@@ -1,0 +1,303 @@
+/* Board — Industrial dispatch board, plate strip
+   Stylesheet for this design only. Loaded when the visitor picks it.
+   Safe to edit: nothing else on the site uses these rules. */
+
+:root{
+  --asphalt:#D7D9D3;
+  --paper:#FFFFFF;
+  --ink:#111411;
+  --ink-2:#5B615B;
+  --rule:#C2C6BE;
+  --rule-2:#E4E6E1;
+  --flag-green:#00713C;
+  --flag-red:#C8102E;
+  --plate-black:#141614;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;padding:0;}
+body{
+  background:var(--asphalt);
+  color:var(--ink);
+  font-family:'Inter',-apple-system,BlinkMacSystemFont,Segoe UI,Roboto,sans-serif;
+  font-size:15px;
+  line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.shell{max-width:1080px;margin:0 auto;padding:0 18px 80px;}
+
+/* ---------- masthead ---------- */
+.masthead{
+  background:var(--plate-black);
+  color:#fff;
+  margin:0 -18px 0;
+  padding:18px 18px 16px;
+}
+.masthead-in{max-width:1080px;margin:0 auto;display:flex;align-items:center;gap:14px;flex-wrap:wrap;}
+.wordmark{
+  font-family:'Archivo',sans-serif;
+  font-weight:800;
+  font-size:26px;
+  letter-spacing:-0.02em;
+  text-transform:uppercase;
+  margin:0;
+  line-height:1;
+}
+.wordmark em{font-style:normal;color:var(--flag-red);}
+.masthead-note{
+  font-family:'Roboto Mono',monospace;
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:#9BA09A;
+  margin-left:auto;
+}
+
+/* ---------- plate strip ---------- */
+.strip-label{
+  font-family:'Roboto Mono',monospace;
+  font-size:11px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+  margin:26px 0 10px;
+}
+.plates{
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(104px,1fr));
+  gap:8px;
+}
+.plate{
+  appearance:none;
+  cursor:pointer;
+  background:var(--paper);
+  border:2px solid var(--plate-black);
+  border-radius:5px;
+  padding:7px 9px 8px;
+  text-align:left;
+  font-family:inherit;
+  display:block;
+  transition:background .12s ease, color .12s ease;
+}
+.plate-emirate{
+  font-family:'Archivo',sans-serif;
+  font-weight:700;
+  font-size:10px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--flag-red);
+  display:block;
+}
+.plate-count{
+  font-family:'Archivo',sans-serif;
+  font-weight:800;
+  font-size:24px;
+  line-height:1.05;
+  letter-spacing:-0.02em;
+  display:block;
+}
+.plate[aria-pressed="true"]{background:var(--plate-black);color:#fff;}
+.plate[aria-pressed="true"] .plate-emirate{color:#FF8095;}
+.plate:focus-visible{outline:3px solid var(--flag-red);outline-offset:2px;}
+
+/* ---------- controls ---------- */
+.controls{
+  margin-top:22px;
+  background:var(--paper);
+  border:1px solid var(--rule);
+  display:grid;
+  grid-template-columns:1.6fr 1fr;
+  gap:0;
+}
+.field{padding:12px 14px;border-right:1px solid var(--rule-2);}
+.field:last-child{border-right:0;}
+.field-label{
+  font-family:'Roboto Mono',monospace;
+  font-size:10px;
+  letter-spacing:.13em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+  display:block;
+  margin-bottom:5px;
+}
+.field input,.field select{
+  width:100%;
+  border:0;
+  background:transparent;
+  font-family:'Inter',sans-serif;
+  font-size:15px;
+  color:var(--ink);
+  padding:0;
+}
+.field input:focus,.field select:focus{outline:none;}
+.field:focus-within{background:#F7F8F6;}
+
+.segrow{
+  display:flex;
+  gap:0;
+  border:1px solid var(--rule);
+  border-top:0;
+  background:var(--paper);
+}
+.seg{
+  flex:1;
+  appearance:none;
+  cursor:pointer;
+  border:0;
+  border-right:1px solid var(--rule-2);
+  background:transparent;
+  padding:11px 8px;
+  font-family:'Archivo',sans-serif;
+  font-weight:600;
+  font-size:12px;
+  letter-spacing:.09em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+}
+.seg:last-child{border-right:0;}
+.seg[aria-pressed="true"]{background:var(--plate-black);color:#fff;}
+.seg:focus-visible{outline:3px solid var(--flag-red);outline-offset:-3px;}
+
+/* ---------- results ---------- */
+.tally{
+  font-family:'Roboto Mono',monospace;
+  font-size:11px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--ink-2);
+  margin:22px 0 9px;
+}
+.rows{border-top:1px solid var(--rule);}
+.row{
+  background:var(--paper);
+  border:1px solid var(--rule);
+  border-top:0;
+  display:grid;
+  grid-template-columns:6px 1fr 220px;
+  align-items:stretch;
+}
+.row-flag{background:var(--flag-green);}
+.row.is-nonagency .row-flag{background:var(--plate-black);}
+.row-main{padding:14px 16px;min-width:0;}
+.row-name{
+  font-family:'Archivo',sans-serif;
+  font-weight:700;
+  font-size:16.5px;
+  letter-spacing:-0.01em;
+  margin:0 0 5px;
+  line-height:1.25;
+}
+.row-addr{color:var(--ink-2);font-size:13.5px;margin:0 0 9px;}
+.tags{display:flex;flex-wrap:wrap;gap:5px;}
+.tag{
+  font-family:'Roboto Mono',monospace;
+  font-size:10.5px;
+  letter-spacing:.04em;
+  text-transform:uppercase;
+  border:1px solid var(--rule);
+  padding:2px 6px;
+  color:var(--ink-2);
+}
+.tag.is-panel{border-color:#9FB6A9;color:#2C5844;}
+.row-side{
+  border-left:1px solid var(--rule-2);
+  padding:14px 16px;
+  display:flex;
+  flex-direction:column;
+  justify-content:space-between;
+  gap:10px;
+}
+.kind{
+  font-family:'Archivo',sans-serif;
+  font-weight:700;
+  font-size:10.5px;
+  letter-spacing:.12em;
+  text-transform:uppercase;
+  color:var(--flag-green);
+}
+.row.is-nonagency .kind{color:var(--ink);}
+.tel{
+  font-family:'Roboto Mono',monospace;
+  font-size:12.5px;
+  color:var(--ink);
+  word-break:break-word;
+}
+.tel.is-empty{color:#9AA09A;}
+.maplink{color:inherit;text-decoration:underline;text-underline-offset:2px;}
+.maplink:hover{color:var(--flag-red);}
+.tel-link{font-family:'Roboto Mono',monospace;font-size:12.5px;color:var(--ink);text-decoration:underline;text-underline-offset:2px;}
+.row-acts{display:flex;gap:6px;flex-wrap:wrap;}
+.act{
+  appearance:none;cursor:pointer;background:var(--paper);border:1px solid var(--border-strong);
+  font-family:'Archivo',sans-serif;font-size:10.5px;font-weight:600;letter-spacing:.1em;
+  text-transform:uppercase;padding:5px 9px;color:var(--ink);text-decoration:none;display:inline-block;
+}
+.act:hover{background:var(--plate-black);color:#fff;border-color:var(--plate-black);}
+.act.is-off{color:var(--ink-faint);border-color:var(--border);cursor:default;}
+.empty{
+  background:var(--paper);
+  border:1px solid var(--rule);
+  border-top:0;
+  padding:34px 16px;
+  text-align:center;
+  color:var(--ink-2);
+}
+.empty strong{display:block;font-family:'Archivo',sans-serif;color:var(--ink);margin-bottom:4px;}
+.foot{
+  margin-top:26px;
+  font-family:'Roboto Mono',monospace;
+  font-size:11px;
+  color:var(--ink-2);
+  letter-spacing:.05em;
+}
+@media (max-width:720px){
+  .controls{grid-template-columns:1fr;}
+  .field{border-right:0;border-bottom:1px solid var(--rule-2);}
+  .row{grid-template-columns:6px 1fr;}
+  .row-side{
+    grid-column:2;
+    border-left:0;
+    border-top:1px solid var(--rule-2);
+    flex-direction:row;
+    align-items:center;
+    justify-content:flex-start;
+    gap:14px;
+    padding:10px 16px;
+  }
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+
+/* Each phone number on its own line — never a raw "04 111 2222 / 055 333 4444". */
+.tel-lines{display:flex;flex-direction:column;gap:3px;}
+.tel-line{display:block;}
+
+/* --- suggestions + insurer picker, in Board's language ------------------- */
+body .gf-sugg, body .gf-ins-panel{border-radius:0;border:2px solid var(--plate-black);background:var(--paper);}
+body .gf-sugg-row, body .gf-ins-row{font-family:'Inter',sans-serif;border-radius:0;}
+body .gf-sugg-kind{font-family:'Roboto Mono',monospace;color:var(--flag-red);}
+body .gf-sugg-row:hover, body .gf-sugg-row[aria-selected="true"], body .gf-ins-row:hover{background:#F1F2EF;}
+body .gf-ins-trigger{border-radius:0;border:1px solid var(--rule);background:var(--paper);}
+body .gf-ins-label{font-family:'Roboto Mono',monospace;font-size:10px;letter-spacing:.13em;text-transform:uppercase;color:var(--ink-2);}
+body .gf-ins-top h2{font-family:'Archivo',sans-serif;font-weight:800;text-transform:uppercase;letter-spacing:-.01em;}
+body .gf-ins-panel{border-radius:0;}
+body .gf-ins-grab{display:none;}
+body .gf-ins-x{border-radius:0;background:var(--plate-black);color:#fff;}
+body .gf-ins-search input{border-radius:0;border:2px solid var(--plate-black);background:var(--paper);}
+body .gf-ins-n{border-radius:0;font-family:'Roboto Mono',monospace;border:1px solid var(--rule);background:transparent;}
+body .gf-ins-row[aria-selected="true"]{background:var(--plate-black);color:#fff;}
+
+/* --- call sheet, Board: hard panel, plate rows, split-flap entrance ------ */
+body #gfCall .gf-sheet{background:var(--paper);border:2px solid var(--plate-black);border-radius:0;
+  padding:0;box-shadow:0 20px 40px -18px rgba(0,0,0,.6);
+  animation:gfcall-flap .32s cubic-bezier(.2,.8,.3,1) both;transform-origin:top center;}
+@keyframes gfcall-flap{from{opacity:0;transform:perspective(800px) rotateX(-68deg)}to{opacity:1;transform:none}}
+body #gfCall .gf-sheet-top{background:var(--plate-black);padding:12px 15px;margin:0;}
+body #gfCall h2{font-family:'Archivo',sans-serif;font-weight:800;text-transform:uppercase;color:#fff;font-size:15px;}
+body #gfCallClose{color:#fff;}
+body #gfCall .gf-sheet-note{font-family:'Roboto Mono',monospace;font-size:10px;letter-spacing:.16em;
+  text-transform:uppercase;color:var(--flag-red);margin:0;padding:11px 15px 0;}
+body #gfCall .gf-num{border-top:1px solid var(--rule);padding:11px 15px 13px;margin-top:11px;}
+body #gfCall .gf-num-txt{font-family:'Roboto Mono',monospace;font-size:15px;}
+body #gfCall .gf-num-btn{border:1px solid var(--plate-black);background:var(--paper);color:var(--ink);
+  border-radius:0;font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;}
+body #gfCall .gf-num-btn.is-call{background:var(--plate-black);color:#fff;}
+body #gfCall .gf-num-btn.is-wa{background:var(--flag-green);border-color:var(--flag-green);color:#fff;}

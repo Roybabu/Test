@@ -1,0 +1,138 @@
+/* Admin review page — loaded on top of styles.css, which supplies the palette. */
+
+.admin-gate{
+  border:1px solid var(--border);
+  background:var(--surface);
+  padding:22px;
+  max-width:440px;
+  margin:0 0 24px;
+}
+.admin-gate label{
+  display:block;
+  font-size:12px;
+  text-transform:uppercase;
+  letter-spacing:.08em;
+  color:var(--ink-soft);
+  margin-bottom:8px;
+}
+.admin-gate input{
+  width:100%;
+  padding:11px 12px;
+  border:1px solid var(--border-strong);
+  background:var(--bg);
+  color:var(--ink);
+  font-size:14px;
+  margin-bottom:12px;
+}
+.admin-gate input:focus{ outline:2px solid var(--focus); outline-offset:-2px; }
+.admin-gate .hint{ margin-top:12px; }
+
+.admin-toolbar{
+  display:flex;
+  flex-wrap:wrap;
+  gap:12px;
+  justify-content:space-between;
+  align-items:center;
+  margin-bottom:22px;
+}
+.admin-filters, .admin-actions, .export-tabs{ display:flex; flex-wrap:wrap; gap:8px; }
+.admin-filters button, .export-tabs button{
+  border:1px solid var(--border-strong);
+  background:var(--bg);
+  color:var(--ink-soft);
+  padding:8px 14px;
+  font-size:13px;
+  cursor:pointer;
+}
+.admin-filters button.active, .export-tabs button.active{
+  background:var(--ink);
+  color:var(--on-ink);
+  border-color:var(--ink);
+}
+
+.export-box{
+  border:1px solid var(--border);
+  background:var(--surface);
+  padding:20px;
+  margin-bottom:32px;
+}
+.export-head{ display:flex; justify-content:space-between; align-items:baseline; gap:12px; }
+.export-head h2{ font-size:16px; margin:0 0 4px; }
+.export-box .export-tabs{ margin:14px 0 12px; }
+.export-box textarea{
+  width:100%;
+  min-height:190px;
+  padding:14px;
+  border:1px solid var(--border-strong);
+  background:var(--bg);
+  color:var(--ink);
+  font-family:ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size:12.5px;
+  line-height:1.65;
+  white-space:pre;
+  resize:vertical;
+  margin-bottom:12px;
+}
+.export-box textarea:focus{ outline:2px solid var(--focus); outline-offset:-2px; }
+.export-box .hint{ margin-left:10px; }
+
+.sub-card{
+  border:1px solid var(--border);
+  border-left:3px solid var(--border-strong);
+  background:var(--bg);
+  padding:18px 20px;
+  margin-bottom:14px;
+}
+.sub-card.pending{ border-left-color:var(--focus); }
+.sub-card.merged{ border-left-color:var(--agency); }
+.sub-card.rejected{ border-left-color:var(--danger); opacity:.62; }
+
+.sub-head{ display:flex; justify-content:space-between; align-items:flex-start; gap:14px; }
+.sub-head h3{ font-size:15.5px; margin:0 0 6px; }
+.sub-meta{
+  display:flex; flex-wrap:wrap; gap:10px; align-items:center;
+  font-size:12.5px; color:var(--ink-soft);
+}
+.edit-flag{ color:var(--nonagency); }
+.sub-status{
+  font-size:11px; text-transform:uppercase; letter-spacing:.08em;
+  border:1px solid var(--border-strong); padding:3px 8px; color:var(--ink-soft);
+  white-space:nowrap;
+}
+.sub-status.pending{ color:var(--focus); border-color:var(--focus); }
+.sub-status.merged{ color:var(--agency); border-color:var(--agency); }
+.sub-status.rejected{ color:var(--danger); border-color:var(--danger); }
+
+.sub-fields{
+  display:grid;
+  grid-template-columns:110px 1fr;
+  gap:4px 14px;
+  margin:14px 0 0;
+  font-size:13.5px;
+}
+.sub-fields dt{ color:var(--ink-faint); font-size:12px; padding-top:2px; }
+.sub-fields dd{ margin:0; color:var(--ink); overflow-wrap:anywhere; }
+
+.sub-actions{ display:flex; flex-wrap:wrap; gap:8px; margin-top:16px; }
+.sub-actions button{
+  border:1px solid var(--border-strong);
+  background:var(--bg);
+  color:var(--ink-soft);
+  padding:6px 12px;
+  font-size:12.5px;
+  cursor:pointer;
+}
+.sub-actions button:hover{ border-color:var(--ink); color:var(--ink); }
+.sub-actions button.del:hover{ border-color:var(--danger); color:var(--danger); }
+
+@media (max-width:560px){
+  .sub-fields{ grid-template-columns:1fr; gap:2px; }
+  .sub-fields dt{ padding-top:8px; }
+  .admin-toolbar{ flex-direction:column; align-items:stretch; }
+}
+
+/* The admin header carries a link back to the directory; the public stylesheet
+   has no link styling because the public page has no links. */
+.wrap header{ display:flex; justify-content:space-between; align-items:flex-start; gap:14px; flex-wrap:wrap; }
+.wrap header a{ color:var(--focus); text-decoration:underline; text-underline-offset:2px; }
+.wrap header a:hover{ color:var(--ink); }

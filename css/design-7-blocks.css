@@ -1,0 +1,183 @@
+/* Blocks — Swiss colour blocks, band toolbar
+   Stylesheet for this design only. Loaded when the visitor picks it.
+   Safe to edit: nothing else on the site uses these rules. */
+
+:root{
+  --stone:#EDEBE4;
+  --ink:#111111;
+  --red:#E23E2C;
+  --blue:#1A4FD6;
+  --yellow:#F2C014;
+  --teal:#0F8A7E;
+  --violet:#6E4BD8;
+  --pink:#E0578F;
+  --sand:#C8873A;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;}
+body{
+  background:var(--stone);
+  color:var(--ink);
+  font-family:'Archivo',-apple-system,Segoe UI,Roboto,sans-serif;
+  font-size:15px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.frame{max-width:1120px;margin:0 auto;padding:0 20px 80px;}
+
+/* ---- masthead ---- */
+.mast{
+  display:grid;grid-template-columns:1fr auto;gap:0;
+  border-bottom:4px solid var(--ink);
+  padding:30px 0 18px;align-items:end;
+}
+.mast h1{
+  font-family:'Anton',sans-serif;font-weight:400;
+  font-size:clamp(44px,9vw,92px);line-height:.86;letter-spacing:-.01em;
+  text-transform:uppercase;margin:0;
+}
+.mast h1 span{color:var(--red);}
+.mast-side{
+  text-align:right;font-size:12px;font-weight:600;
+  letter-spacing:.16em;text-transform:uppercase;line-height:1.7;
+}
+
+/* ---- control band ---- */
+.band{display:grid;grid-template-columns:1fr;gap:0;border-bottom:4px solid var(--ink);}
+.band-row{display:flex;flex-wrap:wrap;border-bottom:2px solid var(--ink);}
+.band-row:last-child{border-bottom:0;}
+.band-label{
+  background:var(--ink);color:var(--stone);
+  padding:12px 16px;font-size:11px;font-weight:700;
+  letter-spacing:.18em;text-transform:uppercase;
+  display:flex;align-items:center;flex:none;min-width:112px;
+}
+.band-body{flex:1;display:flex;flex-wrap:wrap;min-width:200px;}
+.band-body input{
+  flex:1;min-width:180px;border:0;background:transparent;
+  font-family:'Archivo',sans-serif;font-size:17px;font-weight:500;
+  padding:12px 16px;color:var(--ink);
+}
+.band-body input:focus{outline:none;background:var(--yellow);}
+.blk{
+  appearance:none;cursor:pointer;border:0;border-right:2px solid var(--ink);
+  background:transparent;color:var(--ink);
+  padding:12px 15px;font-family:'Archivo',sans-serif;
+  font-size:12.5px;font-weight:700;letter-spacing:.09em;text-transform:uppercase;
+}
+.blk:last-child{border-right:0;}
+.blk[aria-pressed="true"]{background:var(--ink);color:var(--stone);}
+.blk:focus-visible{outline:3px solid var(--red);outline-offset:-3px;}
+.band-body select{
+  flex:1;min-width:180px;border:0;background:transparent;
+  font-family:'Archivo',sans-serif;font-size:15px;font-weight:600;
+  padding:12px 16px;color:var(--ink);
+}
+.band-body select:focus{outline:none;background:var(--yellow);}
+
+.count{
+  font-family:'Anton',sans-serif;font-size:15px;letter-spacing:.1em;
+  text-transform:uppercase;margin:22px 0 14px;
+}
+
+/* ---- tiles ---- */
+.grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(268px,1fr));gap:14px;}
+.tile{
+  border:3px solid var(--ink);
+  padding:0;display:flex;flex-direction:column;min-height:240px;
+  background:#fff;
+}
+.tile-head{
+  padding:14px 15px 15px;color:#fff;flex:none;
+  border-bottom:3px solid var(--ink);
+}
+.tile-kind{
+  font-size:10.5px;font-weight:700;letter-spacing:.18em;text-transform:uppercase;
+  margin:0 0 8px;opacity:.9;
+}
+.tile h2{
+  font-family:'Anton',sans-serif;font-weight:400;font-size:22px;line-height:1.03;
+  letter-spacing:.005em;text-transform:uppercase;margin:0;
+}
+.tile-body{padding:14px 15px;display:flex;flex-direction:column;gap:11px;flex:1;}
+.kv{font-size:13.5px;}
+.kv b{
+  display:block;font-size:10px;font-weight:700;letter-spacing:.16em;
+  text-transform:uppercase;color:#6C6C6C;margin-bottom:2px;
+}
+.marks{display:flex;flex-wrap:wrap;gap:5px;margin-top:auto;}
+.mark{
+  font-size:11px;font-weight:600;letter-spacing:.04em;text-transform:uppercase;
+  border:2px solid var(--ink);padding:2px 7px;
+}
+.tel{
+  font-family:'Anton',sans-serif;font-size:19px;letter-spacing:.02em;
+  border-top:3px solid var(--ink);padding:11px 15px;
+}
+.tel.blank{font-family:'Archivo',sans-serif;font-size:13px;font-weight:600;color:#6C6C6C;text-transform:uppercase;letter-spacing:.1em;}
+.kv a{color:var(--ink);text-decoration:underline;text-underline-offset:2px;}
+.tel a{color:inherit;text-decoration:none;}
+.tile-acts{display:flex;border-top:3px solid var(--ink);}
+.tbtn{
+  flex:1;appearance:none;cursor:pointer;background:#fff;border:0;border-right:3px solid var(--ink);
+  padding:11px 8px;font-family:'Archivo',sans-serif;font-size:11px;font-weight:700;
+  letter-spacing:.12em;text-transform:uppercase;color:var(--ink);text-decoration:none;text-align:center;
+}
+.tbtn:last-child{border-right:0;}
+.tbtn:hover{background:var(--yellow);}
+.tbtn.is-off{color:#9A9A9A;background:#F2F2F0;cursor:default;}
+.void{
+  border:3px solid var(--ink);background:var(--yellow);
+  padding:44px 22px;text-align:center;grid-column:1/-1;
+}
+.void h2{font-family:'Anton',sans-serif;font-size:26px;text-transform:uppercase;margin:0 0 8px;letter-spacing:.02em;}
+.void p{margin:0;font-weight:500;}
+.foot{
+  margin-top:28px;border-top:4px solid var(--ink);padding-top:12px;
+  font-size:11px;font-weight:700;letter-spacing:.16em;text-transform:uppercase;
+}
+@media (max-width:640px){
+  .mast{grid-template-columns:1fr;}
+  .mast-side{text-align:left;margin-top:12px;}
+  .band-label{width:100%;min-width:0;}
+}
+
+/* Each phone number on its own line — never a raw "04 111 2222 / 055 333 4444". */
+.tel-lines{display:flex;flex-direction:column;gap:3px;}
+.tel-line{display:block;}
+
+/* --- suggestions + insurer picker as slabs ------------------------------ */
+body .gf-sugg, body .gf-ins-panel{border-radius:0;border:3px solid var(--ink);background:#fff;}
+body .gf-sugg-row, body .gf-ins-row{border-radius:0;border-bottom:2px solid var(--ink);
+  font-family:'Archivo',sans-serif;font-weight:600;text-transform:uppercase;font-size:12.5px;letter-spacing:.06em;}
+body .gf-sugg-row:hover, body .gf-sugg-row[aria-selected="true"], body .gf-ins-row:hover{background:var(--yellow);}
+body .gf-sugg-kind{font-size:10px;letter-spacing:.14em;color:var(--red);}
+body .gf-ins-trigger{border-radius:0;border:2px solid var(--ink);background:#fff;
+  font-family:'Archivo',sans-serif;font-weight:600;text-transform:uppercase;letter-spacing:.08em;font-size:12.5px;}
+body .gf-ins-top{background:var(--red);color:#fff;padding:12px 14px;margin:0;}
+body .gf-ins-top h2{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;font-size:20px;}
+body .gf-ins-grab{display:none;}
+body .gf-ins-x{border-radius:0;background:transparent;border:2px solid #fff;color:#fff;}
+body .gf-ins-search input{border-radius:0;border:2px solid var(--ink);background:#fff;}
+body .gf-ins-n{border-radius:0;border:2px solid var(--ink);background:transparent;font-family:'Archivo',sans-serif;}
+body .gf-ins-row[aria-selected="true"]{background:var(--ink);color:#fff;}
+body .gf-ins-row[aria-selected="true"] .gf-ins-n{border-color:#fff;background:transparent;color:#fff;}
+
+/* --- call sheet, Blocks: slabs, wiped in sideways ------------------------ */
+body #gfCall .gf-sheet{background:var(--stone);border:3px solid var(--ink);border-radius:0;padding:0;
+  animation:gfcall-wipe .3s cubic-bezier(.6,0,.2,1) both;}
+@keyframes gfcall-wipe{from{clip-path:inset(0 100% 0 0)}to{clip-path:inset(0 0 0 0)}}
+body #gfCall .gf-sheet-top{background:var(--red);color:#fff;padding:13px 16px;border-bottom:3px solid var(--ink);margin:0;}
+body #gfCall h2{font-family:'Anton',sans-serif;font-weight:400;text-transform:uppercase;font-size:21px;color:#fff;}
+body #gfCallClose{color:#fff;border:2px solid #fff;width:26px;height:26px;font-size:15px;padding:0;
+  display:flex;align-items:center;justify-content:center;}
+body #gfCall .gf-sheet-note{font-family:'Archivo',sans-serif;font-weight:700;font-size:10px;letter-spacing:.18em;
+  text-transform:uppercase;color:var(--ink);margin:0;padding:12px 16px 0;}
+body #gfCall .gf-num{border:3px solid var(--ink);background:#fff;margin:12px 16px;padding:0;}
+body #gfCall .gf-num-txt{font-family:'Anton',sans-serif;font-weight:400;font-size:22px;color:var(--ink);
+  padding:11px 12px;margin:0;}
+body #gfCall .gf-num-acts{gap:0;border-top:3px solid var(--ink);}
+body #gfCall .gf-num-btn{border:0;border-right:3px solid var(--ink);background:#fff;color:var(--ink);
+  border-radius:0;font-family:'Archivo',sans-serif;font-size:10.5px;letter-spacing:.12em;text-transform:uppercase;}
+body #gfCall .gf-num-acts > :last-child{border-right:0;}
+body #gfCall .gf-num-btn.is-call{background:var(--yellow);}
+body #gfCall .gf-num-btn.is-wa{background:var(--teal);color:#fff;}

@@ -1,0 +1,176 @@
+/* Split Desk — List left, full record right
+   Stylesheet for this design only. Loaded when the visitor picks it.
+   Safe to edit: nothing else on the site uses these rules. */
+
+:root{
+  --bg:#F4F3F0;
+  --card:#FFFFFF;
+  --ink:#1A1E1D;
+  --ink-2:#5F6866;
+  --ink-3:#98A19E;
+  --line:#E3E2DD;
+  --teal:#0E5C55;
+  --teal-soft:#E2EFEC;
+  --amber:#9A6212;
+  --amber-soft:#F6EEDF;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;height:100%;}
+body{
+  background:var(--bg);color:var(--ink);
+  font-family:'DM Sans',-apple-system,Segoe UI,Roboto,sans-serif;
+  font-size:15px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+.desk{
+  max-width:1180px;margin:0 auto;padding:22px 20px 40px;
+  display:grid;grid-template-columns:minmax(0,1fr) 420px;gap:20px;
+  align-items:start;
+}
+
+/* ---- left column ---- */
+.head{margin-bottom:16px;}
+.head h1{font-size:20px;font-weight:700;letter-spacing:-.02em;margin:0 0 2px;}
+.head p{margin:0;font-family:'DM Mono',monospace;font-size:11.5px;letter-spacing:.08em;text-transform:uppercase;color:var(--ink-3);}
+
+.tools{
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:12px;margin-bottom:14px;
+  display:flex;flex-direction:column;gap:10px;
+}
+.tools input[type="search"]{
+  width:100%;border:1px solid var(--line);border-radius:9px;
+  padding:11px 13px;font-family:'DM Sans',sans-serif;font-size:15px;color:var(--ink);
+  background:var(--bg);
+}
+.tools input[type="search"]:focus{outline:2px solid var(--teal);outline-offset:-1px;border-color:transparent;}
+.toolrow{display:flex;gap:8px;flex-wrap:wrap;}
+.tab{
+  appearance:none;cursor:pointer;border:1px solid var(--line);background:var(--bg);
+  border-radius:8px;padding:7px 12px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;color:var(--ink-2);
+}
+.tab[aria-pressed="true"]{background:var(--ink);border-color:var(--ink);color:#fff;}
+.tab:focus-visible{outline:2px solid var(--teal);outline-offset:2px;}
+.tools select{
+  flex:1;min-width:150px;border:1px solid var(--line);border-radius:8px;
+  padding:7px 10px;background:var(--bg);font-family:'DM Sans',sans-serif;font-size:13px;color:var(--ink);
+}
+
+.tally{
+  font-family:'DM Mono',monospace;font-size:11px;letter-spacing:.1em;
+  text-transform:uppercase;color:var(--ink-3);margin:0 0 8px 2px;
+}
+.list{background:var(--card);border:1px solid var(--line);border-radius:12px;overflow:hidden;}
+.rowbtn{
+  width:100%;appearance:none;cursor:pointer;text-align:left;
+  border:0;border-bottom:1px solid var(--line);background:transparent;
+  padding:14px 15px;display:flex;gap:12px;align-items:center;
+  font-family:'DM Sans',sans-serif;
+}
+.rowbtn:last-child{border-bottom:0;}
+.rowbtn:hover{background:#FAFAF8;}
+.rowbtn[aria-current="true"]{background:var(--teal-soft);}
+.rowbtn:focus-visible{outline:2px solid var(--teal);outline-offset:-2px;}
+.dot{width:8px;height:8px;border-radius:50%;flex:none;background:var(--teal);}
+.rowbtn.is-nonagency .dot{background:var(--amber);}
+.rowtext{min-width:0;flex:1;}
+.rowtext strong{display:block;font-size:15px;font-weight:500;letter-spacing:-.01em;line-height:1.3;}
+.rowtext span{display:block;font-size:13px;color:var(--ink-2);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.rowmeta{
+  font-family:'DM Mono',monospace;font-size:11px;color:var(--ink-3);flex:none;
+  letter-spacing:.06em;text-transform:uppercase;
+}
+.emptylist{padding:40px 20px;text-align:center;color:var(--ink-2);}
+.emptylist strong{display:block;margin-bottom:5px;color:var(--ink);}
+
+/* ---- detail pane ---- */
+.pane{
+  position:sticky;top:22px;
+  background:var(--card);border:1px solid var(--line);border-radius:12px;
+  padding:22px;
+}
+.pane-kind{
+  display:inline-block;font-family:'DM Mono',monospace;font-size:10.5px;
+  letter-spacing:.14em;text-transform:uppercase;
+  background:var(--teal-soft);color:var(--teal);
+  padding:4px 9px;border-radius:6px;margin-bottom:12px;
+}
+.pane.is-nonagency .pane-kind{background:var(--amber-soft);color:var(--amber);}
+.pane h2{font-size:23px;font-weight:700;letter-spacing:-.025em;line-height:1.2;margin:0 0 6px;}
+.pane .where{color:var(--ink-2);font-size:14.5px;margin:0 0 20px;}
+.dl{border-top:1px solid var(--line);padding-top:16px;display:flex;flex-direction:column;gap:15px;}
+.dt{
+  font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);margin:0 0 4px;
+}
+.dd{margin:0;font-size:14.5px;}
+.dd.mono{font-family:'DM Mono',monospace;font-size:14px;}
+.dd.blank{color:var(--ink-3);}
+.taglist{display:flex;flex-wrap:wrap;gap:6px;}
+.tagx{
+  font-size:12.5px;background:var(--bg);border:1px solid var(--line);
+  border-radius:7px;padding:3px 9px;color:var(--ink-2);
+}
+.pane-actions{display:flex;gap:8px;margin-top:22px;}
+.act{
+  flex:1;appearance:none;cursor:pointer;border:1px solid var(--line);
+  background:var(--bg);color:var(--ink);border-radius:9px;padding:11px;
+  font-family:'DM Sans',sans-serif;font-size:14px;font-weight:500;
+  text-align:center;text-decoration:none;
+}
+.act.is-primary{background:var(--teal);border-color:var(--teal);color:#fff;}
+.act.is-off{color:var(--ink-3);cursor:default;}
+.act:focus-visible{outline:2px solid var(--teal);outline-offset:2px;}
+.pane .where a{color:var(--ink-2);text-decoration:underline;text-underline-offset:2px;}
+.pane .where a:hover{color:var(--teal);}
+.dd a{color:var(--ink);text-decoration:underline;text-underline-offset:2px;}
+.pane-hint{
+  margin-top:16px;padding-top:14px;border-top:1px solid var(--line);
+  font-size:12.5px;color:var(--ink-3);
+}
+.foot{
+  grid-column:1/-1;font-family:'DM Mono',monospace;font-size:10.5px;
+  letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);margin-top:8px;
+}
+@media (max-width:900px){
+  .desk{grid-template-columns:1fr;}
+  .pane{position:static;order:-1;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+
+/* Each phone number on its own line — never a raw "04 111 2222 / 055 333 4444". */
+.tel-lines{display:flex;flex-direction:column;gap:3px;}
+.tel-line{display:block;}
+
+/* --- suggestions + insurer picker, quiet ------------------------------- */
+body .gf-sugg, body .gf-ins-panel{border-radius:12px;border:1px solid var(--line);background:var(--card);}
+body .gf-sugg-row, body .gf-ins-row{font-family:'DM Sans',sans-serif;border-radius:9px;color:var(--ink);}
+body .gf-sugg-row:hover, body .gf-sugg-row[aria-selected="true"], body .gf-ins-row:hover{background:var(--bg);}
+body .gf-sugg-kind{font-family:'DM Mono',monospace;color:var(--faint);}
+body .gf-ins-trigger{border-radius:9px;border:1px solid var(--line);background:var(--bg);}
+body .gf-ins-label{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.13em;text-transform:uppercase;color:var(--faint);}
+body .gf-ins-top h2{font-family:'DM Sans',sans-serif;font-weight:700;letter-spacing:-.015em;}
+body .gf-ins-grab{background:var(--line);}
+body .gf-ins-x{background:var(--bg);color:var(--muted);}
+body .gf-ins-search input{border-radius:9px;border:1px solid var(--line);background:var(--bg);}
+body .gf-ins-n{font-family:'DM Mono',monospace;background:var(--bg);color:var(--muted);}
+body .gf-ins-row[aria-selected="true"]{background:var(--teal);color:#fff;}
+
+/* --- call sheet, Split Desk: quiet, it just settles ---------------------- */
+body #gfCall .gf-sheet{background:var(--card);border:1px solid var(--line);border-radius:12px;max-width:400px;
+  animation:gfcall-settle .28s cubic-bezier(.25,.8,.3,1) both;}
+@keyframes gfcall-settle{from{opacity:0;transform:translateY(12px)}to{opacity:1;transform:none}}
+body #gfCall h2{font-family:'DM Sans',sans-serif;font-weight:700;letter-spacing:-.015em;color:var(--ink);}
+body #gfCallClose{color:var(--ink-3);}
+body #gfCall .gf-sheet-note{font-family:'DM Mono',monospace;font-size:10.5px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-3);}
+body #gfCall .gf-num{border-top:1px solid var(--line);}
+body #gfCall .gf-num-txt{font-family:'DM Mono',monospace;font-size:14.5px;color:var(--ink);}
+body #gfCall .gf-num-btn{border:1px solid var(--line);background:var(--bg);color:var(--ink);border-radius:9px;
+  font-family:'DM Sans',sans-serif;font-size:13px;font-weight:500;}
+body #gfCall .gf-num-btn.is-call{background:var(--teal);border-color:var(--teal);color:#fff;}
+
+/* --- emirate as tabs, matching the type filter above -------------------- */
+#em.toolrow{gap:6px;}
+#em .tab{font-size:12.5px;padding:6px 11px;}

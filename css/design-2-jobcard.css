@@ -1,0 +1,288 @@
+/* Job Card — Carbon-copy repair order, ruled form
+   Stylesheet for this design only. Loaded when the visitor picks it.
+   Safe to edit: nothing else on the site uses these rules. */
+
+:root{
+  --ledger:#DEE6F0;
+  --sheet:#F7F9FC;
+  --ink:#1E2A63;
+  --ink-soft:#5B6893;
+  --ink-faint:#939CBC;
+  --rule:#BFCCE2;
+  --rule-soft:#D8E1EF;
+  --stamp:#A8202B;
+  --ok:#1D6B4F;
+}
+*{box-sizing:border-box;}
+html,body{margin:0;}
+body{
+  background:var(--ledger);
+  background-image:repeating-linear-gradient(to bottom,transparent 0 31px,rgba(94,120,168,.13) 31px 32px);
+  color:var(--ink);
+  font-family:'IBM Plex Sans',-apple-system,Segoe UI,Roboto,sans-serif;
+  font-size:15px;
+  line-height:1.55;
+  padding:0 16px 90px;
+  -webkit-font-smoothing:antialiased;
+}
+.sheet{
+  max-width:840px;
+  margin:0 auto;
+  background:var(--sheet);
+  border:1px solid var(--rule);
+  box-shadow:0 1px 0 #fff inset, 3px 3px 0 rgba(30,42,99,.10);
+}
+
+/* ---------- form header ---------- */
+.head{
+  border-bottom:2px solid var(--ink);
+  padding:20px 24px 16px;
+  display:flex;
+  align-items:flex-end;
+  gap:18px;
+  flex-wrap:wrap;
+}
+.head h1{
+  font-size:24px;
+  font-weight:700;
+  letter-spacing:-0.01em;
+  margin:0;
+  line-height:1.15;
+}
+.head-sub{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin:4px 0 0;
+}
+.formno{
+  margin-left:auto;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:.08em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  border:1px solid var(--rule);
+  padding:5px 9px;
+  line-height:1.3;
+  text-align:right;
+}
+
+/* ---------- filter fields ---------- */
+.fields{
+  padding:18px 24px 20px;
+  border-bottom:1px dashed var(--rule);
+  display:grid;
+  grid-template-columns:1fr 1fr;
+  gap:16px 22px;
+}
+.fields .wide{grid-column:1 / -1;}
+.lbl{
+  display:block;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:10.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  margin-bottom:3px;
+}
+.entry{
+  width:100%;
+  border:0;
+  border-bottom:1.5px solid var(--ink);
+  background:transparent;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:14.5px;
+  color:var(--ink);
+  padding:4px 2px 5px;
+  border-radius:0;
+}
+.entry:focus{outline:none;background:#FFF9D9;}
+select.entry{appearance:none;background-image:none;}
+
+.ticks{display:flex;gap:20px;padding-top:6px;flex-wrap:wrap;}
+.tick{
+  display:inline-flex;
+  align-items:center;
+  gap:7px;
+  cursor:pointer;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:12.5px;
+  letter-spacing:.05em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+}
+.tick .box{
+  width:15px;height:15px;
+  border:1.5px solid var(--ink);
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:12px;line-height:1;color:var(--stamp);font-weight:700;
+}
+.tick input{position:absolute;opacity:0;width:0;height:0;}
+.tick input:checked ~ .box::after{content:"×";}
+.tick input:checked ~ .txt{color:var(--ink);font-weight:600;}
+.tick input:focus-visible ~ .box{outline:2px solid var(--stamp);outline-offset:2px;}
+
+.counter{
+  padding:12px 24px;
+  border-bottom:1px solid var(--rule);
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11.5px;
+  letter-spacing:.1em;
+  text-transform:uppercase;
+  color:var(--ink-soft);
+  background:#EEF3FA;
+}
+
+/* ---------- entries ---------- */
+.entries{padding:0 24px 8px;}
+.card{
+  padding:20px 0 22px;
+  border-bottom:1px dashed var(--rule);
+  position:relative;
+}
+.card:last-child{border-bottom:0;}
+.card-top{display:flex;gap:14px;align-items:flex-start;}
+.card-no{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  color:var(--ink-faint);
+  padding-top:5px;
+  letter-spacing:.06em;
+}
+.card-name{
+  font-size:18px;
+  font-weight:600;
+  margin:0 0 2px;
+  letter-spacing:-0.01em;
+  line-height:1.3;
+}
+.stamp{
+  margin-left:auto;
+  flex:none;
+  border:2px solid var(--stamp);
+  color:var(--stamp);
+  font-family:'IBM Plex Mono',monospace;
+  font-weight:600;
+  font-size:10.5px;
+  letter-spacing:.14em;
+  text-transform:uppercase;
+  padding:4px 8px;
+  transform:rotate(-3.5deg);
+  opacity:.85;
+  white-space:nowrap;
+}
+.stamp.is-agency{border-color:var(--ok);color:var(--ok);}
+.grid{
+  margin:12px 0 0 30px;
+  display:grid;
+  grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:10px 26px;
+}
+.cell{border-bottom:1px dotted var(--rule);padding-bottom:5px;min-width:0;}
+.cell .lbl{margin-bottom:1px;}
+.val{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:13.5px;
+  color:var(--ink);
+  word-break:break-word;
+}
+.val.is-blank{color:var(--ink-faint);}
+.panel-list{margin:0;padding:0;list-style:none;}
+.panel-list li{
+  font-family:'IBM Plex Mono',monospace;
+  font-size:13px;
+  padding-left:14px;
+  position:relative;
+}
+.panel-list li::before{content:"▸";position:absolute;left:0;color:var(--ink-faint);}
+.val a{color:var(--ink);text-decoration:underline;text-underline-offset:2px;}
+.val a:hover{color:var(--stamp);}
+.card-acts{margin:14px 0 0 30px;display:flex;gap:8px;flex-wrap:wrap;}
+.fbtn{
+  appearance:none;cursor:pointer;background:transparent;border:1.5px solid var(--ink);
+  color:var(--ink);font-family:'IBM Plex Mono',monospace;font-size:11px;letter-spacing:.12em;
+  text-transform:uppercase;padding:6px 11px;text-decoration:none;display:inline-block;
+}
+.fbtn:hover{background:var(--ink);color:var(--sheet);}
+.fbtn.is-off{border-color:var(--rule);color:var(--ink-faint);cursor:default;}
+@media (max-width:640px){ .card-acts{margin-left:0;} }
+.void{
+  padding:40px 24px 46px;
+  text-align:center;
+  color:var(--ink-soft);
+}
+.void .stamp{display:inline-block;margin:0 0 10px;transform:rotate(-6deg);}
+.foot{
+  max-width:840px;
+  margin:14px auto 0;
+  font-family:'IBM Plex Mono',monospace;
+  font-size:11px;
+  letter-spacing:.08em;
+  color:var(--ink-soft);
+  text-transform:uppercase;
+}
+@media (max-width:640px){
+  .fields{grid-template-columns:1fr;}
+  .grid{margin-left:0;}
+  .stamp{margin-left:0;}
+  .card-top{flex-wrap:wrap;}
+}
+@media (prefers-reduced-motion:reduce){*{transition:none !important;}}
+
+/* Each phone number on its own line — never a raw "04 111 2222 / 055 333 4444". */
+.tel-lines{display:flex;flex-direction:column;gap:3px;}
+.tel-line{display:block;}
+
+/* --- suggestions + insurer picker, as form fields ----------------------- */
+body .gf-sugg, body .gf-ins-panel{border-radius:0;border:1px solid var(--rule);background:var(--sheet);}
+body .gf-sugg-row, body .gf-ins-row{font-family:'IBM Plex Sans',sans-serif;border-radius:0;color:var(--ink);
+  border-bottom:1px dotted var(--rule);}
+body .gf-sugg-kind{font-family:'IBM Plex Mono',monospace;letter-spacing:.14em;color:var(--ink-soft);}
+body .gf-sugg-row:hover, body .gf-sugg-row[aria-selected="true"], body .gf-ins-row:hover{background:#FFF9D9;}
+body .gf-ins-trigger{border-radius:0;border:0;border-bottom:1.5px solid var(--ink);background:transparent;padding-left:2px;}
+body .gf-ins-label{font-family:'IBM Plex Mono',monospace;font-size:10.5px;letter-spacing:.14em;text-transform:uppercase;color:var(--ink-soft);}
+body .gf-ins-value{font-family:'IBM Plex Mono',monospace;}
+body .gf-ins-top h2{font-family:'IBM Plex Sans',sans-serif;}
+body .gf-ins-grab{display:none;}
+body .gf-ins-x{border-radius:0;background:transparent;color:var(--ink-soft);border:1px solid var(--rule);}
+body .gf-ins-search input{border-radius:0;border:0;border-bottom:1.5px solid var(--ink);background:transparent;
+  font-family:'IBM Plex Mono',monospace;}
+body .gf-ins-n{border-radius:0;font-family:'IBM Plex Mono',monospace;background:transparent;border:1px solid var(--rule);}
+body .gf-ins-row[aria-selected="true"]{background:var(--ink);color:var(--sheet);}
+
+/* --- call sheet, Job Card: a call slip fed through the platen ------------ */
+body #gfCall .gf-sheet{background:var(--sheet);border:1px solid var(--rule);border-radius:0;
+  box-shadow:4px 4px 0 rgba(30,42,99,.12);animation:gfcall-feed .36s cubic-bezier(.2,.75,.3,1) both;}
+@keyframes gfcall-feed{from{opacity:0;transform:translateY(40px) skewY(.5deg)}to{opacity:1;transform:none}}
+body #gfCall .gf-sheet-top{border-bottom:2px solid var(--ink);padding-bottom:11px;}
+body #gfCall h2{font-family:'IBM Plex Sans',sans-serif;color:var(--ink);}
+body #gfCallClose{color:var(--ink-soft);}
+body #gfCall .gf-sheet-note{font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--ink-soft);padding-top:12px;}
+body #gfCall .gf-num{border-top:0;border-bottom:1px dashed var(--rule);}
+body #gfCall .gf-num-txt{font-family:'IBM Plex Mono',monospace;color:var(--ink);
+  border-bottom:1px dotted var(--rule);padding-bottom:5px;}
+body #gfCall .gf-num-btn{border:1.5px solid var(--ink);background:transparent;color:var(--ink);border-radius:0;
+  font-family:'IBM Plex Mono',monospace;font-size:10px;letter-spacing:.12em;text-transform:uppercase;}
+body #gfCall .gf-num-btn.is-call{background:var(--ink);color:var(--sheet);}
+body #gfCall .gf-num-btn.is-wa{background:transparent;border-color:var(--ok);color:var(--ok);}
+
+/* --- emirate as ticked form boxes, not a dropdown ----------------------- */
+button.tick{
+  appearance:none;border:0;background:transparent;cursor:pointer;padding:0;
+  display:inline-flex;align-items:center;gap:7px;
+  font-family:'IBM Plex Mono',monospace;font-size:12.5px;letter-spacing:.05em;
+  text-transform:uppercase;color:var(--ink-soft);
+}
+button.tick .box{
+  width:15px;height:15px;border:1.5px solid var(--ink);flex:none;
+  display:inline-flex;align-items:center;justify-content:center;
+  font-size:12px;line-height:1;color:var(--stamp);font-weight:700;
+}
+button.tick[aria-pressed="true"] .box::after{content:"\00d7";}
+button.tick[aria-pressed="true"] .txt{color:var(--ink);font-weight:600;}
+button.tick:focus-visible{outline:2px solid var(--stamp);outline-offset:3px;}
+#em.ticks{gap:14px 20px;padding-top:4px;}
