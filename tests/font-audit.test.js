@@ -1,0 +1,10 @@
+'use strict';
+const fs=require('fs'), path=require('path'), assert=require('assert');
+const root=path.join(__dirname,'..'); const core=fs.readFileSync(path.join(root,'core.js'),'utf8');
+const designs=fs.readdirSync(path.join(root,'css')).filter(x=>/^design-\d+-.+\.css$/.test(x));
+assert.strictEqual(designs.length,10);
+assert(core.includes('DESIGN_FONT_CSS'));
+assert(core.includes("jobcard: 'css/fonts/jobcard.css'"));
+assert(fs.existsSync(path.join(root,'css/fonts/jobcard.css')));
+assert(fs.existsSync(path.join(root,'docs/FONT-AUDIT.md')));
+console.log('font audit tests: PASS');

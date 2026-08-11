@@ -9,6 +9,10 @@
    [ and ] brackets, and fill it in. Keep the comma at the end.
 
      {
+       id:       "ws_XXXXXXXX", // keep this stable once assigned
+       lastVerified: "",
+       verificationStatus: "review",
+       source: "Source name or list",
        name:     "Workshop name",
        emirate:  "Dubai",
        address:  "Al Quoz Industrial Area 4, Dubai",
@@ -53,6 +57,11 @@
 const nonAgencyWorkshops = [
 
   {
+  id:      "ws_09d9a4b4",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company, United Fidelity Insurance Company)",
+
     name:     "Aarya Auto / Aarya Garage",
     emirate:  "Abu Dhabi",
     address:  "Musaffah M-40, Abu Dhabi",
@@ -66,6 +75,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_44f2ca2a",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Aarya Auto Repairs",
     emirate:  "Abu Dhabi",
     address:  "Abu Dhabi",
@@ -75,6 +89,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_f74c8bf8",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "Aarya Auto Repairs LLC",
     emirate:  "Abu Dhabi",
     address:  "Musaffah",
@@ -84,6 +103,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_d64b7505",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Al Arabia Auto Maintenance Workshop",
     emirate:  "Abu Dhabi",
     address:  "Al Maqta, Abu Dhabi",
@@ -96,6 +120,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_4cb83cc9",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Amigo Automotive Service LLC",
     emirate:  "Abu Dhabi",
     address:  "Abu Dhabi",
@@ -105,6 +134,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_092688be",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (United Fidelity Insurance Company)",
+
     name:     "Auto Trust",
     emirate:  "Abu Dhabi",
     address:  "Mussafah",
@@ -114,6 +148,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_48e7ac7e",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "Autosport LLC",
     emirate:  "Abu Dhabi",
     address:  "Musaffah",
@@ -123,6 +162,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_319d02a5",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "Challenge Car Service Center",
     emirate:  "Abu Dhabi",
     address:  "Al Ain",
@@ -132,6 +176,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_76b821d2",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Elite Motors Workshop LLC",
     emirate:  "Abu Dhabi",
     address:  "Abu Dhabi",
@@ -141,6 +190,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_809882f0",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (United Fidelity Insurance Company)",
+
     name:     "Elite Workshop",
     emirate:  "Abu Dhabi",
     address:  "Industrial Area, Al Ain",
@@ -150,6 +204,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_231d50db",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (United Fidelity Insurance Company)",
+
     name:     "Elite Workshop",
     emirate:  "Abu Dhabi",
     address:  "Mussafah",
@@ -159,6 +218,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_0b9d826d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Exotic Auto Services LLC",
     emirate:  "Abu Dhabi",
     address:  "Abu Dhabi",
@@ -168,6 +232,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_9cef8e25",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf, United Fidelity Insurance Company)",
+
     name:     "Grand Tourer / Grand Tourer Workshop",
     emirate:  "Abu Dhabi",
     address:  "Musaffah",
@@ -177,6 +246,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_fcd640e2",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Paradise Autocare Center",
     emirate:  "Abu Dhabi",
     address:  "Al Ain",
@@ -186,6 +260,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_7190e634",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Paradise Garage",
     emirate:  "Abu Dhabi",
     address:  "Al Ain",
@@ -195,6 +274,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_018474eb",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (United Fidelity Insurance Company)",
+
     name:     "RAK Arabia",
     emirate:  "Abu Dhabi",
     address:  "Mussafah",
@@ -204,6 +288,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_ac89a94f",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company, GIG Gulf)",
+
     name:     "Rafi Auto Workshop / Rafi Garage",
     emirate:  "Abu Dhabi",
     address:  "Musaffah",
@@ -216,6 +305,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_24dc8755",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Smart Autocare LLC",
     emirate:  "Abu Dhabi",
     address:  "Musaffah M-13, Abu Dhabi",
@@ -225,6 +319,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_b16cbe85",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Triple S Garage",
     emirate:  "Abu Dhabi",
     address:  "Musaffah M-13, Abu Dhabi",
@@ -234,6 +333,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_2a89d4a7",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (United Fidelity Insurance Company)",
+
     name:     "World Linck",
     emirate:  "Abu Dhabi",
     address:  "Industrial Area, Al Ain",
@@ -243,6 +347,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_e1f61ab0",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "World Link Auto Centre",
     emirate:  "Abu Dhabi",
     address:  "Al Ain",
@@ -252,6 +361,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_4819198d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Al Arabia Auto Maintenance Workshop",
     emirate:  "Ajman",
     address:  "Al Rashidiya 1, Ajman",
@@ -264,6 +378,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_07cc21ed",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Amari Cars Maintenance",
     emirate:  "Ajman",
     address:  "Ajman",
@@ -273,6 +392,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_93569ccd",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (United Fidelity Insurance Company)",
+
     name:     "Motor World",
     emirate:  "Ajman",
     address:  "Ajman",
@@ -285,6 +409,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_1cc84015",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "A.R Garage",
     emirate:  "Dubai",
     address:  "Umm Ramoul/Rashdiya/Ras Al Khor",
@@ -294,6 +423,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_9ad179a6",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "AG Cars",
     emirate:  "Dubai",
     address:  "Deira/Quasis",
@@ -303,6 +437,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_59e6d587",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Aarya Auto Repairs",
     emirate:  "Dubai",
     address:  "Al Quoz",
@@ -312,6 +451,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_03574b34",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Aarya Garage",
     emirate:  "Dubai",
     address:  "Ind 4, Al Quoz",
@@ -321,6 +465,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_d3bf983c",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Al Arabia Auto Maintenance Workshop Al Quoz",
     emirate:  "Dubai",
     address:  "Al Qouz, Dubai",
@@ -333,6 +482,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_1c3afa6d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Al Emad Auto Workshop LLC",
     emirate:  "Dubai",
     address:  "Al Quoz",
@@ -342,6 +496,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_d305512d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Al Kayed Workshop",
     emirate:  "Dubai",
     address:  "Deira",
@@ -351,6 +510,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_f3bcfe5b",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Al Sahari Garage",
     emirate:  "Dubai",
     address:  "Umm Ramoul/Rashdiya/Ras Al Khor",
@@ -360,6 +524,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_c086c0b8",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "Auto Glass Middle East LLC",
     emirate:  "Dubai",
     address:  "Al Quoz",
@@ -369,6 +538,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_2e80e058",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Auto Tech Automotives",
     emirate:  "Dubai",
     address:  "Ras Al Khor",
@@ -382,6 +556,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_98644597",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (United Fidelity Insurance Company)",
+
     name:     "Auto Trust",
     emirate:  "Dubai",
     address:  "Ras Al Khoor",
@@ -391,6 +570,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_2325fb7e",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Autodeal Automotive Service",
     emirate:  "Dubai",
     address:  "Umm Ramoul/Rashdiya/Ras Al Khor",
@@ -400,6 +584,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_a8aa732c",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "Autosport LLC",
     emirate:  "Dubai",
     address:  "Al Quoz",
@@ -409,6 +598,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_22735940",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Autotrust Dubai",
     emirate:  "Dubai",
     address:  "Ras Al Khor Industrial Area 1",
@@ -418,6 +612,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_ba232743",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company, Tokio Marine)",
+
     name:     "Axis Auto Garage",
     emirate:  "Dubai",
     address:  "Al Quoz",
@@ -430,6 +629,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_dc318d78",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "Bobber & Chopper Motorcycles Repairing LLC",
     emirate:  "Dubai",
     address:  "Dubai",
@@ -439,6 +643,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_48f07373",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Boby Auto Garage",
     emirate:  "Dubai",
     address:  "Umm Ramool, Dubai",
@@ -451,6 +660,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_44b09e6f",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (United Fidelity Insurance Company)",
+
     name:     "Burj Al Arab",
     emirate:  "Dubai",
     address:  "Dubai/Deira Al Khubaisi",
@@ -460,6 +674,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_31e92698",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "CAM Auto Centre",
     emirate:  "Dubai",
     address:  "Dubai Investment Park - 1",
@@ -469,6 +688,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_98e5b405",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "Emirates Transport",
     emirate:  "Dubai",
     address:  "Dubai",
@@ -481,6 +705,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_b6368d36",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (United Fidelity Insurance Company)",
+
     name:     "Frankfurt Auto Dubai",
     emirate:  "Dubai",
     address:  "Al Rashidia, Dubai",
@@ -490,6 +719,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_5f5bf105",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company, GIG Gulf)",
+
     name:     "Gargash Auto Repair / Gargash Auto Repair Workshop Al Qusais",
     emirate:  "Dubai",
     address:  "Al Qusais",
@@ -504,6 +738,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_aedf010d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company, GIG Gulf)",
+
     name:     "Gargash Auto Repair / Gargash Auto Repair Workshop Al Quoz",
     emirate:  "Dubai",
     address:  "Al Quoz",
@@ -517,6 +756,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_a44b253f",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Golden Workshop",
     emirate:  "Dubai",
     address:  "Umm Ramoul/Rashdiya/Ras Al Khor",
@@ -526,6 +770,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_a142ab92",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Golden Workshop Car Repairing",
     emirate:  "Dubai",
     address:  "24b, Dubai",
@@ -535,6 +784,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_edf7e227",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Hotline Auto Workshop",
     emirate:  "Dubai",
     address:  "Umm Ramool, Dubai",
@@ -544,6 +798,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_59245ba9",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (United Fidelity Insurance Company)",
+
     name:     "Jahan",
     emirate:  "Dubai",
     address:  "Al Rashidia, Dubai",
@@ -553,6 +812,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_4e07246d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "King Road Garage",
     emirate:  "Dubai",
     address:  "Muhaisnah 4, Al Qusais",
@@ -562,6 +826,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_200cc968",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Liwa Automobile Services",
     emirate:  "Dubai",
     address:  "Al Quoz",
@@ -571,6 +840,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_23edea38",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "Majestic Car Care LLC",
     emirate:  "Dubai",
     address:  "Al Quoz",
@@ -580,6 +854,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_2fc656d0",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Mohd. Ishaq Khan Garage",
     emirate:  "Dubai",
     address:  "Al Qusais Industrial Area No. 1",
@@ -589,6 +868,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_3667bd0a",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf, United Fidelity Insurance Company)",
+
     name:     "N K Auto Maint Workshop / NK Auto",
     emirate:  "Dubai",
     address:  "Al Quoz",
@@ -598,6 +882,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_a098e301",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "PAL Auto Garage",
     emirate:  "Dubai",
     address:  "Al Quoz",
@@ -607,6 +896,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_305a45b6",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "PAL Auto Garage",
     emirate:  "Dubai",
     address:  "Deira",
@@ -616,6 +910,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_130cdc8b",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "PAL Platina",
     emirate:  "Dubai",
     address:  "DIP",
@@ -625,6 +924,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_5344fadd",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Perfect Shine Auto Care Center",
     emirate:  "Dubai",
     address:  "Al Quoz",
@@ -634,6 +938,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_379bc96f",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Platinum Motor Cars Repairing",
     emirate:  "Dubai",
     address:  "Quasis",
@@ -643,6 +952,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_f1aff9d9",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "Prime Max Auto Maintenance",
     emirate:  "Dubai",
     address:  "Al Quoz",
@@ -652,6 +966,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_a32b1081",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company, GIG Gulf)",
+
     name:     "Regent Mechanical Service LLC / Regent Mechanical Services LLC",
     emirate:  "Dubai",
     address:  "Al Quoz",
@@ -664,6 +983,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_b25179d5",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Rover Auto Centre",
     emirate:  "Dubai",
     address:  "Al Quoz Industrial Area 4 - Dubai",
@@ -673,6 +997,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_2e8ceaca",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Smart Auto Care LLC AL Quoz",
     emirate:  "Dubai",
     address:  "Ashok Leyland Service Centre - 29 9B Street - Al Quoz - Dubai",
@@ -685,6 +1014,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_78aa3fb1",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Smart Auto Care LLC Rashidiya",
     emirate:  "Dubai",
     address:  "PBNO 1200 - 13 8b St - Al Rashidiya - Dubai",
@@ -694,6 +1028,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_b4060c47",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Star Square Deal Motors",
     emirate:  "Dubai",
     address:  "Al Quoz",
@@ -703,6 +1042,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_7d8c003f",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Top Gear Services",
     emirate:  "Dubai",
     address:  "Umm Ramoul/Rashdiya/Ras Al Khor",
@@ -712,6 +1056,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_aad3217c",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "United Motors Auto Workshop",
     emirate:  "Dubai",
     address:  "Umm Ramoul/Rashdiya/Ras Al Khor",
@@ -721,6 +1070,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_832c5b7c",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine, United Fidelity Insurance Company)",
+
     name:     "Vertex Auto / Vertex Auto Service Center LLC",
     emirate:  "Dubai",
     address:  "Ras Al Khor",
@@ -730,6 +1084,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_bd3d73c6",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf, Tokio Marine)",
+
     name:     "Al Shaji Auto Rep. Workshop",
     emirate:  "Fujairah",
     address:  "Fujairah",
@@ -739,6 +1098,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_13f5d514",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine, United Fidelity Insurance Company)",
+
     name:     "Emirates Transport",
     emirate:  "Fujairah",
     address:  "Al Hail, Fujairah",
@@ -752,6 +1116,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_b3a5459f",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "MK Motors",
     emirate:  "Fujairah",
     address:  "Fujairah",
@@ -761,6 +1130,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_7f5464fd",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "AG Cars (RAK)",
     emirate:  "Ras Al Khaimah",
     address:  "RAK",
@@ -770,6 +1144,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_db046570",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Al Arabia Auto Maintenance RAK",
     emirate:  "Ras Al Khaimah",
     address:  "Ras Al Khaimah",
@@ -779,6 +1158,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_9fd151a9",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (United Fidelity Insurance Company)",
+
     name:     "Burj Al Arab",
     emirate:  "Ras Al Khaimah",
     address:  "Ras Al Khaimah",
@@ -788,6 +1172,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_04d0121a",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company, GIG Gulf)",
+
     name:     "Lamsi Garage",
     emirate:  "Ras Al Khaimah",
     address:  "Ras Al Khaimah",
@@ -800,6 +1189,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_234a17c2",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine, United Fidelity Insurance Company)",
+
     name:     "RAK Arabia / RAK Arabia Auto Services",
     emirate:  "Ras Al Khaimah",
     address:  "RAK",
@@ -809,6 +1203,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_6b3c328f",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (United Fidelity Insurance Company)",
+
     name:     "Red Fox",
     emirate:  "Ras Al Khaimah",
     address:  "Ras Al Khaimah",
@@ -818,6 +1217,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_7b014251",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company, GIG Gulf, Tokio Marine)",
+
     name:     "Al Arabia (Auto Maintenance) / Al Arabia Auto Maint Workshop / Al Arabia Auto Maintenance Workshop LLC SP",
     emirate:  "Sharjah",
     address:  "Industrial 17, Sharjah",
@@ -831,6 +1235,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_042ed9b9",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Al Deema Auto Maint. Workshop",
     emirate:  "Sharjah",
     address:  "Sharjah",
@@ -840,6 +1249,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_39edb3c0",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Al Mamlkah Garage",
     emirate:  "Sharjah",
     address:  "Sharjah",
@@ -849,6 +1263,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_c1487ecc",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "Bin Sandal Mechanical Station",
     emirate:  "Sharjah",
     address:  "Sharjah",
@@ -858,6 +1277,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_96edf997",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "Dhanya Auto Care Center",
     emirate:  "Sharjah",
     address:  "Sharjah",
@@ -867,6 +1291,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_3ecc4ca5",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (United Fidelity Insurance Company)",
+
     name:     "Frankfurt Auto Services",
     emirate:  "Sharjah",
     address:  "Sharjah",
@@ -876,6 +1305,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_5b164a0c",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "Gear One Auto Maint",
     emirate:  "Sharjah",
     address:  "Sharjah",
@@ -885,6 +1319,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_3eb36865",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (United Fidelity Insurance Company)",
+
     name:     "NK Auto",
     emirate:  "Sharjah",
     address:  "Sharjah",
@@ -894,6 +1333,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_135e2c16",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "Nasir Kalaji Auto Maint",
     emirate:  "Sharjah",
     address:  "Sharjah",
@@ -903,6 +1347,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_749eba6a",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Tokio Marine)",
+
     name:     "North Star Auto Maintenance",
     emirate:  "Sharjah",
     address:  "Sharjah",
@@ -912,6 +1361,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_4df61519",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company, GIG Gulf, Tokio Marine)",
+
     name:     "Samrah Auto Repairing / Samrah Auto Repairing Workshop / Samrah Auto Repairing Workshop LLC",
     emirate:  "Sharjah",
     address:  "Industrial Area 12, Sharjah",
@@ -925,6 +1379,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_d8c2cd5c",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (GIG Gulf)",
+
     name:     "Smart Auto Care",
     emirate:  "Sharjah",
     address:  "Sharjah",
@@ -934,6 +1393,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_2edb34d0",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "insurer garage lists (Dubai National Insurance & Reinsurance Company)",
+
     name:     "Smart Autocare LLC",
     emirate:  "Sharjah",
     address:  "Industrial Area No 6, Sharjah",
@@ -943,6 +1407,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_82c18663",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "AutoGlass",
     emirate:  "Dubai",
     address:  "Sheikh Zayed Road Times Square Service Road, Warehouse 4, Al Quoz, Dubai",
@@ -952,6 +1421,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_31a90ff7",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "Motor World Workshop LLC (Al Kayed)",
     emirate:  "Dubai",
     address:  "13 9B street, Al Quoz Industrial Area 3, Dubai",
@@ -961,6 +1435,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_141ba229",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "Denso Auto Repairing Workshop",
     emirate:  "Dubai",
     address:  "34th Aman Street, Al Qusais Industrial Area 5, Dubai",
@@ -970,6 +1449,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_bc5e16e8",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "Elite Motors Workshop LLC",
     emirate:  "Abu Dhabi",
     address:  "Al Lujayn, 7th Street, Sanaya, Al Ain",
@@ -979,6 +1463,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_4504fb15",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "AG Car Services",
     emirate:  "Abu Dhabi",
     address:  "13th Street, M 37, Abu Dhabi",
@@ -988,6 +1477,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_c9be7454",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "Emirates Transport",
     emirate:  "Abu Dhabi",
     address:  "Musaffah M-40, Opposite Three Star Gift, Abu Dhabi",
@@ -997,6 +1491,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_b712cc86",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "Alsa Automotive Engineering",
     emirate:  "Abu Dhabi",
     address:  "Mussafah Industrial Area, M39, Abu Dhabi",
@@ -1006,6 +1505,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_362a5e11",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "Elite Motors Workshop LLC (Al Kayed)",
     emirate:  "Abu Dhabi",
     address:  "Musaffah, M-11, Abu Dhabi",
@@ -1015,6 +1519,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_f0dff01d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "2000 Auto Workshop",
     emirate:  "Abu Dhabi",
     address:  "12th Street, Musaffah, M-33, Abu Dhabi",
@@ -1024,6 +1533,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_4f5dd4eb",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "Dharagima Auto",
     emirate:  "Abu Dhabi",
     address:  "Musaffah, M-9, Abu Dhabi",
@@ -1036,6 +1550,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_1b085592",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "Smart Auto Care",
     emirate:  "Abu Dhabi",
     address:  "Swaidhan Trading LLC, Abu Dhabi",
@@ -1045,6 +1564,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_0cefeb4f",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "Emirates Transport",
     emirate:  "Ajman",
     address:  "Al Jurf No. 1, opposite International Indian School, Ajman",
@@ -1054,6 +1578,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_5a93d819",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "Al Arabia Auto Services",
     emirate:  "Ras Al Khaimah",
     address:  "Al Dhaid South, behind RAK Transport Authority, Ras Al Khaimah",
@@ -1063,6 +1592,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_2b20482d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "Emirates Transport",
     emirate:  "Ras Al Khaimah",
     address:  "Al Sharisha Area, after Julfar Traffic Signal, Ras Al Khaimah",
@@ -1072,6 +1606,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_10e9ce79",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "AG Cars Services",
     emirate:  "Sharjah",
     address:  "Industrial Area 13, near Ramez Hyper Market, Sharjah",
@@ -1081,6 +1620,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_7d937a17",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "Al Arabia Auto Services",
     emirate:  "Sharjah",
     address:  "Industrial Area No.17, Ardh Al Maahed, Sharjah",
@@ -1090,6 +1634,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_4782bd4b",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "Emirates Transport - Luxury",
     emirate:  "Sharjah",
     address:  "Industrial Area 12, opposite FEWA, Sharjah",
@@ -1099,6 +1648,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_a463a96f",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Sukoon's Key Partner Garage list",
+
     name:     "Al Amana Auto Wash & Repair Garage",
     emirate:  "Sharjah",
     address:  "St. No.10, Behind Geco Complex, Maleha St, Sharjah",
@@ -1108,6 +1662,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_44f54d3d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Alshoala Mechanical Workshop L.L.C",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1117,6 +1676,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_3d0b7902",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "National Tech Auto Services - L.L.C - S.P.C",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1126,6 +1690,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_4ac174af",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Technical Elite Auto Repairing Workshop",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1135,6 +1704,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_9412763e",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "E Trust Motors Auto Repair",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1144,6 +1718,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_07327fde",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Al Jars Al Feddi Car Services Center L.L.C",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1153,6 +1732,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_54e29e29",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "New Castle Auto Repair Garage L.L.C",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1162,6 +1746,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_ca4c07f8",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Corniche Auto Repair Workshop",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1171,6 +1760,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_3fb210e8",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Al Rida Automechanical Repairs",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1180,6 +1774,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_7205d7b3",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Alshatie Auto Services Workshop L.L.C",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1189,6 +1788,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_6a7006d6",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Al Mubashir Auto Repair Workshop L.L.C",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1198,6 +1802,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_45eadb15",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Seapal Auto Repairs",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1207,6 +1816,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_38602dd0",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Zodiac Automobile Repair Sole Proprietorship L.L.C",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1216,6 +1830,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_1ff2ecf6",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Al Karnak Auto Repair Car Services",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1225,6 +1844,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_9e672900",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Al Ogaily Auto Repair Workshop",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1234,6 +1858,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_119f7ceb",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Grand Tourer Workshop",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1243,6 +1872,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_23cafa94",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Smart Motor Auto Repair",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1252,6 +1886,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_d3b02102",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Skyline Auto Repair Workshop L.L.C",
     emirate:  "Abu Dhabi",
     address:  "MUSSAFAH",
@@ -1261,6 +1900,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_548112c3",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Dynatrade Auto Services Centre LLC",
     emirate:  "Abu Dhabi",
     address:  "MAFRAQ",
@@ -1270,6 +1914,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_e54dd615",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Run And Drive Main. & Gen. Repair Of Vehicles L.L.C",
     emirate:  "Dubai",
     address:  "RASHIDIYA",
@@ -1279,6 +1928,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_c5e78b1c",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Abdulhafidh Aljassmi Garage",
     emirate:  "Dubai",
     address:  "AL QUSAIS",
@@ -1288,6 +1942,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_62f59deb",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Autozone Motors Workshop",
     emirate:  "Dubai",
     address:  "RASHIDIYA",
@@ -1297,6 +1956,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_c8589d5c",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Dynatrade Auto Services Centre LLC",
     emirate:  "Dubai",
     address:  "Nad Al Hamar",
@@ -1306,6 +1970,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_4607f0ef",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Dynatrade Auto Services Centre LLC",
     emirate:  "Dubai",
     address:  "AL QUOZ",
@@ -1315,6 +1984,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_03740078",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Regent Mechanical Services",
     emirate:  "Dubai",
     address:  "AL QUOZ",
@@ -1324,6 +1998,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_5bc7a510",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Al Raya Al Bayda Workshop",
     emirate:  "Sharjah",
     address:  "SHARJAH",
@@ -1333,6 +2012,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_497d8670",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Sayda Car Repairing Workshop",
     emirate:  "Sharjah",
     address:  "SHARJAH",
@@ -1342,6 +2026,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_87d54617",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Arizona Auto Repairs Workshop",
     emirate:  "Sharjah",
     address:  "SHARJAH",
@@ -1351,6 +2040,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_7b840395",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Dynatrade Auto Services Centre LLC",
     emirate:  "Sharjah",
     address:  "SHARJAH",
@@ -1360,6 +2054,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_ce09cb21",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Paradise Auto Care Centre L.L.C",
     emirate:  "Abu Dhabi",
     address:  "AL AIN",
@@ -1369,6 +2068,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_126761f9",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Al Baroon Garage",
     emirate:  "Abu Dhabi",
     address:  "AL AIN",
@@ -1378,6 +2082,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_49911ab2",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Extra Zoom Auto Repair",
     emirate:  "Abu Dhabi",
     address:  "AL AIN",
@@ -1387,6 +2096,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_b1a6376d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Al Jaddaf Auto Garage L.L.C",
     emirate:  "Abu Dhabi",
     address:  "AL AIN",
@@ -1396,6 +2110,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_ec0fd762",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Al Bawadi Garage",
     emirate:  "Abu Dhabi",
     address:  "AL AIN",
@@ -1405,6 +2124,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_a3cc5949",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Dynatrade Auto Services Centre LLC",
     emirate:  "Abu Dhabi",
     address:  "AL AIN",
@@ -1414,6 +2138,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_a7ef924a",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Car Center Garage",
     emirate:  "Ras Al Khaimah",
     address:  "RAK",
@@ -1423,6 +2152,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_8aa62e3d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "AG Cars",
     emirate:  "Ras Al Khaimah",
     address:  "RAK",
@@ -1432,6 +2166,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_6223268d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Burj Al Arab Auto Care",
     emirate:  "Ras Al Khaimah",
     address:  "RAK",
@@ -1441,6 +2180,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_9b92eaac",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Online Garage",
     emirate:  "Ajman",
     address:  "AJMAN",
@@ -1450,6 +2194,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_0e3d5b27",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Abdulhafidh Aljassmi Garage",
     emirate:  "Umm Al Quwain",
     address:  "U.A.Q",
@@ -1459,6 +2208,11 @@ const nonAgencyWorkshops = [
   },
 
   {
+  id:      "ws_01f7cfb3",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Insurance House's garage list — used for both EV and ICE claims (Insurance House does not maintain separate networks for the two)",
+
     name:     "Dynatrade Auto Services Centre LLC",
     emirate:  "Abu Dhabi",
     address:  "AL RUWAIS",

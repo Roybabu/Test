@@ -1,0 +1,20 @@
+<!doctype html><meta charset="utf-8"><title>Design lifecycle regression harness</title>
+<p id="result">Running…</p>
+<script>
+(async()=>{
+  const src=await fetch('../core.js').then(r=>r.text());
+  const checks=[
+    ['mount token guards', (src.match(/seq !== mountSeq/g)||[]).length>=4],
+    ['destroy on remount', src.includes('previous.destroy()')],
+    ['stylesheet timeout', src.includes('2500')&&src.includes('rec.timedOut')],
+    ['stylesheet cache', src.includes('sheets[id]')],
+    ['module cache', src.includes('designModules[id]')],
+    ['pending import sharing', src.includes('designLoads[id]')],
+    ['stale CSS disabled', src.includes("media = 'not all'")],
+    ['active CSS enabled', src.includes("media = 'all'")]
+  ];
+  const failed=checks.filter(x=>!x[1]);
+  document.getElementById('result').textContent=failed.length?'FAIL: '+failed.map(x=>x[0]).join(', '):'PASS: lifecycle protections present';
+  if(failed.length) document.body.dataset.failed='true';
+})();
+</script>

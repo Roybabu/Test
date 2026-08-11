@@ -229,16 +229,16 @@ key, copy the formatted block, paste it into the right data file, then click
 
 ### If you see a workshop listed twice
 
-A workshop a visitor adds is kept on their own device so they can see it
-while it waits for review. Once you merge it into a data file and it is
-published, that saved copy is dropped automatically and the entry shows
-once. Matching is by **name + emirate**, ignoring case and punctuation.
+Each published workshop has a stable `id`. New submissions derive the same
+kind of identifier from normalized **name + emirate + phone + address**.
+Comparison normalizes case, whitespace, punctuation and phone formatting.
+An exact normalized identity (or the same stable id) is treated as a
+duplicate automatically.
 
-If you reword the name while merging — say `Beta Auto Care` becomes
-`Beta Auto Care LLC` — the two no longer match, and whoever submitted it
-keeps seeing both on their own device. Nobody else ever sees the duplicate.
-They can clear it with **Clear my saved additions** in the add form. So
-where you can, merge the name as submitted.
+A record with the same normalized name and emirate but different phone or
+address is **not** discarded. It is retained and marked **possible duplicate —
+review** in the admin page so the owner can decide whether it is the same
+workshop. Fuzzy/prefix name matching is no longer used.
 
 ### One difference from the previous version
 
@@ -246,3 +246,12 @@ Visitors can **add** a workshop but no longer **edit** an existing one from
 the public page. The add form is shared across all ten designs; per-design
 edit controls were not rebuilt. Your review page still handles edit-type
 submissions if any are already pending.
+
+## Production security and publication workflow
+
+- Set a strong `ADMIN_KEY` in `submit.php` before deployment; never commit the production key.
+- Serve the application over HTTPS. HSTS is emitted only for HTTPS requests.
+- The public directory consumes `submit.php?action=published`; `data/published-workshops.json` is the server-side published dataset.
+- Visitor submissions remain pending until an administrator approves them. Only approved submissions can be published.
+- `data/admin-audit-log.json` records administrator actions without credentials or admin keys.
+- `data/pending-submissions.json` and `data/workshop-verification.json` are blocked from direct HTTP access by `.htaccess`.

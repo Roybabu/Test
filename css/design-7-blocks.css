@@ -181,3 +181,11 @@ body #gfCall .gf-num-btn{border:0;border-right:3px solid var(--ink);background:#
 body #gfCall .gf-num-acts > :last-child{border-right:0;}
 body #gfCall .gf-num-btn.is-call{background:var(--yellow);}
 body #gfCall .gf-num-btn.is-wa{background:var(--teal);color:#fff;}
+
+.tile-head[data-emirate="Abu Dhabi"]{background:var(--blue)}
+.tile-head[data-emirate="Dubai"]{background:var(--red)}
+.tile-head[data-emirate="Sharjah"]{background:var(--teal)}
+.tile-head[data-emirate="Ajman"]{background:var(--violet)}
+.tile-head[data-emirate="Ras Al Khaimah"]{background:var(--sand)}
+.tile-head[data-emirate="Fujairah"]{background:var(--pink)}
+.tile-head[data-emirate="Umm Al Quwain"]{background:var(--ink)}

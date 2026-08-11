@@ -1,0 +1,15 @@
+'use strict';
+const fs=require('fs'), assert=require('assert');
+const core=fs.readFileSync(require('path').join(__dirname,'..','core.js'),'utf8');
+assert(core.includes('var mountSeq = 0'));
+assert((core.match(/seq !== mountSeq/g)||[]).length >= 4,'mount/version guards missing');
+assert(core.includes('previous.destroy()'),'destroy lifecycle missing');
+assert(core.includes('requestIdleCallback') && core.includes('setTimeout(loadRest, 0)'),'lazy stylesheet warmup missing');
+assert(core.includes('2500'),'stylesheet timeout fallback missing');
+assert(core.includes('rec.timedOut'),'timeout state missing');
+assert(core.includes('designModules[id]'),'design module cache missing');
+assert(core.includes('designLoads[id]'),'pending import deduplication missing');
+assert(core.includes("sheets[id]"),'stylesheet cache missing');
+assert(core.includes("media = 'not all'"),'inactive stale stylesheets are not isolated');
+assert(core.includes("media = 'all'"),'active stylesheet is not enabled');
+console.log('design lifecycle source tests: PASS');

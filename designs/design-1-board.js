@@ -3,8 +3,7 @@
    cards. It reads the shared workshop list from window.GF_DATA and
    registers itself with core.js. */
 
-window.GF_DESIGNS = window.GF_DESIGNS || {};
-window.GF_DESIGNS["board"] = {
+var design = {
   id: "board",
   name: "Board",
   note: "Industrial dispatch board, plate strip",
@@ -104,3 +103,5 @@ render();
     cleanup.destroy();
   }
 };
+
+export default design;

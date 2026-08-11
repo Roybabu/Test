@@ -1,0 +1,14 @@
+'use strict';
+const fs=require('fs'), path=require('path'), assert=require('assert');
+const root=path.join(__dirname,'..');
+const php=fs.readFileSync(path.join(root,'submit.php'),'utf8');
+const published=JSON.parse(fs.readFileSync(path.join(root,'data/published-workshops.json'),'utf8'));
+assert.strictEqual(published.length,219,'seed published dataset must contain all existing workshops');
+assert(php.includes("$action === 'published'"));
+assert(php.includes("$action === 'approve'"));
+assert(php.includes("$action === 'publish'"));
+assert(php.includes("must be manually approved before publication"));
+assert(php.includes('exactWorkshopMatch') && php.includes('uncertainWorkshopMatch'));
+assert(!fs.readFileSync(path.join(root,'index.html'),'utf8').includes('data/data-agency.js'));
+assert(!fs.readFileSync(path.join(root,'index.html'),'utf8').includes('data/data-nonagency.js'));
+console.log('publication workflow tests: PASS');

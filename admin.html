@@ -5,69 +5,56 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <meta name="robots" content="noindex, nofollow">
 <title>Submissions — Garage Finder</title>
-<link rel="stylesheet" href="css/styles.css?v=1">
-<link rel="stylesheet" href="css/admin.css?v=1">
+<link rel="stylesheet" href="css/styles.css?v=2">
+<link rel="stylesheet" href="css/admin.css?v=2">
 </head>
 <body>
 <div class="wrap">
   <header>
-    <div>
-      <h1>Submissions</h1>
-      <p>Workshops added by visitors, waiting to be merged into the data files. <a href="index.html">Back to the directory</a></p>
-    </div>
+    <div><h1>Submissions</h1><p>Review visitor submissions before publication. <a href="index.html">Back to directory</a></p></div>
     <span class="stamp" id="pending-stamp">locked</span>
   </header>
-
   <div id="gate" class="admin-gate">
     <label for="admin-key">Admin key</label>
-    <input type="password" id="admin-key" placeholder="The ADMIN_KEY you set in submit.php" autocomplete="off">
+    <input type="password" id="admin-key" placeholder="Admin key" autocomplete="off">
     <button class="btn-primary" id="unlock-btn">Unlock</button>
-    <div class="hint" id="gate-msg">This is the key from the top of <code>submit.php</code>. It's kept only in this browser tab.</div>
+    <div class="hint" id="gate-msg">The key is kept only in this browser tab.</div>
   </div>
-
-  <div id="panel" style="display:none;">
+  <div id="panel" class="is-hidden">
     <div class="admin-toolbar">
       <div class="admin-filters">
         <button data-s="pending" class="active">Pending</button>
-        <button data-s="merged">Merged</button>
+        <button data-s="approved">Approved</button>
+        <button data-s="published">Published</button>
         <button data-s="rejected">Rejected</button>
         <button data-s="all">All</button>
       </div>
       <div class="admin-actions">
         <button class="btn-ghost" id="refresh-btn">Refresh</button>
+        <button class="btn-ghost" id="verify-btn">Verify workshops</button>
+        <button class="btn-ghost" id="audit-btn">Audit log</button>
         <button class="btn-ghost" id="clear-btn">Clear handled</button>
         <button class="btn-primary" id="lock-btn">Lock</button>
       </div>
     </div>
-
     <div class="export-box">
-      <div class="export-head">
-        <h2>Ready to paste</h2>
-        <span class="hint" id="export-count"></span>
-      </div>
-      <p class="hint">Every <strong>pending</strong> submission below, already formatted for your data files. Copy the block you need, paste it inside the <code>[ ]</code> brackets of the matching file, then mark the submissions as merged.</p>
-      <div class="export-tabs">
-        <button data-x="agency" class="active">For data-agency.js</button>
-        <button data-x="nonagency">For data-nonagency.js</button>
-      </div>
-      <textarea id="export-text" readonly spellcheck="false"></textarea>
-      <button class="btn-primary" id="copy-btn">Copy to clipboard</button>
-      <span class="hint" id="copy-msg"></span>
+      <div class="export-head"><h2>Publication workflow</h2><span class="hint" id="export-count"></span></div>
+      <p class="hint">Approve a submission after manual review, then publish it to the backend dataset. No JavaScript object copying is required.</p>
     </div>
-
-    <div class="results-head">
-      <h2>Submissions</h2>
-      <span class="count" id="showing"></span>
-    </div>
+    <div class="results-head"><h2>Submissions</h2><span class="count" id="showing"></span></div>
     <div id="sub-list"></div>
+    <section class="verification-panel" id="verification-panel" hidden>
+      <div class="results-head"><h2>Workshop verification</h2><span class="count" id="verification-showing"></span></div>
+      <p class="hint">Mark published workshop information as verified, outdated, or requiring review.</p>
+      <div id="verification-list"></div>
+    </section>
+    <section class="verification-panel" id="audit-panel" hidden>
+      <div class="results-head"><h2>Admin audit log</h2><span class="count" id="audit-showing"></span></div>
+      <div id="audit-list"></div>
+    </section>
   </div>
 </div>
-<script>
-(function () {
-  var s = document.createElement('script');
-  s.src = 'admin/admin.js?t=' + Date.now();
-  document.body.appendChild(s);
-})();
-</script>
+<script src="security.js?v=2"></script>
+<script src="admin/admin.js?v=2"></script>
 </body>
 </html>

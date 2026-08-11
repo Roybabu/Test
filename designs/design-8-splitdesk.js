@@ -3,8 +3,7 @@
    cards. It reads the shared workshop list from window.GF_DATA and
    registers itself with core.js. */
 
-window.GF_DESIGNS = window.GF_DESIGNS || {};
-window.GF_DESIGNS["splitdesk"] = {
+var design = {
   id: "splitdesk",
   name: "Split Desk",
   note: "List left, full record right",
@@ -124,3 +123,5 @@ render();
     cleanup.destroy();
   }
 };
+
+export default design;

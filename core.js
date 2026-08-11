@@ -28,8 +28,103 @@
   /* Where visitor submissions go. Set to '' to switch submissions off. */
   var SUBMIT_ENDPOINT = 'submit.php';
 
-  /* If a design file fails to upload, the rest of the site must still work. */
+  /* Loaded design modules are kept here after a successful import. The
+     manifest below contains only lightweight metadata; it does not load any
+     design implementation. */
   window.GF_DESIGNS = window.GF_DESIGNS || {};
+
+  var DESIGN_MANIFEST = {
+    board:     {name:'Board',     note:'Industrial dispatch board, plate strip', file:'design-1-board.js', css:'css/design-1-board.css', swatch:'#00713C'},
+    jobcard:   {name:'Jobcard',   note:'Carbon-copy repair order, ruled form', file:'design-2-jobcard.js', css:'css/design-2-jobcard.css', swatch:'#1E2A63'},
+    pocket:    {name:'Pocket',    note:'Phone-app cards, chip filters', file:'design-3-pocket.js', css:'css/design-3-pocket.css', swatch:'#1A4FE0'},
+    nightdesk: {name:'Nightdesk', note:'Dark console, sticky filter rail', file:'design-4-nightdesk.js', css:'css/design-4-nightdesk.css', swatch:'#8B7BFF'},
+    signpost:  {name:'Signpost',  note:'Road signage, gantry header', file:'design-5-signpost.js', css:'css/design-5-signpost.css', swatch:'#00693E'},
+    index:     {name:'Index',     note:'Printed directory, A-Z rail', file:'design-6-index.js', css:'css/design-6-index.css', swatch:'#1E2FA0'},
+    blocks:    {name:'Blocks',    note:'Swiss colour blocks, band toolbar', file:'design-7-blocks.js', css:'css/design-7-blocks.css', swatch:'#E23E2C'},
+    splitdesk: {name:'Splitdesk', note:'List left, full record right', file:'design-8-splitdesk.js', css:'css/design-8-splitdesk.css', swatch:'#0E5C55'},
+    clay:      {name:'Clay',      note:'Claymorphism, puffy shapes', file:'design-9-clay.js', css:'css/design-9-clay.css', swatch:'#7B5CFF'},
+    neu:       {name:'Neu',       note:'Neumorphism, carved surfaces', file:'design-10-neu.js', css:'css/design-10-neu.css', swatch:'#BFC5D4'}
+  };
+
+  var designModules = {};
+  var designLoads = {};
+
+  /* Each design owns only the font families it actually declares. Font CSS is
+     loaded with the design stylesheet instead of shipping ten Google Fonts
+     stylesheets in the initial HTML. IBM Plex is self-hosted for Jobcard. */
+  var DESIGN_FONT_CSS = {
+    board: 'https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap',
+    jobcard: 'css/fonts/jobcard.css',
+    pocket: 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap',
+    nightdesk: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap',
+    signpost: 'https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&family=Barlow:wght@400;500;600&display=swap',
+    index: 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap',
+    blocks: 'https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap',
+    splitdesk: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap',
+    clay: 'https://fonts.googleapis.com/css2?family=Fredoka:wght@500;600;700&family=Nunito:wght@400;600;700&display=swap',
+    neu: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap'
+  };
+
+  var designFontLoads = {};
+  var designFontReady = {};
+
+  function designMeta(id){ return DESIGN_MANIFEST[id] || null; }
+
+  function loadDesignFonts(id, priority){
+    if (designFontReady[id]) return Promise.resolve(true);
+    if (designFontLoads[id]) return designFontLoads[id];
+    var href = DESIGN_FONT_CSS[id];
+    if (!href) return Promise.resolve(true);
+    var el = document.createElement('link');
+    el.rel = 'stylesheet';
+    el.href = href;
+    el.setAttribute('data-gf-fonts', id);
+    if (priority === 'initial') el.setAttribute('fetchpriority', 'high');
+    else el.setAttribute('fetchpriority', 'low');
+    var promise = new Promise(function(resolve){
+      function done(ok){
+        designFontReady[id] = !!ok;
+        el.removeEventListener('load', onload);
+        el.removeEventListener('error', onerror);
+        resolve(!!ok);
+      }
+      function onload(){ done(true); }
+      function onerror(){ done(false); }
+      el.addEventListener('load', onload);
+      el.addEventListener('error', onerror);
+    });
+    designFontLoads[id] = promise;
+    document.head.appendChild(el);
+    return promise;
+  }
+
+  function known(id){ return ORDER.indexOf(id) !== -1 && !!designMeta(id); }
+
+  function loadDesign(id){
+    if (designModules[id]) return Promise.resolve(designModules[id]);
+    if (designLoads[id]) return designLoads[id];
+
+    var meta = designMeta(id);
+    if (!meta) return Promise.reject(new Error('Unknown design: ' + id));
+
+    var url = './designs/' + meta.file + '?v=' + ASSET_V;
+    var promise = import(url).then(function(mod){
+      var d = mod && (mod.default || mod.design);
+      if (!d || d.id !== id || typeof d.start !== 'function') {
+        throw new Error('Design module \"' + id + '\" has an invalid export.');
+      }
+      designModules[id] = d;
+      window.GF_DESIGNS[id] = d;
+      delete designLoads[id];
+      return d;
+    }).catch(function(err){
+      delete designLoads[id];
+      throw err;
+    });
+
+    designLoads[id] = promise;
+    return promise;
+  }
 
   /* Bump this whenever you re-upload changed files, so returning visitors
      get the new ones instead of a cached copy. */
@@ -44,114 +139,58 @@
   /* ======================================================================
      DATA
      ====================================================================== */
-  var missing = [];
-  var agency    = (typeof agencyWorkshops    !== 'undefined') ? agencyWorkshops    : (missing.push('data-agency.js'), []);
-  var nonagency = (typeof nonAgencyWorkshops !== 'undefined') ? nonAgencyWorkshops : (missing.push('data-nonagency.js'), []);
-  var insurerRows = (typeof insurerData      !== 'undefined') ? insurerData        : (missing.push('data-insurers.js'), []);
-
-  function norm(w, type){
-    return {
-      type:     type,
-      name:     w.name    || '',
-      emirate:  w.emirate || '',
-      address:  w.address || '',
-      phone:    w.phone   || '',
-      hours:    w.hours   || '',
-      notes:    w.notes   || '',
-      makes:    w.makes    || [],
-      insurers: type === 'nonagency' ? (w.insurers || []) : [],
-      pending:  !!w.pending
-    };
-  }
-
-  var workshops = []
-    .concat(agency.map(function(w){ return norm(w, 'agency'); }))
-    .concat(nonagency.map(function(w){ return norm(w, 'nonagency'); }));
-
-  var insurers = insurerRows
+  var workshops = [];
+  var insurers = (typeof insurerData !== 'undefined' ? insurerData : [])
     .map(function(r){ return r && r.name; })
     .filter(function(n){ return n && n !== 'Insurer name as it should appear'; });
   insurers = insurers.filter(function(n, i){ return insurers.indexOf(n) === i; }).sort();
 
-  /* Workshops this visitor added themselves, kept on their own device
-     until the site owner merges them into the data files. */
+  function norm(w, type){
+    return {
+      id: w.id || '', type: type, name: w.name || '', emirate: w.emirate || '',
+      address: w.address || '', phone: w.phone || '', hours: w.hours || '', notes: w.notes || '',
+      makes: w.makes || [], insurers: type === 'nonagency' ? (w.insurers || []) : [],
+      pending: !!w.pending, duplicateReview: !!w.duplicateReview,
+      lastVerified: w.lastVerified || '',
+      verificationStatus: ['verified','outdated','review'].indexOf(w.verificationStatus) !== -1 ? w.verificationStatus : 'review',
+      source: w.source || 'Existing directory data'
+    };
+  }
+
   var LOCAL_KEY = 'gf_local_workshops';
-  function readLocal(){
-    try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]'); }
-    catch (e) { return []; }
-  }
-  function writeLocal(list){
-    try { localStorage.setItem(LOCAL_KEY, JSON.stringify(list)); } catch (e) {}
-  }
-  /* Identifies "the same workshop" across a visitor's own copy and the
-     published data files — name + emirate, ignoring case and punctuation.
-     Without this, a workshop a visitor added would keep showing from their
-     device even after the owner merged it into a data file, so they'd see
-     it twice. */
-  function slugify(s){
-    return String(s || '').toLowerCase()
-      .replace(/[^a-z0-9]+/g, '-')
-      .replace(/^-+|-+$/g, '')
-      .slice(0, 60);
-  }
-  /* Two records are the same place when the names match — or when one name
-     is the start of the other, which covers the owner adding a suffix like
-     "LLC" or "Auto Repairs" while merging. The emirate must agree, unless
-     one of them is blank. */
-  function samePlace(a, b){
-    var na = slugify(a && a.name), nb = slugify(b && b.name);
-    if (!na || !nb) return false;
-    var hit = (na === nb) ||
-              (na.length >= 8 && nb.length >= 8 &&
-               (na.indexOf(nb) === 0 || nb.indexOf(na) === 0));
-    if (!hit) return false;
-    var ea = slugify(a && a.emirate), eb = slugify(b && b.emirate);
-    return !ea || !eb || ea === eb;
-  }
-  function isPublished(w){
-    for (var i = 0; i < workshops.length; i++){
-      if (samePlace(workshops[i], w)) return true;
-    }
-    return false;
+  function readLocal(){ try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]'); } catch(e){ return []; } }
+  function writeLocal(list){ try { localStorage.setItem(LOCAL_KEY, JSON.stringify(list)); } catch(e){} }
+  function normalizeIdentityText(s){ return String(s || '').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim().replace(/[^\p{L}\p{N}\s]/gu,'').replace(/\s+/g,' '); }
+  function normalizeIdentityPhone(s){ var digits=String(s||'').replace(/\D/g,'').replace(/^00/,''); if(digits.indexOf('971')===0)return '971'+(digits.charAt(3)==='0'?digits.slice(4):digits.slice(3)); if(digits.charAt(0)==='0')return '971'+digits.slice(1); return digits; }
+  function identityKey(w){ return [normalizeIdentityText(w&&w.name),normalizeIdentityText(w&&w.emirate),normalizeIdentityPhone(w&&w.phone),normalizeIdentityText(w&&w.address)].join('|'); }
+  function stableWorkshopId(w){ if(w&&w.id)return String(w.id); var input=identityKey(w),hash=2166136261; for(var i=0;i<input.length;i++){hash^=input.charCodeAt(i);hash=Math.imul(hash,16777619)>>>0;} return 'ws_'+('00000000'+hash.toString(16)).slice(-8); }
+  function exactIdentityMatch(a,b){ if(a&&b&&a.id&&b.id)return String(a.id)===String(b.id); return identityKey(a)===identityKey(b); }
+  function uncertainIdentityMatch(a,b){ if(!a||!b)return false; return normalizeIdentityText(a.name)===normalizeIdentityText(b.name)&&normalizeIdentityText(a.emirate)===normalizeIdentityText(b.emirate)&&!exactIdentityMatch(a,b); }
+  function isPublished(w){ for(var i=0;i<workshops.length;i++) if(exactIdentityMatch(workshops[i],w)) return true; return false; }
+  function publishedIdentityReview(w){ for(var i=0;i<workshops.length;i++) if(uncertainIdentityMatch(workshops[i],w)) return true; return false; }
+
+  function initializePublishedData(publishedRows){
+    workshops = (Array.isArray(publishedRows)?publishedRows:[]).map(function(w){
+      return norm(w, w.type === 'nonagency' ? 'nonagency' : 'agency');
+    });
+    var mine=readLocal(), stillMine=mine.filter(function(w){
+      if(isPublished(w)) return false;
+      w.id=stableWorkshopId(w); w.duplicateReview=publishedIdentityReview(w); return true;
+    });
+    if(stillMine.length!==mine.length) writeLocal(stillMine);
+    var kept=[];
+    stillMine.forEach(function(w){
+      for(var i=0;i<kept.length;i++) if(exactIdentityMatch(kept[i],w)) return;
+      w.pending=true; kept.push(w); workshops.push(norm(w,w.type==='nonagency'?'nonagency':'agency'));
+    });
+    workshops.sort(function(a,b){return a.name.localeCompare(b.name);});
+    window.GF_DATA={workshops:workshops,insurers:insurers,emirates:EMIRATES};
   }
 
-  /* Anything now published is dropped from this device — and pruned from
-     storage too, so it heals itself instead of needing a cache clear. */
-  var mine = readLocal();
-  var stillMine = mine.filter(function(w){ return !isPublished(w); });
-  if (stillMine.length !== mine.length){
-    writeLocal(stillMine);
-    if (window.console && console.info){
-      console.info('Garage Finder: removed ' + (mine.length - stillMine.length) +
-                   ' saved copy/copies that are now published.');
-    }
-  }
-
-  var kept = [];
-  stillMine.forEach(function(w){
-    for (var i = 0; i < kept.length; i++){
-      if (samePlace(kept[i], w)) return;   // guard against a double submit
-    }
-    kept.push(w);
-    w.pending = true;
-    workshops.push(norm(w, w.type === 'nonagency' ? 'nonagency' : 'agency'));
-  });
-
-  workshops.sort(function(a, b){ return a.name.localeCompare(b.name); });
-
-  window.GF_DATA = {
-    workshops: workshops,
-    insurers:  insurers,
-    emirates:  EMIRATES
-  };
-
-  if (missing.length){
-    var warn = document.createElement('div');
-    warn.style.cssText = 'position:fixed;top:0;left:0;right:0;z-index:2147483000;' +
-      'background:#B3261E;color:#fff;padding:12px 16px;font:600 14px/1.4 system-ui,sans-serif;';
-    warn.textContent = 'Could not load: ' + missing.join(', ') +
-      ' — check the file is uploaded and has no typo (F12 → Console shows the line).';
-    document.addEventListener('DOMContentLoaded', function(){ document.body.appendChild(warn); });
+  function fetchPublishedData(){
+    return fetch('submit.php?action=published',{cache:'no-store',headers:{'Accept':'application/json'}})
+      .then(function(res){ if(!res.ok) throw new Error('Published workshop API returned HTTP '+res.status); return res.json(); })
+      .then(function(data){ if(!data||data.ok!==true||!Array.isArray(data.workshops)) throw new Error('Published workshop API returned invalid data.'); initializePublishedData(data.workshops); });
   }
 
   /* ======================================================================
@@ -163,8 +202,6 @@
   var pendingRemember = false;
   var KEY = 'gf_design';
 
-  function known(id){ return ORDER.indexOf(id) !== -1 && window.GF_DESIGNS && window.GF_DESIGNS[id]; }
-
   var mountSeq = 0;
   var currentDesign = null;
   var destroyActiveInsurerPicker = null;
@@ -172,11 +209,9 @@
 
   function mount(id, remember){
     if (!known(id)) id = known(DEFAULT_DESIGN) ? DEFAULT_DESIGN : ORDER[0];
-    var d = window.GF_DESIGNS[id];
-    if (!d) return;
 
-    var previous = currentDesign;
     var seq = ++mountSeq;
+    var previous = currentDesign;
 
     /* Invalidate/cancel any asynchronous CSS callback belonging to the
        previous mount before starting this one. */
@@ -185,13 +220,6 @@
       cancelPendingMount = null;
     }
 
-    /* Lifecycle order:
-       1. destroy old design
-       2. remove old DOM
-       3. activate/load new CSS
-       4. render new DOM
-       5. start new design
-    */
     if (previous && typeof previous.destroy === 'function'){
       try {
         previous.destroy();
@@ -200,9 +228,6 @@
       }
     }
 
-    /* The insurer picker is core-owned and lives outside #stage.
-       Destroy it before replacing the current design so its document
-       listener can never survive a mount. */
     if (destroyActiveInsurerPicker){
       try {
         destroyActiveInsurerPicker();
@@ -212,75 +237,55 @@
       destroyActiveInsurerPicker = null;
     }
 
-    currentDesign = d;
+    currentDesign = null;
     current = id;
     pendingRemember = !!remember;
 
     document.body.removeAttribute('style');
     document.body.className = '';
     document.documentElement.removeAttribute('style');
-
     stage.className = '';
     stage.innerHTML = '';
 
-    var rec = sheetFor(id);
+    /* Only the selected design implementation is imported here. The module
+       is cached after a successful import, while a pending import is shared
+       by repeated selections of the same design. */
+    loadDesign(id).then(function(d){
+      /* A later selection has superseded this asynchronous import. Never
+         allow a stale module to mutate the DOM or become current. */
+      if (seq !== mountSeq) return;
 
-    function paint(){
-      /* A later mount has superseded this pending CSS load. */
-      if (seq !== mountSeq || currentDesign !== d) return;
+      currentDesign = d;
 
-      activate(id);
-      stage.innerHTML = d.html;
+      function paint(){
+        if (seq !== mountSeq || currentDesign !== d) return;
 
-      try {
-        d.start();
-      } catch (err) {
-        console.error('Design "' + id + '" failed to start:', err);
-      }
+        activate(id, seq);
+        stage.innerHTML = d.html;
 
-      finish();
-    }
-
-    if (!rec || rec.ready || (rec.el && rec.el.sheet)){
-      paint();
-    } else {
-      var done = false;
-      var timer = null;
-
-      function go(){
-        /* Every asynchronous callback must verify that its mount is still
-           current before changing state or touching the UI. */
-        if (seq !== mountSeq || currentDesign !== d){
-          return;
+        try {
+          d.start();
+        } catch (err) {
+          console.error('Design "' + id + '" failed to start:', err);
         }
 
-        if (done) return;
-        done = true;
-        rec.el.removeEventListener('load', go);
-        rec.el.removeEventListener('error', go);
-        if (timer !== null) clearTimeout(timer);
-
-        cancelPendingMount = null;
-        paint();
+        finish();
       }
 
-      rec.el.addEventListener('load', go);
-      rec.el.addEventListener('error', go);
-      timer = setTimeout(go, 700);
-
-      cancelPendingMount = function(){
-        if (done) return;
-        done = true;
-        rec.el.removeEventListener('load', go);
-        rec.el.removeEventListener('error', go);
-        if (timer !== null) clearTimeout(timer);
-        if (cancelPendingMount === cancelThisMount) cancelPendingMount = null;
-      };
-
-      var cancelThisMount = cancelPendingMount;
-    }
+      Promise.all([waitForSheet(id, seq), loadDesignFonts(id, 'initial')]).then(function(){
+        /* A stylesheet/font callback from an old mount may finish its own
+           cache bookkeeping, but it can never paint or activate the design. */
+        if (seq !== mountSeq || currentDesign !== d) return;
+        paint();
+      });
+    }).catch(function(err){
+      if (seq !== mountSeq) return;
+      console.error('Design "' + id + '" failed to load:', err);
+      stage.innerHTML = '<div class="gf-design-error" role="alert">Could not load this design. Please choose another design.</div>';
+      pendingRemember = false;
+      currentDesign = null;
+    });
   }
-
 
   function finish(){
     var d = window.GF_DESIGNS[current];
@@ -296,6 +301,10 @@
        position:fixed child inside it (the Index design's A–Z rail). */
     playEntrance(d.id);
 
+    /* The current design is interactive now; begin fetching unused styles
+       only after this first mount has completed. */
+    warmRemainingStyles();
+
     if (pendingRemember){
       pendingRemember = false;
       try { localStorage.setItem(KEY, current); } catch (e) {}
@@ -308,63 +317,105 @@
   /* ======================================================================
      STYLESHEETS
      ----------------------------------------------------------------------
-     A stylesheet has to be fetched and parsed before it applies. If the
-     markup is swapped at the same moment the href changes, the new markup
-     is briefly painted with the PREVIOUS design's rules — which is what
-     produced the flash of unstyled page, and stray shapes like a round
-     Clay badge landing on a Board row.
+     Only the stylesheet for the currently selected design is loaded during
+     the initial mount. It is fetched at high priority and the mount waits
+     for it before painting that design, so the first design never flashes
+     unstyled or inherits rules from another design.
 
-     So every design's stylesheet is loaded up front, sitting inactive
-     (media="not all"). Switching then only flips which one is active,
-     which the browser applies immediately, with nothing to download.
+     Once the first interface is interactive, the remaining design
+     stylesheets are requested lazily at low priority and kept inactive.
+     Their load callbacks may update their own cache record, but they can
+     never activate a stylesheet or mutate the current design. Mounts are
+     still protected by mountSeq, just like asynchronous design imports.
      ====================================================================== */
   var sheets = {};
+  var stylesWarmupStarted = false;
 
-  function sheetFor(id){
-    if (sheets[id]) return sheets[id];
-    var d = window.GF_DESIGNS[id];
+  function sheetFor(id, priority){
+    if (sheets[id]) {
+      if (priority === 'initial') sheets[id].el.setAttribute('fetchpriority', 'high');
+      return sheets[id];
+    }
+    var d = designMeta(id);
     if (!d) return null;
 
     var href = d.css + '?v=' + ASSET_V;
-    var el;
+    var el = document.createElement('link');
+    el.rel = 'stylesheet';
+    el.href = href;
+    el.media = 'not all';
+    el.setAttribute('data-design', id);
+    el.setAttribute('data-gf-design-sheet', 'true');
+    el.setAttribute('fetchpriority', priority === 'initial' ? 'high' : 'low');
 
-    // the one already in index.html, so the first paint is never delayed
-    if (link && link.getAttribute('href') && link.getAttribute('href').indexOf(d.css) === 0){
-      el = link;
-      el.setAttribute('href', href);
-    } else {
-      el = document.createElement('link');
-      el.rel = 'stylesheet';
-      el.href = href;
-      el.media = 'not all';                 // downloads, does not apply
-      el.setAttribute('data-design', id);
-      document.head.appendChild(el);
-    }
+    var rec = {el: el, ready: false, failed: false, loaded: false, promise: null};
+    rec.promise = new Promise(function(resolve){
+      function done(ok){
+        rec.ready = true;
+        rec.loaded = !!ok;
+        rec.failed = !ok;
+        el.removeEventListener('load', onload);
+        el.removeEventListener('error', onerror);
+        resolve(rec);
+      }
+      function onload(){ done(true); }
+      function onerror(){ done(false); }
+      el.addEventListener('load', onload);
+      el.addEventListener('error', onerror);
+    });
 
-    /* The link that shipped in index.html has already been fetched and
-       applied by the time this script runs — and a link that is already
-       loaded never fires another load event, so treat it as ready. */
-    var rec = {el: el, ready: (el === link) || !!el.sheet};
-    el.addEventListener('load', function(){ rec.ready = true; });
-    el.addEventListener('error', function(){ rec.ready = true; });
     sheets[id] = rec;
+    document.head.appendChild(el);
     return rec;
   }
 
-  function activate(id){
+  function waitForSheet(id, seq){
+    var rec = sheetFor(id, 'initial');
+    if (!rec) return Promise.resolve(null);
+    if (rec.ready || rec.el.sheet) { rec.ready=true; rec.loaded=true; return Promise.resolve(rec); }
+    var timeout = new Promise(function(resolve){
+      window.setTimeout(function(){
+        if (!rec.ready) rec.timedOut=true;
+        resolve(rec);
+      }, 2500);
+    });
+    return Promise.race([rec.promise, timeout]).then(function(result){
+      /* The mount token is checked by the caller immediately before paint.
+         A stale stylesheet can therefore finish later without taking over. */
+      return result;
+    });
+  }
+
+  function activate(id, seq){
+    if (seq != null && seq !== mountSeq) return;
     for (var other in sheets){
-      if (sheets.hasOwnProperty(other) && other !== id) sheets[other].el.media = 'not all';
+      if (Object.prototype.hasOwnProperty.call(sheets, other) && other !== id){
+        sheets[other].el.media = 'not all';
+      }
     }
-    var rec = sheetFor(id);
-    if (rec) rec.el.media = 'all';
+    var rec = sheets[id];
+    if (rec && (!rec.failed) && (rec.ready || rec.timedOut)) rec.el.media = 'all';
   }
 
-  /* Warm the other nine once the page is idle, so the first switch to each
-     is as instant as the rest. */
-  function preloadSheets(){
-    ORDER.forEach(function(id){ if (window.GF_DESIGNS[id]) sheetFor(id); });
-  }
+  function warmRemainingStyles(){
+    if (stylesWarmupStarted) return;
+    stylesWarmupStarted = true;
 
+    function loadRest(){
+      for (var i = 0; i < ORDER.length; i++){
+        var id = ORDER[i];
+        if (id === current) continue;
+        if (!sheets[id]) sheetFor(id, 'lazy');
+        loadDesignFonts(id, 'lazy');
+      }
+    }
+
+    if (typeof window.requestIdleCallback === 'function') {
+      window.requestIdleCallback(loadRest, {timeout: 1500});
+    } else {
+      window.setTimeout(loadRest, 0);
+    }
+  }
 
   /* ======================================================================
      SEARCH SUGGESTIONS + INSURER PICKER
@@ -385,14 +436,7 @@
   /* Escape any value before it is interpolated into HTML. Prefer textContent
      / DOM APIs when building UI from scratch; use this when a template string
      is unavoidable. Covers text nodes and double-quoted attributes. */
-  function esc(s){
-    return String(s == null ? '' : s)
-      .replace(/&/g,'&amp;')
-      .replace(/</g,'&lt;')
-      .replace(/>/g,'&gt;')
-      .replace(/"/g,'&quot;')
-      .replace(/'/g,'&#39;');
-  }
+  const esc = window.GF_SECURITY.escapeHTML;
   window.GF_esc = esc;
 
   /* ======================================================================
@@ -523,7 +567,7 @@
     var ta = document.createElement('textarea');
     ta.value = text;
     ta.setAttribute('readonly', '');
-    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+    ta.className = 'gf-copy-buffer';
     document.body.appendChild(ta);
     ta.select();
     try { document.execCommand('copy'); flashCopied(btn); } catch (e) {}
@@ -934,7 +978,7 @@
     if (!num) return;
     var i = ORDER.indexOf(current);
     num.textContent = (i + 1) + '/' + ORDER.length;
-    var cur = window.GF_DESIGNS[current];
+    var cur = designModules[current] || designMeta(current);
     document.getElementById('gfName').textContent = cur ? cur.name : '';
     Array.prototype.forEach.call(document.querySelectorAll('#gfList .item'), function(b){
       b.setAttribute('aria-current', b.getAttribute('data-id') === current ? 'true' : 'false');
@@ -943,13 +987,13 @@
 
   function buildPicker(){
     if (!SHOW_PICKER) return;
-    if (!Object.keys(window.GF_DESIGNS).length) return;
+    if (!ORDER.length) return;
     var wrap = document.createElement('div');
     wrap.id = 'gfPicker';
     wrap.innerHTML =
       '<div id="gfMenu" hidden><h3>Choose a design</h3><div id="gfList">' +
       ORDER.map(function(id, i){
-        var d = window.GF_DESIGNS[id];
+        var d = designMeta(id);
         if (!d) return '';
         return '<button class="item" type="button" data-id="' + esc(id) + '" aria-current="false">' +
                  '<span class="sw" style="background:' + esc(d.swatch) + '"></span>' +
@@ -1036,7 +1080,7 @@
     var ta = document.createElement('textarea');
     ta.value = text;
     ta.setAttribute('readonly', '');
-    ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;';
+    ta.className = 'gf-copy-buffer';
     document.body.appendChild(ta);
     ta.select();
     try { document.execCommand('copy'); done(); } catch (e) {}
@@ -1306,11 +1350,13 @@
     if (!w.name){ say('A workshop name is required.', false); return; }
 
     // show it to this visitor immediately, without creating a second copy
-    var saved = readLocal().filter(function(x){ return !samePlace(x, w); });
+    w.id = stableWorkshopId(w);
+    w.duplicateReview = publishedIdentityReview(w);
+    var saved = readLocal().filter(function(x){ return !exactIdentityMatch(x, w); });
     saved.push(w);
     writeLocal(saved);
     window.GF_DATA.workshops = window.GF_DATA.workshops.filter(function(x){
-      return !(x.pending && samePlace(x, w));
+      return !(x.pending && exactIdentityMatch(x, w));
     });
     var added = norm(w, type);
     added.pending = true;
@@ -1346,23 +1392,19 @@
      ====================================================================== */
   function boot(){
     stage = document.getElementById('stage');
-    link  = document.getElementById('design-css');
-    buildPicker();
-
-    var fromHash = (location.hash || '').replace('#', '');
-    var saved = null;
-    try { saved = localStorage.getItem(KEY); } catch (e) {}
-    mount(known(fromHash) ? fromHash : (known(saved) ? saved : DEFAULT_DESIGN), false);
-
-    /* warm the remaining stylesheets once the first design is up */
-    if (window.requestIdleCallback) requestIdleCallback(preloadSheets);
-    else setTimeout(preloadSheets, 400);
-
-    window.addEventListener('hashchange', function(){
-      mount((location.hash || '').replace('#', ''), false);
+    stage.textContent = 'Loading published workshop directory…';
+    fetchPublishedData().then(function(){
+      if (mountSeq === 0) {
+        buildPicker();
+        var fromHash=(location.hash||'').replace('#','');
+        var saved=null; try{saved=localStorage.getItem(KEY)}catch(e){}
+        mount(known(fromHash)?fromHash:(known(saved)?saved:DEFAULT_DESIGN),false);
+        window.addEventListener('hashchange',function(){mount((location.hash||'').replace('#',''),false);});
+      }
+    }).catch(function(err){
+      console.error(err);
+      stage.innerHTML='<div class="gf-design-error" role="alert">Could not load the published workshop directory. Please try again later.</div>';
     });
   }
-
-  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot);
-  else boot();
+  if (document.readyState === 'loading') document.addEventListener('DOMContentLoaded', boot); else boot();
 })();

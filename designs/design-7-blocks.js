@@ -3,8 +3,7 @@
    cards. It reads the shared workshop list from window.GF_DATA and
    registers itself with core.js. */
 
-window.GF_DESIGNS = window.GF_DESIGNS || {};
-window.GF_DESIGNS["blocks"] = {
+var design = {
   id: "blocks",
   name: "Blocks",
   note: "Swiss colour blocks, band toolbar",
@@ -21,10 +20,6 @@ const esc = GF.esc || window.GF_esc || function(s){
 };
 const WORKSHOPS = window.GF_DATA.workshops;
 const EMIRATES = GF.emirates || ["Abu Dhabi","Dubai","Sharjah","Ajman","Ras Al Khaimah","Fujairah","Umm Al Quwain"];
-const COLOR = {
-  "Abu Dhabi":"var(--blue)","Dubai":"var(--red)","Sharjah":"var(--teal)",
-  "Ajman":"var(--violet)","Ras Al Khaimah":"var(--sand)","Fujairah":"var(--pink)","Umm Al Quwain":"var(--ink)"
-};
 const INSURERS = window.GF_DATA.insurers;
 let state = {emirate:"all", type:"all", insurer:"all", q:""};
 
@@ -46,7 +41,7 @@ function render(){
   gridEl.innerHTML = list.map(w => {
     const items = (w.type === 'agency' ? w.makes : w.insurers).map(t => `<span class="mark">${esc(t)}</span>`).join('');
     return `<article class="tile">
-      <div class="tile-head" style="background:${COLOR[w.emirate]}">
+      <div class="tile-head" data-emirate="${esc(w.emirate)}">
         <p class="tile-kind">${w.type==='agency'?'Agency':'Non-agency'} · ${esc(w.emirate)}</p>
         <h2>${esc(w.name)}</h2>
       </div>
@@ -90,3 +85,5 @@ render();
     cleanup.destroy();
   }
 };
+
+export default design;

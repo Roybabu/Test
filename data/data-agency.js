@@ -9,6 +9,10 @@
    [ and ] brackets, and fill it in. Keep the comma at the end.
 
      {
+       id:      "ws_XXXXXXXX", // keep this stable once assigned
+       lastVerified: "",
+       verificationStatus: "review",
+       source: "Source name or list",
        name:    "Workshop name (Emirate)",
        makes:   ["Toyota", "Lexus"],
        emirate: "Dubai",
@@ -41,6 +45,11 @@
 const agencyWorkshops = [
 
   {
+  id:      "ws_93dbbfeb",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Gargash Enterprises — Mercedes-Benz (Dubai)",
     makes:   ["Mercedes-Benz", "Maybach"],
     emirate: "Dubai",
@@ -50,6 +59,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_c6464951",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Futtaim Auto Centers — Toyota, Lexus, Volvo, Jeep, Honda, Dodge, BYD (Dubai)",
     makes:   ["Toyota", "Lexus", "Volvo", "Jeep", "Honda", "Dodge", "BYD"],
     emirate: "Dubai",
@@ -59,6 +73,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_6cd879d7",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Futtaim Auto Centers — Toyota, Lexus, Volvo, Jeep, Honda, Dodge, BYD (Sharjah)",
     makes:   ["Toyota", "Lexus", "Volvo", "Jeep", "Honda", "Dodge", "BYD"],
     emirate: "Sharjah",
@@ -68,6 +87,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_204bed76",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Futtaim Motors — Honda (Abu Dhabi)",
     makes:   ["Honda"],
     emirate: "Abu Dhabi",
@@ -77,6 +101,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_a2cd2caa",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Trading Enterprises — Jeep, Chrysler, Dodge, RAM (Dubai)",
     makes:   ["Jeep", "Chrysler", "Dodge", "RAM"],
     emirate: "Dubai",
@@ -86,6 +115,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_ae4495ba",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Western Motors — Jeep (Abu Dhabi)",
     makes:   ["Jeep"],
     emirate: "Abu Dhabi",
@@ -95,6 +129,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_d0f564bb",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Trading Enterprises — Volvo (Dubai)",
     makes:   ["Volvo"],
     emirate: "Dubai",
@@ -104,6 +143,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_9ef86e0e",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Arabian Automobiles (AW Rostamani) — Nissan (Dubai)",
     makes:   ["Nissan"],
     emirate: "Dubai",
@@ -113,6 +157,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_a7e14544",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Arabian Automobiles (AW Rostamani) — Nissan (Sharjah)",
     makes:   ["Nissan"],
     emirate: "Sharjah",
@@ -122,6 +171,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_1ce66766",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Arabian Automobiles (AW Rostamani) — Infiniti (Dubai)",
     makes:   ["Infiniti"],
     emirate: "Dubai",
@@ -131,6 +185,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_f5653959",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Arabian Automobiles (AW Rostamani) — Renault (Dubai)",
     makes:   ["Renault"],
     emirate: "Dubai",
@@ -140,6 +199,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_2fae4840",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Masaood Automobiles — Nissan, Infiniti, Renault (Abu Dhabi)",
     makes:   ["Nissan", "Infiniti", "Renault"],
     emirate: "Abu Dhabi",
@@ -149,6 +213,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_8bbd246a",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Nabooda Automobiles — Volkswagen (Dubai)",
     makes:   ["Volkswagen"],
     emirate: "Dubai",
@@ -158,6 +227,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_911c21a0",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Ali & Sons Motors — Volkswagen (Abu Dhabi)",
     makes:   ["Volkswagen"],
     emirate: "Abu Dhabi",
@@ -167,6 +241,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_80f77914",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Nabooda Automobiles — Audi (Dubai)",
     makes:   ["Audi"],
     emirate: "Dubai",
@@ -176,6 +255,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_886c0bdf",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Nabooda Automobiles — Porsche (Dubai)",
     makes:   ["Porsche"],
     emirate: "Dubai",
@@ -185,6 +269,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_9748ff65",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Porsche Centre — Porsche (Abu Dhabi)",
     makes:   ["Porsche"],
     emirate: "Abu Dhabi",
@@ -194,6 +283,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_688dd4ef",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "AGMC — BMW, MINI (Dubai)",
     makes:   ["BMW", "MINI"],
     emirate: "Dubai",
@@ -203,6 +297,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_e63d2cf6",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "AGMC — Rolls-Royce (Dubai)",
     makes:   ["Rolls-Royce"],
     emirate: "Dubai",
@@ -212,6 +311,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_b4dd52bb",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Abu Dhabi Motors (Al Saqer Group) — BMW, MINI, BMW Alpina (Abu Dhabi)",
     makes:   ["BMW", "MINI", "BMW Alpina"],
     emirate: "Abu Dhabi",
@@ -221,6 +325,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_900d769b",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Abu Dhabi Motors — Rolls-Royce (Abu Dhabi)",
     makes:   ["Rolls-Royce"],
     emirate: "Abu Dhabi",
@@ -230,6 +339,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_c7f7133a",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "AGMC — BMW, MINI (Sharjah branch)",
     makes:   ["BMW", "MINI"],
     emirate: "Sharjah",
@@ -239,6 +353,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_da81d3b9",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Juma Al Majid Group — Kia (Dubai)",
     makes:   ["Kia"],
     emirate: "Dubai",
@@ -248,6 +367,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_8ac1c585",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Juma Al Majid Group — Kia (Sharjah)",
     makes:   ["Kia"],
     emirate: "Sharjah",
@@ -257,6 +381,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_4f1c80d5",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Juma Al Majid Group — Kia, Hyundai (Abu Dhabi)",
     makes:   ["Kia", "Hyundai"],
     emirate: "Abu Dhabi",
@@ -266,6 +395,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_895252aa",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Juma Al Majid Group — Hyundai (Dubai)",
     makes:   ["Hyundai"],
     emirate: "Dubai",
@@ -275,6 +409,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_0600dc0b",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Juma Al Majid Group — Genesis (Dubai)",
     makes:   ["Genesis"],
     emirate: "Dubai",
@@ -284,6 +423,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_6cbfa815",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "GENAVCO (Juma Al Majid Group) — Isuzu",
     makes:   ["Isuzu"],
     emirate: "Dubai",
@@ -293,6 +437,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_e13ad9e7",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Tayer Motors — Ford, Lincoln, Land Rover (Dubai)",
     makes:   ["Ford", "Lincoln", "Land Rover"],
     emirate: "Dubai",
@@ -302,6 +451,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_c83be3da",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Tayer Motors — Jaguar",
     makes:   ["Jaguar"],
     emirate: "Dubai",
@@ -311,6 +465,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_c41f7c2e",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Tayer Motors — Ferrari, Maserati",
     makes:   ["Ferrari", "Maserati"],
     emirate: "Dubai",
@@ -320,6 +479,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_1b21ba21",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Habtoor Motors — Mitsubishi, JAC (Dubai)",
     makes:   ["Mitsubishi", "JAC"],
     emirate: "Dubai",
@@ -329,6 +493,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_3156172a",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Habtoor Motors — Mitsubishi (Abu Dhabi)",
     makes:   ["Mitsubishi"],
     emirate: "Abu Dhabi",
@@ -338,6 +507,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_46856469",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Habtoor Motors — Bentley, Bugatti, FUSO",
     makes:   ["Bentley", "Bugatti", "FUSO"],
     emirate: "Dubai",
@@ -347,6 +521,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_e18a942a",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Galadari Automobiles — Mazda (Dubai)",
     makes:   ["Mazda"],
     emirate: "Dubai",
@@ -356,6 +535,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_0130c2ea",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Galadari Automobiles — Mahindra",
     makes:   ["Mahindra"],
     emirate: "Dubai",
@@ -365,6 +549,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_3ef3edc6",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Rostamani Trading Company — Suzuki (Sharjah)",
     makes:   ["Suzuki"],
     emirate: "Sharjah",
@@ -374,6 +563,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_c7e5076d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Rostamani Trading Company — Suzuki (Al Ain)",
     makes:   ["Suzuki"],
     emirate: "Abu Dhabi",
@@ -383,6 +577,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_ed58a2fd",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Swaidan Trading (Al Naboodah Group) — Peugeot (Dubai)",
     makes:   ["Peugeot"],
     emirate: "Dubai",
@@ -392,6 +591,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_97da0d48",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Swaidan Trading (Al Naboodah Group) — Peugeot (Abu Dhabi)",
     makes:   ["Peugeot"],
     emirate: "Abu Dhabi",
@@ -401,6 +605,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_6c4c8b69",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Ghandi Auto — GMC, Chevrolet, Cadillac (Dubai & Northern Emirates)",
     makes:   ["GMC", "Chevrolet", "Cadillac"],
     emirate: "Dubai",
@@ -410,6 +619,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_2d1072f2",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Bin Hamoodah Auto — Chevrolet, GMC (Abu Dhabi)",
     makes:   ["Chevrolet", "GMC"],
     emirate: "Abu Dhabi",
@@ -419,6 +633,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_cae6dd18",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Union Motors — Changan",
     makes:   ["Changan"],
     emirate: "Dubai",
@@ -428,6 +647,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_2c22fdf3",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Galadari Automobiles — OMODA & JAECOO",
     makes:   ["Omoda", "Jaecoo"],
     emirate: "Sharjah",
@@ -437,6 +661,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_b5eecde6",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Galadari Automobiles — Lynk & Co",
     makes:   ["Lynk & Co"],
     emirate: "Dubai",
@@ -446,6 +675,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_b9183bf2",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "AGMC — Geely (Dubai)",
     makes:   ["Geely"],
     emirate: "Dubai",
@@ -455,6 +689,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_2ed00f57",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "AGMC — Geely (Abu Dhabi)",
     makes:   ["Geely"],
     emirate: "Abu Dhabi",
@@ -464,6 +703,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_41ee9c7d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "AGMC — Geely (Sharjah)",
     makes:   ["Geely"],
     emirate: "Sharjah",
@@ -473,6 +717,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_b4279ad0",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Khoory Automobiles — Subaru",
     makes:   ["Subaru"],
     emirate: "Dubai",
@@ -482,6 +731,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_e6fc63ce",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Inter Emirates Motors — MG (Dubai)",
     makes:   ["MG"],
     emirate: "Dubai",
@@ -491,6 +745,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_9fb1e45f",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Inter Emirates Motors — MG (Abu Dhabi)",
     makes:   ["MG"],
     emirate: "Abu Dhabi",
@@ -500,6 +759,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_1b781c05",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Gargash Motor — GAC",
     makes:   ["GAC"],
     emirate: "Dubai",
@@ -509,6 +773,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_b13b44ac",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Swaidan Trading — GWM / Great Wall Motors (Dubai)",
     makes:   ["GWM"],
     emirate: "Dubai",
@@ -518,6 +787,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_d19080f1",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Swaidan Trading — GWM / Great Wall Motors (Abu Dhabi)",
     makes:   ["GWM"],
     emirate: "Abu Dhabi",
@@ -527,6 +801,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_0ce4f62a",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Al Khalid Auto — Bestune",
     makes:   ["Bestune"],
     emirate: "Dubai",
@@ -536,6 +815,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_a574ba02",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Existing directory data",
+
     name:    "Western Motors — Opel",
     makes:   ["Opel"],
     emirate: "Dubai",
@@ -545,6 +829,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_b151945e",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Tesla official approved body shop list",
+
     name:    "Gargash Auto Repair LLC — Tesla Approved Body Shop",
     makes:   ["Tesla"],
     emirate: "Dubai",
@@ -554,6 +843,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_44fd6b0e",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Tesla official approved body shop list",
+
     name:    "XA Auto General Repairing Co LLC (XpressAuto) — Tesla Approved Body Shop",
     makes:   ["Tesla"],
     emirate: "Dubai",
@@ -563,6 +857,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_79257f4d",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Tesla official approved body shop list",
+
     name:    "PAL EV Motorworks — Tesla Approved Body Shop",
     makes:   ["Tesla"],
     emirate: "Dubai",
@@ -572,6 +871,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_c586d88e",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Tesla official approved body shop list",
+
     name:    "PAL EV, Al Quoz — Tesla Approved Body Shop",
     makes:   ["Tesla"],
     emirate: "Dubai",
@@ -581,6 +885,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_82b32062",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Tesla official approved body shop list",
+
     name:    "Pitstop Automotive Services LLC — Branch of Abu Dhabi — Tesla Approved Body Shop",
     makes:   ["Tesla"],
     emirate: "Abu Dhabi",
@@ -590,6 +899,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_73db536f",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Tesla official approved body shop list",
+
     name:    "Technical Resources Est — Tesla Approved Body Shop (Abu Dhabi)",
     makes:   ["Tesla"],
     emirate: "Abu Dhabi",
@@ -599,6 +913,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_76c1a557",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Tesla official approved body shop list",
+
     name:    "Technical Resources / Premium Car Care — Tesla Approved Body Shop (Dubai)",
     makes:   ["Tesla"],
     emirate: "Dubai",
@@ -608,6 +927,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_8df6b086",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Tesla official approved body shop list",
+
     name:    "Run and Drive — Tesla Approved Body Shop",
     makes:   ["Tesla"],
     emirate: "Dubai",
@@ -617,6 +941,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_224a77cf",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Tesla official approved body shop list",
+
     name:    "Private Car Auto Service Center LLC - SPC — Tesla Approved Body Shop",
     makes:   ["Tesla"],
     emirate: "Abu Dhabi",
@@ -626,6 +955,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_138d1051",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Tesla official approved body shop list",
+
     name:    "Pitstop Automotive Services LLC — Tesla Approved Body Shop (Al Sajaah, Sharjah)",
     makes:   ["Tesla"],
     emirate: "Sharjah",
@@ -635,6 +969,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_68bc7744",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Tesla official approved body shop list",
+
     name:    "EVS Ajman — Tesla Approved Body Shop",
     makes:   ["Tesla"],
     emirate: "Ajman",
@@ -644,6 +983,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_6a9727cd",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Tesla official approved body shop list",
+
     name:    "KM Auto Center — Tesla Approved Body Shop",
     makes:   ["Tesla"],
     emirate: "Ras Al Khaimah",
@@ -653,6 +997,11 @@ const agencyWorkshops = [
   },
 
   {
+  id:      "ws_3f8c3def",
+  lastVerified: "",
+  verificationStatus: "review",
+  source: "Tesla official approved body shop list",
+
     name:    "Drivetech by FNCT Workshop — Tesla Approved Body Shop",
     makes:   ["Tesla"],
     emirate: "Fujairah",

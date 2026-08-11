@@ -361,3 +361,4 @@ input[type="search"]::-webkit-search-results-decoration{
   .gf-ins-panel{border-radius:20px;max-height:78vh;padding-bottom:8px;}
 }
 @media (prefers-reduced-motion:reduce){.gf-ins-panel{animation:none!important;}}
+.gf-copy-buffer{position:fixed;top:0;left:0;opacity:0;pointer-events:none}
