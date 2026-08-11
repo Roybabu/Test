@@ -1,0 +1,30 @@
+
+.published-loading {
+  min-height: 42vh;
+  display: grid;
+  place-items: center;
+  align-content: center;
+  gap: 14px;
+  text-align: center;
+  font-family: inherit;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  font-size: 12px;
+  opacity: 0;
+  animation: published-loader-in .35s ease-out forwards;
+}
+.published-loading img {
+  width: 96px;
+  height: 96px;
+  display: block;
+  image-rendering: auto;
+}
+.published-loading-label { opacity: .65; }
+@keyframes published-loader-in {
+  from { opacity: 0; transform: translateY(5px); }
+  to { opacity: 1; transform: translateY(0); }
+}
+@media (prefers-reduced-motion: reduce) {
+  .published-loading img { animation: none; }
+  .published-loading { animation: none; opacity: 1; }
+}

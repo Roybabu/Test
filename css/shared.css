@@ -97,14 +97,26 @@
    TYPE-AHEAD for the insurer and car-make fields
    ========================================================================== */
 #gfAdd .gf-f{position:relative;}
-#gfAdd .gf-sugg{display:flex;flex-direction:column;gap:2px;margin-top:6px;}
-#gfAdd .gf-sugg:empty{display:none;}
-#gfAdd .gf-sugg-item{appearance:none;cursor:pointer;text-align:left;border:1px solid #E4E8F0;
-  background:#F7F9FC;color:#16181D;border-radius:9px;padding:9px 11px;
-  font:400 14px/1.35 'Inter',sans-serif;}
-#gfAdd .gf-sugg-item:hover{background:#EAF0FB;border-color:#C3D4F2;}
-#gfAdd .gf-sugg-none{margin:0;padding:9px 11px;border-radius:9px;background:#FDF3E7;
-  color:#8A5A12;font:400 13px/1.45 'Inter',sans-serif;}
+/* Add-workshop type-ahead intentionally shares the public search suggestion
+   skin (.gf-sugg/.gf-sugg-row) while keeping its own flow/interaction hook. */
+#gfAdd .gf-add-sugg{
+  position:absolute;
+  left:0;
+  right:0;
+  top:calc(100% + 6px);
+  z-index:900;
+  max-height:min(50vh,340px);
+  overflow-y:auto;
+}
+#gfAdd .gf-add-sugg:empty{display:none;}
+#gfAdd .gf-add-sugg:empty{display:none;}
+#gfAdd .gf-add-sugg-item{
+  width:100%;
+  appearance:none;
+  cursor:pointer;
+  text-align:left;
+  box-sizing:border-box;
+}
 #gfAdd .gf-unknown{margin:6px 0 0;font:400 12.5px/1.45 'Inter',sans-serif;color:#96231F;}
 #gfAdd .gf-unknown[hidden]{display:none;}
 @media print{ #gfCall{display:none;} }
