@@ -231,6 +231,17 @@ input[type="search"]::-webkit-search-results-decoration{
   animation:gfa-settle .34s cubic-bezier(.25,.8,.3,1) both;
 }
 
+/* --- 9 Neu: surfaces rise out of the panel ----------------------------- */
+@keyframes gfa-emboss{
+  0%{opacity:0;transform:scale(.988);filter:blur(7px) contrast(.86);}
+  60%{opacity:1;filter:blur(1px) contrast(.97);}
+  100%{opacity:1;transform:none;filter:none;}
+}
+#stage.gf-in-neu{ animation:gfa-emboss .5s cubic-bezier(.25,.8,.3,1) both; }
+#stage.gf-in-neu #list > *:nth-child(-n+8){
+  animation:gfa-emboss .46s cubic-bezier(.25,.8,.3,1) both;
+}
+
 /* --- stagger for the result lists ------------------------------------- */
 #stage[class*="gf-in-"] #rows > *:nth-child(2),
 #stage[class*="gf-in-"] #entries > *:nth-child(2),

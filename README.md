@@ -68,7 +68,7 @@ design file.
 | `data/data-insurers.js` | Master list of insurers | Occasionally |
 | `core.js` | Shared engine: builds the list, runs the design picker, sends submissions | Rarely |
 | `shared.css` | The design picker and the add-workshop form | Rarely |
-| `design-1-board.css` / `.js` … `design-8-splitdesk.css` / `.js` | The five designs — one pair of files each | When changing a look |
+| `design-1-board.css` / `.js` … `design-9-neu.css` / `.js` | The six designs — one pair of files each | When changing a look |
 | `submit.php` | Receives visitor submissions | **Set your key once** |
 | `admin.html` / `admin.js` / `admin.css` | Your private review page | No |
 | `FILE-1-goes-in-DATA-folder.txt` | Rename to `.htaccess`, put inside `data/` | Once |
@@ -118,7 +118,7 @@ needed — everything here is static HTML/CSS/JS. `admin.html` will not work
 on GitHub Pages, since review/approval requires `submit.php`; use it on the
 InfinityFree copy only.
 
-## The five designs
+## The six designs
 
 Each design is a complete page of its own: its own header, its own filter
 controls, its own card layout. Two files per design, and they share nothing,
@@ -131,6 +131,7 @@ so editing one cannot break another.
 | 3 | `index` | Printed directory, letter dividers, A–Z jump rail |
 | 4 | `blocks` | Swiss colour blocks, black band toolbar |
 | 5 | `splitdesk` | List on the left, full record on the right |
+| 6 | `neu` | Neumorphism — carved surfaces, animated logo, saved workshops, grid/list toggle |
 
 ### Choosing the design visitors see first
 
@@ -165,9 +166,10 @@ Each design arrives in a way that suits what it is, rather than blinking in:
 | Job Card | The sheet feeds up through a platen |
 | Index | A page turning open from the left |
 | Blocks | A colour wipe across, then tiles pop in |
-| Split Desk | It just settles — deliberately the quietest of the five |
+| Split Desk | It just settles — deliberately the quietest of the six |
+| Neu | Surfaces rise into focus out of a soft blur |
 
-All five stylesheets are loaded when the page opens, sitting inactive until
+All six stylesheets are loaded when the page opens, sitting inactive until
 chosen, so switching never has to wait for a download — that wait was what
 produced the flash of unstyled page and stray shapes from the previous
 design. Result cards stagger in behind the page itself. The animation lives in
@@ -260,7 +262,7 @@ workshop. Fuzzy/prefix name matching is no longer used.
 ### One difference from the previous version
 
 Visitors can **add** a workshop but no longer **edit** an existing one from
-the public page. The add form is shared across all five designs; per-design
+the public page. The add form is shared across all six designs; per-design
 edit controls were not rebuilt. Your review page still handles edit-type
 submissions if any are already pending.
 

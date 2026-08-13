@@ -1,7 +1,7 @@
 /* ============================================================================
    CORE
    ----------------------------------------------------------------------------
-   Everything the five designs share:
+   Everything the six designs share:
 
      • builds the public workshop list from the authenticated publication API
      • loads whichever design the visitor picked and swaps it on demand
@@ -17,7 +17,7 @@
 
   /* ------------------------------------------------------------------------
      WHICH DESIGN LOADS FIRST
-     Change to any id below: board, jobcard, index, blocks, splitdesk
+     Change to any id below: board, jobcard, index, blocks, splitdesk, neu
      ------------------------------------------------------------------------ */
   var DEFAULT_DESIGN = 'board';
 
@@ -37,7 +37,8 @@
     jobcard:   {name:'Jobcard',   note:'Carbon-copy repair order, ruled form', file:'design-2-jobcard.js', css:'css/design-2-jobcard.css', swatch:'#1E2A63'},
     index:     {name:'Index',     note:'Printed directory, A-Z rail', file:'design-6-index.js', css:'css/design-6-index.css', swatch:'#1E2FA0'},
     blocks:    {name:'Blocks',    note:'Swiss colour blocks, band toolbar', file:'design-7-blocks.js', css:'css/design-7-blocks.css', swatch:'#E23E2C'},
-    splitdesk: {name:'Splitdesk', note:'List left, full record right', file:'design-8-splitdesk.js', css:'css/design-8-splitdesk.css', swatch:'#0E5C55'}
+    splitdesk: {name:'Splitdesk', note:'List left, full record right', file:'design-8-splitdesk.js', css:'css/design-8-splitdesk.css', swatch:'#0E5C55'},
+    neu:       {name:'Neu',       note:'Neumorphism, carved surfaces — animated & interactive', file:'design-9-neu.js', css:'css/design-9-neu.css', swatch:'#4A57C4'}
   };
 
   var designModules = {};
@@ -51,7 +52,8 @@
     jobcard: 'css/fonts/jobcard.css',
     index: 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap',
     blocks: 'https://fonts.googleapis.com/css2?family=Anton&family=Archivo:wght@400;500;600;700&display=swap',
-    splitdesk: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap'
+    splitdesk: 'https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;700&family=DM+Mono:wght@400;500&display=swap',
+    neu: 'https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700&display=swap'
   };
 
   var designFontLoads = {};
@@ -119,7 +121,7 @@
      get the new ones instead of a cached copy. */
   var ASSET_V = '1';
 
-  var ORDER = ['board','jobcard','index','blocks','splitdesk'];
+  var ORDER = ['board','jobcard','index','blocks','splitdesk','neu'];
 
   var EMIRATES = ['Abu Dhabi','Dubai','Sharjah','Ajman',
                   'Ras Al Khaimah','Fujairah','Umm Al Quwain'];

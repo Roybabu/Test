@@ -11,7 +11,7 @@ for (const f of designs) {
   const s = fs.readFileSync(path.join(root, 'css', f), 'utf8');
   if (!/font-family:/.test(s)) throw new Error(`${f} has no font-family declaration`);
 }
-for (const id of ['board','jobcard','index','blocks','splitdesk']) {
+for (const id of ['board','jobcard','index','blocks','splitdesk','neu']) {
   const pattern = id.includes('-') ? `'${id}':` : `${id}:`;
   if (!new RegExp(pattern).test(core)) throw new Error(`Missing font mapping for ${id}`);
 }
