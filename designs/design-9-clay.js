@@ -58,9 +58,12 @@ function render(){
         <div>
           <h2>${esc(w.name)}</h2>
           ${GF.pendingBadge(w)}
-          <p class="place"><a href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(w.address)}</a> · ${esc(w.emirate)}</p>
           <span class="badge">${isAg?'Agency':'Non-agency'}</span>
         </div>
+      </div>
+      <div class="tray tray-address">
+        <p>Address</p>
+        <a class="place" href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(GF.fullAddress(w))}</a>
       </div>
       <div class="tray">
         <p>${isAg?'Makes handled':'Insurer panels'}</p>

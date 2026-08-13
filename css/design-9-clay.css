@@ -180,8 +180,8 @@ body{
 .chub.go{background:var(--violet);color:#fff;}
 .chub.off{color:var(--ink-3);cursor:default;}
 .chub:focus-visible{outline:3px solid var(--violet-deep);outline-offset:3px;}
-.place a{color:inherit;text-decoration:underline;text-underline-offset:3px;}
-.place a:hover{color:var(--violet-deep);}
+a.place{display:block;text-decoration:underline;text-underline-offset:3px;}
+a.place:hover{color:var(--violet-deep);}
 .nothing{
   background:var(--white);border-radius:32px;padding:44px 24px;text-align:center;
   box-shadow:var(--clay);

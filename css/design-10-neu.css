@@ -147,8 +147,8 @@ body{
 .press.go{color:var(--accent);}
 .press.off{color:var(--ink-3);cursor:default;box-shadow:var(--in-sm);}
 .press:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
-.where a{color:inherit;text-decoration:underline;text-underline-offset:3px;}
-.where a:hover{color:var(--accent);}
+a.where{display:block;text-decoration:underline;text-underline-offset:3px;}
+a.where:hover{color:var(--accent);}
 .hollow{
   background:var(--surface);border-radius:24px;padding:48px 24px;text-align:center;
   box-shadow:var(--in);
