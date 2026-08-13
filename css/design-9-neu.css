@@ -247,8 +247,6 @@ body::after{
   text-transform:uppercase;color:var(--ink-3);
 }
 .well p svg{flex:none;stroke:var(--ink-3);width:13px;height:13px;}
-.well-grid{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:18px;}
-.well-grid .well{margin-top:0;}
 .where{color:var(--ink);font-size:13.5px;font-weight:500;}
 .caps{display:flex;flex-wrap:wrap;gap:8px;}
 .cap{
@@ -288,7 +286,6 @@ a.where:hover{color:var(--accent);}
 #list:not(.is-grid) .unit h2{font-size:16px;}
 #list:not(.is-grid) .stamp{margin-top:7px;padding:4px 11px;font-size:10.5px;}
 #list:not(.is-grid) .well{margin-top:12px;padding:12px 14px;}
-#list:not(.is-grid) .well-grid{gap:10px;margin-top:12px;}
 #list:not(.is-grid) .unit-actions{gap:9px;margin-top:14px;}
 #list:not(.is-grid) .press{padding:10px;font-size:12.5px;min-width:100px;}
 #list:not(.is-grid) .favbtn{width:29px;height:29px;top:12px;right:12px;}
@@ -296,7 +293,6 @@ a.where:hover{color:var(--accent);}
 
 @media (max-width:560px){
   .unit-top{flex-direction:column;padding-right:0;}
-  .well-grid{grid-template-columns:1fr;}
   #list.is-grid{grid-template-columns:1fr;}
 }
 @media (prefers-reduced-motion:reduce){
