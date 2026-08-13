@@ -49,7 +49,7 @@ core.js
 ├── esc           (GF.esc — every data value before innerHTML)
 │
 └── design renderer
-      ├── Board / Job Card / Pocket / Night Desk / …
+      ├── Board / Job Card / Index / …
       └── each design owns only its shell HTML, CSS, and card markup
 ```
 
@@ -68,7 +68,7 @@ design file.
 | `data/data-insurers.js` | Master list of insurers | Occasionally |
 | `core.js` | Shared engine: builds the list, runs the design picker, sends submissions | Rarely |
 | `shared.css` | The design picker and the add-workshop form | Rarely |
-| `design-1-board.css` / `.js` … `design-10-neu.css` / `.js` | The ten designs — one pair of files each | When changing a look |
+| `design-1-board.css` / `.js` … `design-10-neu.css` / `.js` | The seven designs — one pair of files each | When changing a look |
 | `submit.php` | Receives visitor submissions | **Set your key once** |
 | `admin.html` / `admin.js` / `admin.css` | Your private review page | No |
 | `FILE-1-goes-in-DATA-folder.txt` | Rename to `.htaccess`, put inside `data/` | Once |
@@ -118,7 +118,7 @@ needed — everything here is static HTML/CSS/JS. `admin.html` will not work
 on GitHub Pages, since review/approval requires `submit.php`; use it on the
 InfinityFree copy only.
 
-## The ten designs
+## The seven designs
 
 Each design is a complete page of its own: its own header, its own filter
 controls, its own card layout. Two files per design, and they share nothing,
@@ -128,14 +128,11 @@ so editing one cannot break another.
 |---|---|---|
 | 1 | `board` | Industrial dispatch board, number-plate strip with counts |
 | 2 | `jobcard` | Carbon-copy repair order on ruled ledger paper |
-| 3 | `automotive-glass` | Gradient/tech-forward, glassmorphism, modern professional |
-| 4 | `nightdesk` | Dark console with a sticky filter rail |
-| 5 | `signpost` | Road signage, green gantry header, sign panels |
-| 6 | `index` | Printed directory, letter dividers, A–Z jump rail |
-| 7 | `blocks` | Swiss colour blocks, black band toolbar |
-| 8 | `splitdesk` | List on the left, full record on the right |
-| 9 | `clay` | Claymorphism — puffy shapes, soft gradient |
-| 10 | `neu` | Neumorphism — one surface, carved controls |
+| 3 | `index` | Printed directory, letter dividers, A–Z jump rail |
+| 4 | `blocks` | Swiss colour blocks, black band toolbar |
+| 5 | `splitdesk` | List on the left, full record on the right |
+| 6 | `clay` | Claymorphism — puffy shapes, soft gradient |
+| 7 | `neu` | Neumorphism — one surface, carved controls |
 
 ### Choosing the design visitors see first
 
@@ -168,16 +165,13 @@ Each design arrives in a way that suits what it is, rather than blinking in:
 |---|---|
 | Board | Plates and rows flap over, like a split-flap departure board |
 | Job Card | The sheet feeds up through a platen |
-| Pocket | The screen pushes in from the right, like a phone app |
-| Night Desk | A CRT warming up — a bright line that opens out |
-| Signpost | The page sweeps past as if driving, then panels bolt down |
 | Index | A page turning open from the left |
 | Blocks | A colour wipe across, then tiles pop in |
-| Split Desk | It just settles — deliberately the quietest of the ten |
+| Split Desk | It just settles — deliberately the quietest of the seven |
 | Clay | Squash and stretch, overshooting then springing back |
 | Neu | Surfaces rise out of the panel from a blur |
 
-All ten stylesheets are loaded when the page opens, sitting inactive until
+All seven stylesheets are loaded when the page opens, sitting inactive until
 chosen, so switching never has to wait for a download — that wait was what
 produced the flash of unstyled page and stray shapes from the previous
 design. Result cards stagger in behind the page itself. The animation lives in
@@ -270,7 +264,7 @@ workshop. Fuzzy/prefix name matching is no longer used.
 ### One difference from the previous version
 
 Visitors can **add** a workshop but no longer **edit** an existing one from
-the public page. The add form is shared across all ten designs; per-design
+the public page. The add form is shared across all seven designs; per-design
 edit controls were not rebuilt. Your review page still handles edit-type
 submissions if any are already pending.
 

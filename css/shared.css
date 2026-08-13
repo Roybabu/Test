@@ -199,32 +199,6 @@ input[type="search"]::-webkit-search-results-decoration{
   animation:gfa-push .36s cubic-bezier(.25,.9,.3,1) both;
 }
 
-/* --- 4 Night Desk: CRT warming up -------------------------------------- */
-@keyframes gfa-crt{
-  0%{opacity:0;transform:scaleY(.006) scaleX(.86);filter:brightness(7);}
-  30%{opacity:1;transform:scaleY(.006) scaleX(1);filter:brightness(5);}
-  55%{transform:scaleY(1) scaleX(1);filter:brightness(2.2);}
-  75%{filter:brightness(.85);}
-  100%{transform:none;filter:none;opacity:1;}
-}
-#stage.gf-in-nightdesk{ animation:gfa-crt .58s cubic-bezier(.3,.8,.25,1) both; }
-
-/* --- 5 Signpost: driving past, then panels bolt down ------------------- */
-@keyframes gfa-driveby{
-  0%{opacity:0;transform:translateX(54px) skewX(-3deg);filter:blur(4px);}
-  55%{opacity:1;filter:blur(0);}
-  100%{transform:none;}
-}
-@keyframes gfa-bolt{
-  0%{opacity:0;transform:translateY(-18px) rotate(-1.2deg);}
-  68%{opacity:1;transform:translateY(4px) rotate(.35deg);}
-  100%{opacity:1;transform:none;}
-}
-#stage.gf-in-signpost{ animation:gfa-driveby .5s cubic-bezier(.2,.8,.3,1) both; }
-#stage.gf-in-signpost #list > *:nth-child(-n+8){
-  animation:gfa-bolt .44s cubic-bezier(.25,.85,.3,1) both;
-}
-
 /* --- 6 Index: a page turning ------------------------------------------ */
 @keyframes gfa-page{
   0%{opacity:.15;transform:perspective(1500px) rotateY(-34deg) translateX(-10px);}
