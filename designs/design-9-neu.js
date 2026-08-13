@@ -72,7 +72,11 @@ const design = {
 
     <div class="set">
       <p class="setname">Insurer panel</p>
-      <select class="dial" id="ins"></select>
+      <select class="dial" id="ins" hidden></select>
+      <button class="dial insdrop" id="insDropBtn" type="button" aria-haspopup="listbox" aria-expanded="false" aria-controls="insDropList">
+        <span id="insDropLabel">All insurer panels</span><span class="insdrop-chev" aria-hidden="true">▾</span>
+      </button>
+      <div class="insdrop-list" id="insDropList" role="listbox" hidden></div>
     </div>
   </div>
 
@@ -96,6 +100,9 @@ let state = {emirate:"all", type:"all", insurer:"all", q:""};
 const listEl = document.getElementById('list');
 const emEl = document.getElementById('emirates');
 const insEl = document.getElementById('ins');
+const insDropBtn = document.getElementById('insDropBtn');
+const insDropLabel = document.getElementById('insDropLabel');
+const insDropList = document.getElementById('insDropList');
 const viewBtn = document.getElementById('viewToggle');
 const filtersBtn = document.getElementById('filtersToggle');
 const consoleEl = document.getElementById('console');
@@ -104,6 +111,30 @@ const fcountEl = document.getElementById('fcount');
 insEl.innerHTML = '<option value="all">All insurer panels</option>' + INSURERS.map(i => `<option>${esc(i)}</option>`).join('');
 emEl.innerHTML = `<button class="key" type="button" data-emirate="all" aria-pressed="true">All</button>` +
   EMIRATES.map(e => `<button class="key" type="button" data-emirate="${esc(e)}" aria-pressed="false">${e}</button>`).join('');
+
+/* ---- insurer panel: an inline scrollable list, not a separate sheet ---- */
+insDropList.innerHTML = ['<button type="button" class="insdrop-item" role="option" data-v="all" aria-selected="true">All insurer panels</button>']
+  .concat(INSURERS.map(i => `<button type="button" class="insdrop-item" role="option" data-v="${esc(i)}" aria-selected="false">${esc(i)}</button>`))
+  .join('');
+function closeInsDrop(){ insDropList.hidden = true; insDropBtn.setAttribute('aria-expanded', 'false'); }
+function openInsDrop(){ insDropList.hidden = false; insDropBtn.setAttribute('aria-expanded', 'true'); }
+function onInsDropBtnClick(){ insDropList.hidden ? openInsDrop() : closeInsDrop(); }
+cleanup.listen(insDropBtn, 'click', onInsDropBtnClick);
+function onInsDropListClick(e){
+  const b = e.target.closest('.insdrop-item'); if (!b) return;
+  const v = b.getAttribute('data-v');
+  insEl.value = v;
+  insDropLabel.textContent = v === 'all' ? 'All insurer panels' : v;
+  insDropList.querySelectorAll('.insdrop-item').forEach(x => x.setAttribute('aria-selected', String(x === b)));
+  closeInsDrop();
+  state.insurer = v;
+  render();
+}
+cleanup.listen(insDropList, 'click', onInsDropListClick);
+function onDocClickCloseInsDrop(e){
+  if (!insDropList.hidden && !e.target.closest('.set')) closeInsDrop();
+}
+cleanup.listen(document, 'click', onDocClickCloseInsDrop);
 
 /* ---- saved (starred) workshops — this device only ---- */
 const FAV_KEY = 'gf_neu_favs';
@@ -230,9 +261,6 @@ function onEmelClick(e){
   render();
 }
 cleanup.listen(emEl, 'click', onEmelClick);
-
-function onInsurerChange(e){ state.insurer = e.target.value; render(); }
-cleanup.listen(insEl, 'change', onInsurerChange);
 
 function onQueryInput(e){ state.q = e.target.value; render(); }
 cleanup.listen(document.getElementById('q'), 'input', onQueryInput);

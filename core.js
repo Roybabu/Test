@@ -651,6 +651,18 @@
 
   /* ---------- what the search box can suggest ---------- */
   var suggestIndex = null;
+  /* "Al Quoz Industrial Area 3", "Al Quoz Ind Area 4" and "Al Quoz 2" are
+     all the same area for suggestion purposes — strip the numbered
+     sub-area/parenthetical noise so they collapse to one "Al Quoz" entry
+     instead of cluttering the list with near-duplicates. */
+  function normalizeArea(area){
+    return String(area || '')
+      .replace(/\s*[-–(].*$/,'')
+      .replace(/\s+(industrial\s+)?(ind\.?\s+)?area\s*(no\.?\s*)?\d+\s*$/i,'')
+      .replace(/\s+(no\.?\s*)?\d+\s*$/i,'')
+      .trim();
+  }
+
   function buildSuggestIndex(){
     if (suggestIndex) return suggestIndex;
     var seen = {}, out = [];
@@ -666,9 +678,9 @@
       (w.makes || []).forEach(function(m){ add(m, 'make'); });
       add(w.emirate, 'emirate');
       /* the area is the useful part of an address — "Al Quoz Industrial
-         Area 3, Dubai" is worth suggesting as "Al Quoz Industrial Area 3" */
+         Area 3, Dubai" is worth suggesting as "Al Quoz" */
       if (w.address){
-        var area = w.address.split(',')[0].trim();
+        var area = normalizeArea(w.address.split(',')[0].trim());
         if (area.length > 2 && area.length < 46) add(area, 'area');
       }
     });
@@ -931,7 +943,9 @@
       destroyActiveInsurerPicker = null;
     }
     [].forEach.call(document.querySelectorAll('.gf-ins-sheet'), function(s){ s.remove(); });
-    attachInsurerPicker(stage.querySelector('#ins'));
+    /* Neu builds its own inline insurer list instead of the shared
+       bottom-sheet picker — see design-9-neu.js. */
+    if (current !== 'neu') attachInsurerPicker(stage.querySelector('#ins'));
   }
 
   /* ======================================================================

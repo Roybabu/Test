@@ -184,6 +184,29 @@ body::after{
 }
 .dial:focus{outline:2px solid var(--accent);outline-offset:3px;}
 
+/* insurer panel: an inline scrollable list in the same box, not a
+   separate sheet/overlay */
+.insdrop{
+  display:flex;align-items:center;justify-content:space-between;gap:10px;
+  cursor:pointer;text-align:left;
+}
+.insdrop-chev{color:var(--ink-3);font-size:12px;flex:none;transition:transform .16s ease;}
+.insdrop[aria-expanded="true"]{box-shadow:var(--in);}
+.insdrop[aria-expanded="true"] .insdrop-chev{transform:rotate(180deg);}
+.insdrop-list{
+  margin-top:10px;max-height:200px;overflow-y:auto;
+  background:var(--surface);border-radius:14px;box-shadow:var(--in-sm);padding:6px;
+  scrollbar-width:thin;
+}
+.insdrop-item{
+  display:block;width:100%;appearance:none;cursor:pointer;border:0;background:transparent;
+  text-align:left;padding:9px 11px;border-radius:10px;
+  font-family:'Poppins',sans-serif;font-size:13.5px;font-weight:500;color:var(--ink);
+}
+.insdrop-item:hover{background:var(--light);}
+.insdrop-item[aria-selected="true"]{background:var(--light);color:var(--accent);font-weight:600;}
+.insdrop-item:focus-visible{outline:2px solid var(--accent);outline-offset:-2px;}
+
 .listbar{display:flex;align-items:center;margin:0 0 16px 6px;}
 .readout{
   margin:0;font-size:13px;font-weight:500;
@@ -193,11 +216,20 @@ body::after{
 /* ---- results: grid mode is responsive (1 col mobile, more on desktop);
        list mode always a single column, on every screen size ---- */
 #list{display:grid;grid-template-columns:1fr;gap:20px;}
-#list.is-grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));align-items:start;}
+#list.is-grid{grid-template-columns:repeat(auto-fill,minmax(300px,1fr));}
 
 /* ---- cards ---- */
+/* Every card is the same size: the two variable-length parts (the
+   heading and the address) are clamped to a fixed number of lines, the
+   chip list scrolls in its own box instead of growing the card, and the
+   actions row is pinned to the bottom with margin-top:auto — so total
+   height stays constant no matter how much text a workshop has. Grid
+   mode's default align-items:stretch then keeps every card in a row the
+   same height as its tallest neighbour too. */
 .unit{
   position:relative;
+  display:flex;flex-direction:column;
+  min-height:420px;
   background:var(--surface);border-radius:24px;padding:22px;
   box-shadow:var(--up);
   animation:gf-rise .5s cubic-bezier(.25,.8,.3,1) both;
@@ -226,7 +258,10 @@ body::after{
   color:var(--agency);
 }
 .unit.is-nonagency .knob{color:var(--nonagency);}
-.unit h2{font-size:18px;font-weight:600;letter-spacing:-.015em;line-height:1.3;margin:0 0 3px;}
+.unit h2{
+  font-size:18px;font-weight:600;letter-spacing:-.015em;line-height:1.3;margin:0 0 3px;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+}
 .stamp{
   display:inline-block;margin-top:11px;
   background:var(--surface);border-radius:12px;padding:6px 14px;
@@ -247,14 +282,20 @@ body::after{
   text-transform:uppercase;color:var(--ink-3);
 }
 .well p svg{flex:none;stroke:var(--ink-3);width:13px;height:13px;}
-.where{color:var(--ink);font-size:13.5px;font-weight:500;}
-.caps{display:flex;flex-wrap:wrap;gap:8px;}
+.where{
+  color:var(--ink);font-size:13.5px;font-weight:500;
+  display:-webkit-box;-webkit-box-orient:vertical;-webkit-line-clamp:2;overflow:hidden;
+}
+.caps{
+  display:flex;flex-wrap:wrap;align-content:flex-start;gap:8px;
+  max-height:84px;overflow-y:auto;scrollbar-width:thin;padding-right:2px;
+}
 .cap{
   background:var(--surface);border-radius:11px;padding:5px 12px;
   font-size:12.5px;font-weight:500;color:var(--ink-2);
   box-shadow:var(--up-sm);
 }
-.unit-actions{display:flex;gap:12px;margin-top:20px;flex-wrap:wrap;}
+.unit-actions{display:flex;gap:12px;margin-top:auto;padding-top:20px;flex-wrap:wrap;}
 .press{
   flex:1;min-width:120px;appearance:none;cursor:pointer;border:0;
   display:inline-flex;align-items:center;justify-content:center;gap:7px;
@@ -268,7 +309,7 @@ body::after{
 .press.go{color:var(--accent);box-shadow:var(--up-sm), inset 0 0 0 1px rgba(74,87,196,.18);}
 .press.off{color:var(--ink-3);cursor:default;box-shadow:var(--in-sm);}
 .press:focus-visible{outline:2px solid var(--accent);outline-offset:3px;}
-a.where{display:block;text-decoration:underline;text-underline-offset:3px;}
+a.where{text-decoration:underline;text-underline-offset:3px;}
 a.where:hover{color:var(--accent);}
 .hollow{
   grid-column:1/-1;
@@ -280,13 +321,14 @@ a.where:hover{color:var(--accent);}
 .foot{margin:30px 6px 0;font-size:11.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);}
 
 /* ---- list mode: a denser row, not just a full-width copy of the grid card ---- */
-#list:not(.is-grid) .unit{padding:16px 18px;}
+#list:not(.is-grid) .unit{padding:16px 18px;min-height:300px;}
 #list:not(.is-grid) .unit-top{gap:12px;padding-right:30px;}
 #list:not(.is-grid) .knob{width:40px;height:40px;font-size:13px;}
 #list:not(.is-grid) .unit h2{font-size:16px;}
 #list:not(.is-grid) .stamp{margin-top:7px;padding:4px 11px;font-size:10.5px;}
 #list:not(.is-grid) .well{margin-top:12px;padding:12px 14px;}
-#list:not(.is-grid) .unit-actions{gap:9px;margin-top:14px;}
+#list:not(.is-grid) .caps{max-height:60px;}
+#list:not(.is-grid) .unit-actions{gap:9px;padding-top:14px;}
 #list:not(.is-grid) .press{padding:10px;font-size:12.5px;min-width:100px;}
 #list:not(.is-grid) .favbtn{width:29px;height:29px;top:12px;right:12px;}
 #list:not(.is-grid) .favbtn svg{width:15px;height:15px;}
@@ -304,26 +346,14 @@ a.where:hover{color:var(--accent);}
 .tel-lines{display:flex;flex-direction:column;gap:3px;}
 .tel-line{display:block;}
 
-/* --- suggestions + insurer picker, carved ------------------------------- */
+/* --- search suggestions, carved ------------------------------------------
+   Neu builds its own inline insurer list (see .insdrop-* above) instead of
+   using the shared bottom-sheet picker, so no .gf-ins-* rules are needed
+   here. ------------------------------------------------------------------ */
 body .gf-sugg{border:0;border-radius:20px;background:var(--surface);box-shadow:var(--up-lg);padding:6px;}
 body .gf-sugg-row{border-radius:14px;font-family:'Poppins',sans-serif;color:var(--ink);margin:2px 0;}
 body .gf-sugg-row:hover, body .gf-sugg-row[aria-selected="true"]{box-shadow:var(--in-sm);}
 body .gf-sugg-kind{color:var(--ink-3);}
-body .gf-ins-trigger{border:0;border-radius:16px;background:var(--surface);box-shadow:var(--up);
-  font-family:'Poppins',sans-serif;color:var(--ink);padding:13px 16px;}
-body .gf-ins-label{color:var(--ink-3);font-weight:600;}
-body .gf-ins-panel{background:var(--surface);border-radius:26px 26px 0 0;box-shadow:var(--up-lg);}
-body .gf-ins-top h2{font-family:'Poppins',sans-serif;font-weight:600;color:var(--ink);}
-body .gf-ins-grab{background:var(--dark);}
-body .gf-ins-x{border:0;background:var(--surface);box-shadow:var(--up-sm);color:var(--ink-2);border-radius:12px;width:32px;height:32px;}
-body .gf-ins-search input{border:0;border-radius:16px;background:var(--surface);box-shadow:var(--in);
-  font-family:'Poppins',sans-serif;color:var(--ink);}
-body .gf-ins-row{border-radius:15px;font-family:'Poppins',sans-serif;color:var(--ink);}
-body .gf-ins-row:hover{box-shadow:var(--up-sm);}
-body .gf-ins-n{border-radius:11px;background:var(--surface);box-shadow:var(--in-sm);color:var(--ink-2);}
-body .gf-ins-row[aria-selected="true"]{background:var(--surface);color:var(--accent);font-weight:600;box-shadow:var(--in-sm);}
-body .gf-ins-row[aria-selected="true"] .gf-ins-n{color:var(--accent);}
-@media (min-width:560px){ .gf-ins-panel{border-radius:26px;} }
 
 /* --- call sheet, Neu: one surface, carved wells -------------------------- */
 body #gfCall{background:rgba(44,51,70,.32);}
