@@ -87,9 +87,36 @@ design file.
    it next to `index.html`.
 4. Open `admin.html`, enter your key, and confirm it loads.
 
-**No PHP on your host?** Delete `submit.php`, `admin.html`, `admin.js` and
-`admin.css`, then open `core.js` and set `SUBMIT_ENDPOINT` to `''`. The
-directory still works — the add button just disappears.
+**No PHP on your host?** The site detects this automatically — see
+[Hosting on GitHub Pages](#hosting-on-github-pages) below. To remove the
+dead weight instead of relying on the fallback, delete `submit.php`,
+`admin.html`, `admin.js` and `admin.css`, then open `core-v4.js` and set
+`SUBMIT_ENDPOINT` to `''`. The directory still works — the add button just
+disappears.
+
+## Hosting on GitHub Pages
+
+The site can be served from two places at once:
+
+- **InfinityFree** (or any PHP host) — full read/write. `submit.php` serves
+  the live published dataset and accepts visitor submissions.
+- **GitHub Pages** (or any static host) — read-only. GitHub Pages cannot run
+  `submit.php`, so `core-v4.js` detects that the request failed or came back
+  as non-JSON (raw PHP source) and falls back to fetching
+  `data/published-workshops.json` directly as a static file. The directory
+  renders normally; the **+ Add workshop** button hides itself since there is
+  no backend to send submissions to.
+
+Because `submit.php` reads and writes that same `data/published-workshops.json`
+file on the PHP host, keeping the GitHub repo in sync with what is published
+on InfinityFree (redeploy or copy the file over after approving submissions)
+keeps both copies of the site showing the same workshops.
+
+To enable it: push this repo to GitHub, then in **Settings → Pages** choose
+**Deploy from a branch**, pick `main` and `/ (root)`. No build step is
+needed — everything here is static HTML/CSS/JS. `admin.html` will not work
+on GitHub Pages, since review/approval requires `submit.php`; use it on the
+InfinityFree copy only.
 
 ## The ten designs
 

@@ -200,7 +200,22 @@
   function fetchPublishedData(){
     return fetch('submit.php?action=published',{cache:'no-store',headers:{'Accept':'application/json'}})
       .then(function(res){ if(!res.ok) throw new Error('Published workshop API returned HTTP '+res.status); return res.json(); })
-      .then(function(data){ if(!data||data.ok!==true||!Array.isArray(data.workshops)) throw new Error('Published workshop API returned invalid data.'); initializePublishedData(data.workshops); });
+      .then(function(data){ if(!data||data.ok!==true||!Array.isArray(data.workshops)) throw new Error('Published workshop API returned invalid data.'); initializePublishedData(data.workshops); })
+      .catch(function(apiErr){
+        /* submit.php only runs on a PHP host (e.g. InfinityFree). Static hosts
+           such as GitHub Pages cannot execute it, so the request above either
+           fails outright or returns the raw PHP source instead of JSON. Fall
+           back to the static snapshot checked into data/published-workshops.json
+           so the directory still renders, read-only, on a static host. */
+        return fetch('data/published-workshops.json',{cache:'no-store',headers:{'Accept':'application/json'}})
+          .then(function(res){ if(!res.ok) throw apiErr; return res.json(); })
+          .then(function(rows){
+            if(!Array.isArray(rows)) throw apiErr;
+            SUBMIT_ENDPOINT = ''; // no backend to send submissions to; hides the add-workshop button
+            initializePublishedData(rows);
+          })
+          .catch(function(){ throw apiErr; });
+      });
   }
 
   /* ======================================================================
