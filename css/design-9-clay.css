@@ -158,6 +158,7 @@ body{
   margin:0 0 9px;font-size:11.5px;font-weight:700;letter-spacing:.13em;
   text-transform:uppercase;color:var(--ink-3);
 }
+.tray-tel{text-align:right;}
 .beads{display:flex;flex-wrap:wrap;gap:7px;}
 .bead{
   background:#fff;border-radius:13px;padding:5px 12px;

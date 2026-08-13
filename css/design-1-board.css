@@ -188,7 +188,7 @@ body{
 }
 .row-addr{color:var(--ink-2);font-size:13.5px;margin:0 0 9px;}
 .tags{display:flex;flex-wrap:wrap;gap:5px;}
-.tags-panel{margin-top:6px;}
+.tags-panel{margin-top:10px;}
 .tag{
   font-family:'Roboto Mono',monospace;
   font-size:10.5px;

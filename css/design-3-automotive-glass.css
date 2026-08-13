@@ -167,12 +167,12 @@ body{
 }
 
 .ag-contact{border-top:1px solid var(--glass-border);padding-top:12px;}
-.ag-phone-block{margin-bottom:10px;}
+.ag-phone-block{margin-bottom:10px;text-align:right;}
 .ag-phone-block .tel-lines{display:flex;flex-direction:column;gap:3px;}
 .ag-phone-block .tel-line{
   color:var(--accent-bright);text-decoration:none;font-weight:700;font-size:14px;
 }
-.ag-no-phone{margin:0 0 10px;color:var(--text-faint);font-size:12px;font-style:italic;}
+.ag-no-phone{margin:0 0 10px;color:var(--text-faint);font-size:12px;font-style:italic;text-align:right;}
 
 .ag-quick-actions{display:flex;gap:7px;}
 .ag-btn{

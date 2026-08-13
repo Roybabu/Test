@@ -65,7 +65,7 @@ function render(){
         <p>${isAg?'Makes handled':'Insurer panels'}</p>
         <div class="caps">${items}</div>
       </div>
-      <div class="well">
+      <div class="well well-tel">
         <p>Phone</p>
         ${w.phone ? GF.phoneLines(w.phone) : '<span class="where">No number on file</span>'}
       </div>

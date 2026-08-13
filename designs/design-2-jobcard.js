@@ -66,11 +66,11 @@ function render(){
       <div class="grid">
         <div class="cell"><span class="lbl">Address</span>
           <div class="val"><a href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(w.address)}</a></div></div>
+        ${third}
         <div class="cell"><span class="lbl">Telephone</span>
           <div class="val ${w.phone ? '' : 'is-blank'}">${w.phone
             ? GF.phoneLines(w.phone)
             : '— not on file —'}</div></div>
-        ${third}
       </div>
       <div class="card-acts">
         ${w.phone ? `<a class="fbtn" href="${GF.firstTel(w.phone)}">Call</a>` : `<span class="fbtn is-off">Call</span>`}
