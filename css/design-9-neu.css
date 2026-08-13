@@ -73,14 +73,28 @@ body::after{
 .emblem-plate{
   position:absolute;inset:0;border-radius:22px;
   background:var(--surface);box-shadow:var(--up-lg);
+  animation:gf-glow 5s ease-in-out .8s infinite;
 }
-.emblem-ring{position:absolute;inset:6px;animation:gf-spin 9s linear infinite;}
-.emblem-mark{
-  position:relative;font-weight:700;font-size:18px;letter-spacing:-.02em;
-  background-image:linear-gradient(155deg,var(--accent),var(--accent-2));
-  -webkit-background-clip:text;background-clip:text;color:transparent;
+.emblem-icon{
+  position:relative;width:28px;height:28px;
+  transform-origin:50% 50%;
+  animation:gf-settle .8s cubic-bezier(.2,.85,.3,1.3) both;
 }
-@keyframes gf-spin{ to{ transform:rotate(360deg); } }
+.emblem:hover .emblem-icon{animation:gf-wiggle .5s ease-in-out;}
+@keyframes gf-settle{
+  0%{opacity:0;transform:rotate(-55deg) scale(.35);}
+  65%{opacity:1;transform:rotate(8deg) scale(1.08);}
+  100%{opacity:1;transform:rotate(0) scale(1);}
+}
+@keyframes gf-glow{
+  0%,100%{box-shadow:var(--up-lg);}
+  50%{box-shadow:11px 11px 24px var(--dark), -11px -11px 24px var(--light), 0 0 14px rgba(74,87,196,.28);}
+}
+@keyframes gf-wiggle{
+  0%,100%{transform:rotate(0);}
+  25%{transform:rotate(-12deg);}
+  75%{transform:rotate(12deg);}
+}
 .top-text h1{font-size:27px;font-weight:600;letter-spacing:-.02em;margin:0;line-height:1.15;}
 .top-text p{margin:2px 0 0;color:var(--ink-2);font-size:14px;font-weight:400;}
 
@@ -266,6 +280,19 @@ a.where:hover{color:var(--accent);}
 .hollow h2{font-size:19px;font-weight:600;margin:0 0 6px;}
 .hollow p{margin:0;color:var(--ink-2);font-size:14px;}
 .foot{margin:30px 6px 0;font-size:11.5px;font-weight:500;letter-spacing:.1em;text-transform:uppercase;color:var(--ink-3);}
+
+/* ---- list mode: a denser row, not just a full-width copy of the grid card ---- */
+#list:not(.is-grid) .unit{padding:16px 18px;}
+#list:not(.is-grid) .unit-top{gap:12px;padding-right:30px;}
+#list:not(.is-grid) .knob{width:40px;height:40px;font-size:13px;}
+#list:not(.is-grid) .unit h2{font-size:16px;}
+#list:not(.is-grid) .stamp{margin-top:7px;padding:4px 11px;font-size:10.5px;}
+#list:not(.is-grid) .well{margin-top:12px;padding:12px 14px;}
+#list:not(.is-grid) .well-grid{gap:10px;margin-top:12px;}
+#list:not(.is-grid) .unit-actions{gap:9px;margin-top:14px;}
+#list:not(.is-grid) .press{padding:10px;font-size:12.5px;min-width:100px;}
+#list:not(.is-grid) .favbtn{width:29px;height:29px;top:12px;right:12px;}
+#list:not(.is-grid) .favbtn svg{width:15px;height:15px;}
 
 @media (max-width:560px){
   .unit-top{flex-direction:column;padding-right:0;}

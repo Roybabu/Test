@@ -29,11 +29,10 @@ const design = {
   <header class="top">
     <div class="emblem" aria-hidden="true">
       <span class="emblem-plate"></span>
-      <svg class="emblem-ring" viewBox="0 0 64 64" fill="none">
-        <circle cx="32" cy="32" r="26" stroke="url(#neuRingGrad)" stroke-width="3" stroke-linecap="round" stroke-dasharray="95 270"/>
-        <defs><linearGradient id="neuRingGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4A57C4"/><stop offset="1" stop-color="#8B96EE"/></linearGradient></defs>
+      <svg class="emblem-icon" viewBox="0 0 24 24" fill="none">
+        <defs><linearGradient id="neuIconGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4A57C4"/><stop offset="1" stop-color="#8B96EE"/></linearGradient></defs>
+        <path fill="url(#neuIconGrad)" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/>
       </svg>
-      <span class="emblem-mark">GF</span>
     </div>
     <div class="top-text">
       <h1>Garage Finder</h1>
