@@ -101,7 +101,7 @@ so editing one cannot break another.
 |---|---|---|
 | 1 | `board` | Industrial dispatch board, number-plate strip with counts |
 | 2 | `jobcard` | Carbon-copy repair order on ruled ledger paper |
-| 3 | `pocket` | Phone-app cards, chip filters, sticky filter dock |
+| 3 | `automotive-glass` | Gradient/tech-forward, glassmorphism, modern professional |
 | 4 | `nightdesk` | Dark console with a sticky filter rail |
 | 5 | `signpost` | Road signage, green gantry header, sign panels |
 | 6 | `index` | Printed directory, letter dividers, A–Z jump rail |

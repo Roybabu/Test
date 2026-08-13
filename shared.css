@@ -53,10 +53,7 @@
 #gfAdd .gf-msg{margin:0 0 12px;font-size:13.5px;padding:10px 12px;border-radius:9px;line-height:1.45;}
 #gfAdd .gf-msg.is-ok{background:#E4F6EE;color:#0E6B4C;}
 #gfAdd .gf-msg.is-bad{background:#FDECEC;color:#96231F;}
-#gfAdd .gf-sheet-acts{display:flex;flex-wrap:wrap;gap:9px;margin-top:4px;}
-/* Clear form is a rarely-used escape hatch — it stays compact so Cancel and
-   the primary action keep their width on a phone. */
-#gfAdd .gf-sheet-acts #gfClearForm{flex:0 0 auto;padding-left:14px;padding-right:14px;}
+#gfAdd .gf-sheet-acts{display:flex;gap:9px;margin-top:4px;}
 #gfAdd .gf-sheet-acts button{flex:1;appearance:none;cursor:pointer;border-radius:11px;padding:12px;
   font:600 14.5px/1 'Inter',sans-serif;border:1px solid #DFE3EB;background:#F4F6FA;color:#16181D;}
 #gfAdd .gf-primary{background:#16181D;border-color:#16181D;color:#fff;}
@@ -376,66 +373,3 @@ input[type="search"]::-webkit-search-results-decoration{
 }
 @media (prefers-reduced-motion:reduce){.gf-ins-panel{animation:none!important;}}
 .gf-copy-buffer{position:fixed;top:0;left:0;opacity:0;pointer-events:none}
-
-/* ============================================================================
-   PENDING / AWAITING-REVIEW BADGE
-   Shown on cards the visitor has submitted but not yet been approved.
-   ========================================================================== */
-.gf-pending-badge{
-  display:inline-block;
-  position:relative;
-  z-index:2;
-  margin-top:4px;
-  padding:2px 8px;
-  border-radius:99px;
-  font:600 11px/1.6 'Inter',sans-serif;
-  letter-spacing:.03em;
-  text-transform:uppercase;
-  color:#7A4F00;
-  background:#FFF3CD;
-  border:1px solid #F0C040;
-  vertical-align:middle;
-}
-
-.gf-pending-edit{
-  display:inline-block;
-  position:relative;
-  z-index:2;
-  margin-top:4px;
-  margin-left:6px;
-  padding:2px 10px;
-  border-radius:99px;
-  font:600 11px/1.6 'Inter',sans-serif;
-  letter-spacing:.02em;
-  color:#0E5C55;
-  background:#fff;
-  border:1px solid #0E5C55;
-  cursor:pointer;
-  vertical-align:middle;
-}
-.gf-pending-edit:hover{ background:#0E5C55; color:#fff; }
-
-/* A card belonging to the visitor's own not-yet-approved submission:
-   softly blurred until the owner approves it, with the badge/edit
-   button (both z-index:2, above the ::after overlay at z-index:1)
-   staying crisp on top. */
-.gf-is-pending{ position:relative; }
-.gf-is-pending::after{
-  content:'';
-  position:absolute;
-  inset:0;
-  z-index:1;
-  border-radius:inherit;
-  background:rgba(255,255,255,.06);
-  backdrop-filter:blur(1.5px);
-  -webkit-backdrop-filter:blur(1.5px);
-  pointer-events:none;
-}
-
-/* Lighter treatment for compact list rows (e.g. Split Desk's left list) —
-   a full blur is too heavy for a single line of text, so just a tint
-   and an amber edge to flag it as awaiting review. */
-.gf-is-pending-row{
-  opacity:.82;
-  border-left:3px solid #F0C040 !important;
-}

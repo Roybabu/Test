@@ -52,16 +52,17 @@ function render(){
     return;
   }
   rowsEl.innerHTML = list.map(w => {
-    const tags = [`<span class="tag">${esc(w.emirate)}</span>`]
-      .concat(w.makes.map(m => `<span class="tag">${esc(m)}</span>`))
+    const otherTags = w.makes.map(m => `<span class="tag">${esc(m)}</span>`)
       .concat(w.insurers.map(i => `<span class="tag is-panel">${esc(i)}</span>`))
       .join('');
-    return `<article class="row ${w.type === 'nonagency' ? 'is-nonagency' : ''}">
+    return `<article class="row ${w.type === 'nonagency' ? 'is-nonagency' : ''} ${w.pending ? 'gf-is-pending' : ''}">
       <div class="row-flag"></div>
       <div class="row-main">
         <h2 class="row-name">${esc(w.name)}</h2>
+        ${GF.pendingBadge(w)}
         <p class="row-addr"><a class="maplink" href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(w.address)}</a></p>
-        <div class="tags">${tags}</div>
+        <div class="tags tags-location"><span class="tag">${esc(w.emirate)}</span></div>
+        ${otherTags ? `<div class="tags tags-panel">${otherTags}</div>` : ''}
       </div>
       <div class="row-side">
         <span class="kind">${w.type === 'agency' ? 'Agency' : 'Non-agency'}</span>

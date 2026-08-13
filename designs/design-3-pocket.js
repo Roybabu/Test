@@ -132,11 +132,12 @@ function render(){
     const call = w.phone
       ? `<a class="btn is-primary" href="${GF.firstTel(w.phone)}">Call</a>`
       : `<span class="btn is-off">No number on file</span>`;
-    return `<article class="card">
+    return `<article class="card ${w.pending?'gf-is-pending':''}">
       <div class="card-head">
         <span class="avatar is-${kind}">${esc(initials(w.name))}</span>
         <div>
           <h2 class="card-name">${esc(w.name)}</h2>
+          ${GF.pendingBadge(w)}
           <p class="card-loc"><a href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(w.address)}</a> · ${esc(w.emirate)}</p>
           <span class="badge is-${kind}">${label}</span>
         </div>

@@ -40,10 +40,11 @@ function render(){
   }
   gridEl.innerHTML = list.map(w => {
     const items = (w.type === 'agency' ? w.makes : w.insurers).map(t => `<span class="mark">${esc(t)}</span>`).join('');
-    return `<article class="tile">
+    return `<article class="tile ${w.pending?'gf-is-pending':''}">
       <div class="tile-head" data-emirate="${esc(w.emirate)}">
         <p class="tile-kind">${w.type==='agency'?'Agency':'Non-agency'} · ${esc(w.emirate)}</p>
         <h2>${esc(w.name)}</h2>
+        ${GF.pendingBadge(w)}
       </div>
       <div class="tile-body">
         <div class="kv"><b>Address</b><a href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(w.address)}</a></div>

@@ -6,7 +6,7 @@ const css = fs.readFileSync(path.join(__dirname, '..', 'css', 'shared.css'), 'ut
 if (!core.includes("wrap.className = 'gf-sugg gf-add-sugg'")) {
   throw new Error('Add-workshop suggestions must use the homepage search skin');
 }
-if (!core.includes("button.className = 'gf-sugg-row gf-sugg-item'")) {
+if (!core.includes("button.className = 'gf-sugg-row gf-add-sugg-item'")) {
   throw new Error('Suggestion rows must use the homepage search row skin');
 }
 if (!css.includes('#gfAdd .gf-add-sugg')) {

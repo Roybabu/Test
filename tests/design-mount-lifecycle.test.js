@@ -1,6 +1,6 @@
 'use strict';
 const fs=require('fs'), assert=require('assert');
-const core=fs.readFileSync(require('path').join(__dirname,'..','core.js'),'utf8');
+const core=fs.readFileSync(require('path').join(__dirname,'..','core-v4.js'),'utf8');
 assert(core.includes('var mountSeq = 0'));
 assert((core.match(/seq !== mountSeq/g)||[]).length >= 4,'mount/version guards missing');
 assert(core.includes('previous.destroy()'),'destroy lifecycle missing');

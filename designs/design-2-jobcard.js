@@ -53,11 +53,12 @@ function render(){
            <div class="val">${esc(w.makes.join(', '))}</div></div>`
       : `<div class="cell"><span class="lbl">Insurer panels</span>
            <ul class="panel-list">${w.insurers.map(p => `<li>${esc(p)}</li>`).join('')}</ul></div>`;
-    return `<article class="card">
+    return `<article class="card ${w.pending?'gf-is-pending':''}">
       <div class="card-top">
         <span class="card-no">${pad(i+1)}</span>
         <div>
           <h2 class="card-name">${esc(w.name)}</h2>
+          ${GF.pendingBadge(w)}
           <span class="lbl">${esc(w.emirate)}</span>
         </div>
         <span class="stamp ${isAgency ? 'is-agency' : ''}">${isAgency ? 'Agency' : 'Non-agency'}</span>

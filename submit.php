@@ -586,7 +586,7 @@ if ($method === 'POST') {
     out(['ok' => false, 'error' => 'Method not allowed.'], 405);
 }
 
-$allowedTopLevelFields = ['action', 'key', 'workshop', 'id', 'status'];
+$allowedTopLevelFields = ['action', 'key', 'workshop', 'id', 'ids', 'status'];
 $unknownTopLevel = array_diff(array_keys($decoded), $allowedTopLevelFields);
 if ($unknownTopLevel) {
     validationError('Unknown request field: ' . (string)reset($unknownTopLevel) . '.');
@@ -598,7 +598,7 @@ $key = $decoded['key'] ?? '';
 if (!is_string($action) || $action === '') {
     validationError('Action is required.', 'action');
 }
-$allowedActions = ['login', 'session', 'logout', 'submit', 'published', 'list', 'delete', 'clear-handled', 'clear', 'approve', 'reject', 'publish', 'edit', 'audit-list', 'verification-list', 'verification'];
+$allowedActions = ['login', 'session', 'logout', 'submit', 'published', 'list', 'delete-published', 'submission-status', 'approve', 'reject', 'publish', 'edit', 'edit-own', 'audit-list', 'verification-list', 'verification'];
 if (!in_array($action, $allowedActions, true)) {
     validationError('Unknown action.', 'action');
 }
@@ -726,6 +726,22 @@ if ($action === 'submit') {
         ALLOWED_INSURERS
     );
 
+    // Assemble the validated fields into the record that actually gets stored.
+    $workshop = [
+        'id'       => $workshopId,
+        'name'     => $name,
+        'type'     => $type,
+        'emirate'  => $emirate,
+        'address'  => $address,
+        'phone'    => $phone,
+        'hours'    => $hours,
+        'notes'    => $notes,
+        'makes'    => $makes,
+        'insurers' => $insurers,
+        'duplicateReview' => $duplicateReview,
+    ];
+    if ($email !== '') $workshop['email'] = $email;
+
     $result = withStateLock(function() use ($kind, $target, $workshop) {
         $rows = readAll();
 
@@ -746,6 +762,11 @@ if ($action === 'submit') {
         $workshop['duplicateReview'] = false;
         foreach ($rows as $existing) {
             $existingWorkshop = is_array($existing['workshop'] ?? null) ? $existing['workshop'] : [];
+            // A row with no usable name is malformed (e.g. written by an older
+            // build that failed to store the workshop body). Its identity key
+            // would be empty and would therefore collide with every other
+            // malformed row, blocking all future submissions. Skip those.
+            if (trim((string)($existingWorkshop['name'] ?? '')) === '') continue;
             if (exactWorkshopMatch($existingWorkshop, $workshop)) {
                 validationError('A submission for this normalized workshop already exists.', 'workshop');
             }
@@ -772,6 +793,142 @@ if ($action === 'submit') {
     });
     if (!($result['ok'] ?? false)) out(['ok' => false, 'error' => $result['error']], (int)($result['status'] ?? 500));
     out($result);
+}
+
+// ---- PUBLIC: visitor edits their own still-pending submission ------------
+if ($action === 'edit-own') {
+    requirePost();
+    $id = $decoded['id'] ?? '';
+    $incoming = $decoded['workshop'] ?? null;
+    if (!is_string($id) || !preg_match('/^sub-\d{8}-\d{6}-[a-f0-9]{6}$/', $id)) {
+        validationError('Invalid submission ID.', 'id');
+    }
+    if (!is_array($incoming)) {
+        validationError('Workshop data is required.', 'workshop');
+    }
+
+    $allowedWorkshopFields = [
+        'id', 'name', 'type', 'emirate', 'phone', 'makes', 'insurers',
+        'address', 'hours', 'notes', 'email', 'kind', 'target', 'duplicateReview'
+    ];
+    $unknown = array_diff(array_keys($incoming), $allowedWorkshopFields);
+    if ($unknown) {
+        validationError('Unknown workshop field: ' . (string)reset($unknown) . '.');
+    }
+
+    $name = validateString(
+        $incoming['name'] ?? null, 'Workshop name', MAX_LENGTHS['name'], true,
+        '/^[\p{L}\p{N}][\p{L}\p{N}\p{M}\s&().,\-\/+\'’]*$/u'
+    );
+    $type = validateString($incoming['type'] ?? null, 'Workshop type', 20, true, '/^[a-z]+$/');
+    if (!in_array($type, WORKSHOP_TYPES, true)) {
+        validationError('Workshop type must be agency or nonagency.', 'type');
+    }
+    $emirate = validateString($incoming['emirate'] ?? null, 'Emirate', 30, true, '/^[\p{L}\s-]+$/u');
+    if (!in_array($emirate, EMIRATES, true)) {
+        validationError('Invalid UAE emirate.', 'emirate');
+    }
+    $address = validateString(
+        $incoming['address'] ?? null, 'Address', MAX_LENGTHS['address'], false,
+        '/^[\p{L}\p{N}\p{M}\s#&().,\-\/+:;\'’]*$/u'
+    );
+    $hours = validateString(
+        $incoming['hours'] ?? null, 'Hours', MAX_LENGTHS['hours'], false,
+        '/^[\p{L}\p{N}\p{M}\s#&().,\-\/+:;\'’]*$/u'
+    );
+    $notes = validateString(
+        $incoming['notes'] ?? null, 'Notes', MAX_LENGTHS['notes'], false,
+        '/^[\p{L}\p{N}\p{M}\s#&().,\-\/+:;!?%\'’]*$/u'
+    );
+    $phone = normalizePhone($incoming['phone'] ?? null, false);
+    $email = validateEmail($incoming['email'] ?? null, false);
+    $makes = validateList($incoming['makes'] ?? null, 'Makes', MAX_LENGTHS['list'], 25, $type === 'agency', ALLOWED_MAKES);
+    $insurers = validateList($incoming['insurers'] ?? null, 'Insurers', MAX_LENGTHS['insurer'], 25, $type === 'nonagency', ALLOWED_INSURERS);
+
+    $result = withStateLock(function() use ($id, $name, $type, $emirate, $address, $hours, $notes, $phone, $email, $makes, $insurers) {
+        $rows = readAll();
+        $idx = null;
+        foreach ($rows as $i => $r) { if (($r['id'] ?? '') === $id) { $idx = $i; break; } }
+        if ($idx === null) {
+            return ['ok' => false, 'status' => 404, 'error' => 'Submission not found.'];
+        }
+        $row = $rows[$idx];
+
+        // Only the original submitter (by IP hash, same trust model as the
+        // rate limiter above) may edit, and only while still pending review.
+        if (($row['by'] ?? '') !== ipHash()) {
+            return ['ok' => false, 'status' => 403, 'error' => 'This submission was not made from this connection.'];
+        }
+        if (($row['status'] ?? 'pending') !== 'pending') {
+            return ['ok' => false, 'status' => 409, 'error' => 'This submission has already been reviewed and can no longer be edited.'];
+        }
+
+        $base = is_array($row['workshop'] ?? null) ? $row['workshop'] : [];
+        $workshop = [
+            'id'       => is_string($base['id'] ?? null) ? $base['id'] : null,
+            'name'     => $name,
+            'type'     => $type,
+            'emirate'  => $emirate,
+            'address'  => $address,
+            'phone'    => $phone,
+            'hours'    => $hours,
+            'notes'    => $notes,
+            'makes'    => $makes,
+            'insurers' => $insurers,
+            'duplicateReview' => false,
+        ];
+        if ($email !== '') $workshop['email'] = $email;
+
+        foreach ($rows as $i => $existing) {
+            if ($i === $idx) continue;
+            $existingWorkshop = is_array($existing['workshop'] ?? null) ? $existing['workshop'] : [];
+            if (trim((string)($existingWorkshop['name'] ?? '')) === '') continue;
+            if (exactWorkshopMatch($existingWorkshop, $workshop)) {
+                return ['ok' => false, 'status' => 422, 'error' => 'Another submission already matches these details.'];
+            }
+            if (uncertainWorkshopMatch($existingWorkshop, $workshop)) {
+                $workshop['duplicateReview'] = true;
+            }
+        }
+
+        $rows[$idx]['workshop'] = $workshop;
+        $rows[$idx]['received'] = date('c');
+        $rows[$idx]['ts'] = time();
+        if (!writeAll($rows)) {
+            return ['ok' => false, 'status' => 500, 'error' => 'Could not save your changes — check folder permissions.'];
+        }
+        if (!recordAuditUnlocked($id, 'edit-own', 'pending', 'pending', [])) {
+            return ['ok' => false, 'status' => 500, 'error' => 'Changes saved but the audit log could not be written.'];
+        }
+        return ['ok' => true, 'workshop' => $workshop];
+    });
+    if (!($result['ok'] ?? false)) out(['ok' => false, 'error' => $result['error']], (int)($result['status'] ?? 500));
+    out($result);
+}
+
+// ---- PUBLIC: status of a visitor's own submissions -----------------------
+/* A device keeps its own submissions in localStorage so they show while
+   awaiting review. Nothing on the server can reach into that storage, so
+   without this the device would keep showing a workshop after the owner
+   rejected it or removed it from the directory. The client asks here and
+   drops anything no longer pending. Only a status is returned, and only
+   for an exact submission id, so this leaks nothing a guesser could use. */
+if ($action === 'submission-status') {
+    requirePost();
+    $ids = $decoded['ids'] ?? null;
+    if (!is_array($ids)) validationError('A list of submission ids is required.', 'ids');
+    if (count($ids) > 50) validationError('Too many submission ids in one request.', 'ids');
+    $rows = readAll();
+    $statuses = [];
+    foreach ($ids as $rawId) {
+        if (!is_string($rawId) || !preg_match('/^sub-\d{8}-\d{6}-[a-f0-9]{6}$/', $rawId)) continue;
+        $found = null;
+        foreach ($rows as $r) { if (($r['id'] ?? '') === $rawId) { $found = $r; break; } }
+        // A row that is gone entirely was deleted, published-then-removed, or
+        // cleared. Either way the device should stop showing it.
+        $statuses[$rawId] = $found === null ? 'missing' : (string)($found['status'] ?? 'pending');
+    }
+    out(['ok' => true, 'statuses' => $statuses]);
 }
 
 // ---- PUBLIC: published dataset -------------------------------------------
@@ -856,7 +1013,7 @@ if ($action === 'reject') {
 if ($action === 'edit') {
     requirePost(); requireCsrf();
     $id=$decoded['id']??''; $incoming=$decoded['workshop']??null;
-    if(!is_string($id)||!preg_match('/^sub-\d{8}-\d{6}$/',$id))validationError('Invalid submission ID.','id');
+    if(!is_string($id)||!preg_match('/^sub-\d{8}-\d{6}-[a-f0-9]{6}$/',$id))validationError('Invalid submission ID.','id');
     if(!is_array($incoming))validationError('Workshop data is required.','workshop');
     $result=withStateLock(function() use($id,$incoming){
         $rows=readAll(); $idx=null; foreach($rows as $i=>$r)if(($r['id']??'')===$id){$idx=$i;break;}
@@ -897,31 +1054,63 @@ if ($action === 'publish') {
     out($result,(int)($result['status']??200));
 }
 
-// ---- ADMIN: delete one ---------------------------------------------------
-if ($action === 'delete') {
+// Deliberately no per-submission 'delete' action here. A submission row —
+// pending, approved, published, or rejected — is never removable from the
+// queue by any action in this file. It is the only record of when and what
+// was submitted. To take a published workshop off the live site, use
+// 'delete-published' below, which touches only the published dataset and
+// leaves the originating submission row untouched.
+
+// ---- ADMIN: remove a published workshop from the live directory ----------
+// This is deliberately the ONLY removal path anywhere in this file. Queue
+// records (pending-submissions.json, any status) are never deleted, cleared,
+// or otherwise erased by any action — see the removed 'delete'/'clear' block
+// below for why. This action only ever touches the live published dataset
+// and its verification entry; the originating submission row stays exactly
+// as it is, permanently, as the record of when and what was submitted.
+if ($action === 'delete-published') {
     requirePost(); requireCsrf();
-    $id=$decoded['id']??''; if(!is_string($id)||!preg_match('/^sub-\d{8}-\d{6}-[a-f0-9]{6}$/',$id))validationError('Invalid submission ID.','id');
-    $result=withStateLock(function() use($id){
-        $rows=readAll();$found=null;$new=[];foreach($rows as $r){if(($r['id']??'')===$id)$found=$r;else$new[]=$r;}
-        if($found===null)return ['ok'=>false,'status'=>404,'error'=>'Submission not found.'];
-        if(!writeAll($new))return ['ok'=>false,'status'=>500,'error'=>'Could not save.'];
-        if(!recordAuditUnlocked($id,'delete',(string)($found['status']??'unknown'),'deleted',[]))return ['ok'=>false,'status'=>500,'error'=>'Delete saved but audit log could not be written.'];
-        return ['ok'=>true,'remaining'=>count($new)];
+    $id = $decoded['id'] ?? '';
+    if (!is_string($id) || !preg_match('/^ws_[a-f0-9]{8}$/', $id)) {
+        validationError('Invalid workshop ID.', 'id');
+    }
+    $result = withStateLock(function() use ($id) {
+        $pubBefore = readPublished();
+        $pubAfter = [];
+        $removed = null;
+        foreach ($pubBefore as $w) {
+            if (($w['id'] ?? '') === $id && $removed === null) { $removed = $w; continue; }
+            $pubAfter[] = $w;
+        }
+        if ($removed === null) {
+            return ['ok' => false, 'status' => 404, 'error' => 'Published workshop not found.'];
+        }
+
+        if (!writePublished($pubAfter)) {
+            return ['ok' => false, 'status' => 500, 'error' => 'Could not save; the directory was not changed.'];
+        }
+
+        // Verification metadata is a side registry, not the source of truth.
+        // Cleaned up after the published dataset commits; a stale key here
+        // is harmless, so a failure here is not worth rolling back for.
+        $registry = readVerification();
+        if (array_key_exists($id, $registry)) {
+            unset($registry[$id]);
+            writeVerification($registry);
+        }
+
+        if (!recordAuditUnlocked($id, 'delete-published', 'published', 'unlisted', [
+            'name' => (string)($removed['name'] ?? '')
+        ])) {
+            return ['ok' => false, 'status' => 500, 'error' => 'Workshop removed but audit log could not be written.'];
+        }
+        return ['ok' => true, 'id' => $id, 'remaining' => count($pubAfter)];
     });
-    out($result,(int)($result['status']??200));
+    out($result, (int)($result['status'] ?? 200));
 }
 
-// ---- ADMIN: clear --------------------------------------------------------
-if ($action === 'clear' || $action === 'clear-handled') {
-    requirePost(); requireCsrf();
-    $result=withStateLock(function(){
-        $rows=readAll();$kept=[];$removed=[];foreach($rows as $r){if(in_array(($r['status']??''),['rejected','published'],true))$removed[]=$r;else$kept[]=$r;}
-        if(!writeAll($kept))return ['ok'=>false,'status'=>500,'error'=>'Could not save.'];
-        $ids=array_values(array_map(fn($r)=>(string)($r['id']??''),$removed));
-        if(!recordAuditUnlocked('','clear','mixed','cleared',['removedCount'=>count($removed),'removedSubmissionIds'=>$ids]))return ['ok'=>false,'status'=>500,'error'=>'Clear saved but audit log could not be written.'];
-        return ['ok'=>true,'removed'=>count($removed),'remaining'=>count($kept)];
-    });
-    out($result,(int)($result['status']??200));
-}
+// Deliberately no bulk 'clear'/'clear-handled' action here, for the same
+// reason 'delete' is gone above: rejected and published rows are history,
+// not clutter, and are kept indefinitely.
 
 validationError('Unknown action.', 'action');

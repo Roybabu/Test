@@ -44,11 +44,12 @@ function render(){
   listEl.innerHTML = list.map(w => {
     const items = (w.type === 'agency' ? w.makes : w.insurers)
       .map(t => `<span class="plate">${esc(t)}</span>`).join('');
-    return `<article class="sign ${w.type==='nonagency'?'is-nonagency':''}">
+    return `<article class="sign ${w.type==='nonagency'?'is-nonagency':''} ${w.pending?'gf-is-pending':''}">
       <div class="sign-in">
         <div class="sign-row">
           <div>
             <h2>${esc(w.name)}</h2>
+            ${GF.pendingBadge(w)}
             <p class="sign-addr"><a href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(w.address)}</a></p>
           </div>
           <span class="shield">${esc(SHORT[w.emirate] || "")}<br>${w.type==='agency'?'Agency':'Non-ag'}</span>

@@ -50,9 +50,10 @@ function render(){
   listEl.innerHTML = list.map(w => {
     const tags = w.makes.map(m => `<span class="c">${esc(m)}</span>`).join('') +
                  w.insurers.map(i => `<span class="c panel">${esc(i)}</span>`).join('');
-    return `<article class="entry ${w.type==='nonagency'?'is-nonagency':''}">
+    return `<article class="entry ${w.type==='nonagency'?'is-nonagency':''} ${w.pending?'gf-is-pending':''}">
       <div class="entry-top">
         <h3>${esc(w.name)}</h3>
+        ${GF.pendingBadge(w)}
         <span class="kind">${w.type==='agency'?'Agency':'Non-agency'}</span>
       </div>
       <p class="entry-meta"><a href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(w.address)}</a> · ${esc(w.emirate)}</p>

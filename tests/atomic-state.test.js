@@ -2,7 +2,7 @@ const fs = require('fs');
 const assert = require('assert');
 const php = fs.readFileSync('submit.php','utf8');
 
-for (const action of ['submit','approve','reject','edit','delete']) {
+for (const action of ['submit','approve','reject','edit']) {
   const start = php.indexOf(`if ($action === '${action}')`);
   assert(start >= 0, `${action} action missing`);
   const end = php.indexOf('\nif ($action ===', start + 10);

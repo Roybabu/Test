@@ -4,7 +4,7 @@ All ten design stylesheets were audited. The application actually declares these
 
 - Board: Archivo, Inter, Roboto Mono
 - Jobcard: IBM Plex Sans, IBM Plex Mono (self-hosted)
-- Pocket: Manrope
+- Automotive Glass: system UI font stack (no webfont — gradient/glassmorphism design)
 - Nightdesk: Inter, Space Grotesk, JetBrains Mono
 - Signpost: Barlow, Barlow Semi Condensed
 - Index: Fraunces, Inter

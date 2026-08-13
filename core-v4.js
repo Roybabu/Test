@@ -17,7 +17,7 @@
 
   /* ------------------------------------------------------------------------
      WHICH DESIGN LOADS FIRST
-     Change to any id below: board, jobcard, pocket, nightdesk, signpost,
+     Change to any id below: board, jobcard, automotive-glass, nightdesk, signpost,
      index, blocks, splitdesk, clay, neu
      ------------------------------------------------------------------------ */
   var DEFAULT_DESIGN = 'board';
@@ -36,7 +36,7 @@
   var DESIGN_MANIFEST = {
     board:     {name:'Board',     note:'Industrial dispatch board, plate strip', file:'design-1-board.js', css:'css/design-1-board.css', swatch:'#00713C'},
     jobcard:   {name:'Jobcard',   note:'Carbon-copy repair order, ruled form', file:'design-2-jobcard.js', css:'css/design-2-jobcard.css', swatch:'#1E2A63'},
-    pocket:    {name:'Pocket',    note:'Phone-app cards, chip filters', file:'design-3-pocket.js', css:'css/design-3-pocket.css', swatch:'#1A4FE0'},
+    'automotive-glass': {name:'Automotive Glass', note:'Gradient/tech-forward, glassmorphism, modern professional', file:'design-3-automotive-glass.js', css:'css/design-3-automotive-glass.css', swatch:'#00D4FF'},
     nightdesk: {name:'Nightdesk', note:'Dark console, sticky filter rail', file:'design-4-nightdesk.js', css:'css/design-4-nightdesk.css', swatch:'#8B7BFF'},
     signpost:  {name:'Signpost',  note:'Road signage, gantry header', file:'design-5-signpost.js', css:'css/design-5-signpost.css', swatch:'#00693E'},
     index:     {name:'Index',     note:'Printed directory, A-Z rail', file:'design-6-index.js', css:'css/design-6-index.css', swatch:'#1E2FA0'},
@@ -55,7 +55,7 @@
   var DESIGN_FONT_CSS = {
     board: 'https://fonts.googleapis.com/css2?family=Archivo:wght@400;500;600;700;800&family=Roboto+Mono:wght@400;500&display=swap',
     jobcard: 'css/fonts/jobcard.css',
-    pocket: 'https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap',
+    'automotive-glass': null,
     nightdesk: 'https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500&family=Space+Grotesk:wght@500;600;700&display=swap',
     signpost: 'https://fonts.googleapis.com/css2?family=Barlow+Semi+Condensed:wght@400;500;600;700&family=Barlow:wght@400;500;600&display=swap',
     index: 'https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,600;9..144,700&family=Inter:wght@400;500;600&display=swap',
@@ -130,7 +130,7 @@
      get the new ones instead of a cached copy. */
   var ASSET_V = '1';
 
-  var ORDER = ['board','jobcard','pocket','nightdesk','signpost',
+  var ORDER = ['board','jobcard','automotive-glass','nightdesk','signpost',
                'index','blocks','splitdesk','clay','neu'];
 
   var EMIRATES = ['Abu Dhabi','Dubai','Sharjah','Ajman',
@@ -151,6 +151,7 @@
       address: w.address || '', phone: w.phone || '', hours: w.hours || '', notes: w.notes || '',
       makes: w.makes || [], insurers: type === 'nonagency' ? (w.insurers || []) : [],
       pending: !!w.pending, duplicateReview: !!w.duplicateReview,
+      submissionId: w.submissionId || '',
       lastVerified: w.lastVerified || '',
       verificationStatus: ['verified','outdated','review'].indexOf(w.verificationStatus) !== -1 ? w.verificationStatus : 'review',
       source: w.source || 'Existing directory data'
@@ -158,6 +159,15 @@
   }
 
   var LOCAL_KEY = 'gf_local_workshops';
+
+  /* Unsent add/edit form contents, kept so navigating away or closing the
+     sheet by accident does not lose typing. Cleared only on a successful
+     submit or when the visitor clears the form themselves. */
+  var DRAFT_PREFIX = 'gf_form_draft_';
+  var draftKey = null;
+  function readDraft(key){ try { return JSON.parse(localStorage.getItem(DRAFT_PREFIX + key) || 'null'); } catch(e){ return null; } }
+  function writeDraft(key, data){ try { localStorage.setItem(DRAFT_PREFIX + key, JSON.stringify(data)); } catch(e){} }
+  function dropDraft(key){ try { localStorage.removeItem(DRAFT_PREFIX + key); } catch(e){} }
   function readLocal(){ try { return JSON.parse(localStorage.getItem(LOCAL_KEY) || '[]'); } catch(e){ return []; } }
   function writeLocal(list){ try { localStorage.setItem(LOCAL_KEY, JSON.stringify(list)); } catch(e){} }
   function normalizeIdentityText(s){ return String(s || '').normalize('NFKC').toLowerCase().replace(/\s+/g,' ').trim().replace(/[^\p{L}\p{N}\s]/gu,'').replace(/\s+/g,' '); }
@@ -635,6 +645,16 @@
     };
   }
 
+  function pendingBadge(w){
+    if (!w || !w.pending) return '';
+    var badge = '<span class="gf-pending-badge">Awaiting review</span>';
+    /* Editing needs the server-side submission id, which only exists once
+       the submit call has come back. A copy saved before that (or by an
+       older build) shows the badge without the button. */
+    if (!w.submissionId) return badge;
+    return badge + '<button type="button" class="gf-pending-edit" data-edit-pending="' + esc(w.id) + '">Edit</button>';
+  }
+
   window.GF = {
     esc:           esc,
     emirates:      EMIRATES,
@@ -652,7 +672,8 @@
     detailsText:   detailsText,
     copyDetails:   copyDetails,
     wireCopy:      wireCopy,
-    createCleanup: createCleanup
+    createCleanup: createCleanup,
+    pendingBadge:  pendingBadge
   };
 
   /* ---------- what the search box can suggest ---------- */
@@ -1154,7 +1175,15 @@
     if (!input) return;
     var wrap = document.createElement('div');
     wrap.className = 'gf-sugg gf-add-sugg';
+    wrap.id = input.id + 'Sugg';
+    wrap.setAttribute('role', 'listbox');
     input.parentNode.insertBefore(wrap, input.nextSibling);
+
+    input.setAttribute('role', 'combobox');
+    input.setAttribute('aria-autocomplete', 'list');
+    input.setAttribute('aria-controls', wrap.id);
+    input.setAttribute('aria-expanded', 'false');
+    function setExpanded(open){ input.setAttribute('aria-expanded', open ? 'true' : 'false'); }
 
     function normalizeList(){
       return (listFn() || []).map(function(item){
@@ -1168,7 +1197,7 @@
 
     function segments(){ return input.value.split(','); }
     function currentTerm(){ return segments()[segments().length - 1].trim(); }
-    function close(){ wrap.replaceChildren(); }
+    function close(){ wrap.replaceChildren(); setExpanded(false); }
 
     function choose(value){
       var segs = segments();
@@ -1177,6 +1206,7 @@
       close();
       input.focus();
       check(true);
+      saveDraft();
     }
 
     function render(){
@@ -1208,11 +1238,13 @@
       hits.forEach(function(n){
         var button = document.createElement('button');
         button.type = 'button';
-        button.className = 'gf-sugg-row gf-sugg-item';
+        button.className = 'gf-sugg-row gf-add-sugg-item';
+        button.setAttribute('role', 'option');
         button.dataset.v = n;
         button.textContent = n;
         wrap.appendChild(button);
       });
+      setExpanded(true);
     }
 
     // Only completed comma-separated values are validated while typing.
@@ -1298,9 +1330,24 @@
     b.id = 'gfAddBtn';
     b.type = 'button';
     b.textContent = '+ Add workshop';
-    b.addEventListener('click', openAdd);
+    b.addEventListener('click', function(){ openAdd(null); });
     document.body.appendChild(b);
   }
+
+  /* Every card for a pending (not-yet-approved) workshop carries an
+     "Edit" button (see GF.pendingBadge). Since designs are swapped out
+     and re-rendered constantly, this is one delegated listener rather
+     than something each design has to wire up itself. */
+  var editingId = null;
+  var editingSubmissionId = '';
+  document.addEventListener('click', function(e){
+    var b = e.target.closest && e.target.closest('[data-edit-pending]');
+    if (!b) return;
+    var id = b.getAttribute('data-edit-pending');
+    var w = (window.GF_DATA.workshops || []).filter(function(x){ return x.pending && x.id === id; })[0];
+    if (!w) return;
+    openAdd(w);
+  });
 
   function field(label, id, ph, tag){
     return '<label class="gf-f"><span>' + label + '</span>' +
@@ -1309,16 +1356,18 @@
         : '<input id="' + id + '" placeholder="' + ph + '">') + '</label>';
   }
 
-  function openAdd(){
+  function openAdd(editWorkshop){
+    editingId = editWorkshop ? editWorkshop.id : null;
+    editingSubmissionId = editWorkshop ? (editWorkshop.submissionId || '') : '';
     var box = document.getElementById('gfAdd');
     if (!box){
       box = document.createElement('div');
       box.id = 'gfAdd';
       box.innerHTML =
         '<div class="gf-sheet" role="dialog" aria-modal="true" aria-label="Add a workshop">' +
-          '<div class="gf-sheet-top"><h2>Add a workshop</h2>' +
+          '<div class="gf-sheet-top"><h2 id="gfSheetTitle">Add a workshop</h2>' +
             '<button type="button" id="gfAddClose" aria-label="Close">&times;</button></div>' +
-          '<p class="gf-sheet-note">This is sent to the site owner for review. It shows in your own list straight away, marked as awaiting review, and disappears from your device once the owner publishes it. <button type="button" id="gfClearMine" class="gf-linkbtn">Clear my saved additions</button></p>' +
+          '<p class="gf-sheet-note" id="gfSheetNote">This is sent to the site owner for review. It shows in your own list straight away, marked as awaiting review, and disappears from your device once the owner publishes it. <button type="button" id="gfClearMine" class="gf-linkbtn">Clear my saved additions</button></p>' +
           '<label class="gf-f"><span>Type</span><select id="gfType">' +
             '<option value="agency">Agency (dealer workshop)</option>' +
             '<option value="nonagency">Non-agency</option></select></label>' +
@@ -1334,6 +1383,7 @@
           field('Notes', 'gfNotes', 'Anything worth knowing before dispatch', 'textarea') +
           '<p class="gf-msg" id="gfMsg" hidden></p>' +
           '<div class="gf-sheet-acts">' +
+            '<button type="button" class="gf-secondary" id="gfClearForm">Clear form</button>' +
             '<button type="button" class="gf-secondary" id="gfCancel">Cancel</button>' +
             '<button type="button" class="gf-primary" id="gfSave">Send for review</button>' +
           '</div>' +
@@ -1352,6 +1402,20 @@
                     function(){ return window.GF_DATA.insurers; }, 'insurer');
       attachSuggest(document.getElementById('gfMakes'), allMakes, 'car make');
       document.getElementById('gfSave').addEventListener('click', save);
+
+      /* Any keystroke or dropdown change stores the draft, so leaving the
+         page (or closing the sheet) never costs the visitor their typing. */
+      box.addEventListener('input', saveDraft);
+      box.addEventListener('change', saveDraft);
+
+      document.getElementById('gfClearForm').addEventListener('click', function(){
+        if (!confirm('Clear everything you have typed in this form?')) return;
+        fillForm(null);
+        if (draftKey) dropDraft(draftKey);
+        document.getElementById('gfMsg').hidden = true;
+        document.getElementById('gfName2').focus();
+      });
+
       document.getElementById('gfClearMine').addEventListener('click', function(){
         writeLocal([]);
         window.GF_DATA.workshops = window.GF_DATA.workshops.filter(function(x){ return !x.pending; });
@@ -1359,13 +1423,86 @@
         setTimeout(function(){ closeAdd(); mount(current, false); }, 1200);
       });
     }
+
+    /* Reset/populate the form every time the sheet opens, whether this is
+       a fresh add or an edit of an existing pending submission — the box
+       itself is created once and reused. */
+    var isEdit = !!editWorkshop;
+    document.getElementById('gfSheetTitle').textContent = isEdit ? 'Edit your submission' : 'Add a workshop';
+    document.getElementById('gfSheetNote').firstChild.textContent = isEdit
+      ? 'Changes are sent back for review. It stays blurred and marked as awaiting review until the owner approves it. '
+      : 'This is sent to the site owner for review. It shows in your own list straight away, marked as awaiting review, and disappears from your device once the owner publishes it. ';
+    document.getElementById('gfClearMine').hidden = isEdit;
+    document.getElementById('gfSave').textContent = isEdit ? 'Save changes' : 'Send for review';
+    document.getElementById('gfMsg').hidden = true;
+
+    /* Drafts are scoped: a half-typed new workshop and a half-typed edit of
+       an existing submission are kept apart, so neither overwrites the other. */
+    draftKey = isEdit ? ('edit_' + editingId) : 'new';
+    var draft = readDraft(draftKey);
+    fillForm(draft || (editWorkshop ? {
+      type:    editWorkshop.type,
+      name:    editWorkshop.name || '',
+      emirate: editWorkshop.emirate,
+      address: editWorkshop.address || '',
+      phone:   editWorkshop.phone || '',
+      hours:   editWorkshop.hours || '',
+      makes:   (editWorkshop.makes || []).join(', '),
+      ins:     (editWorkshop.insurers || []).join(', '),
+      notes:   editWorkshop.notes || ''
+    } : null));
+
     box.hidden = false;
+    if (draft) say('Picked up where you left off. Use Clear form to start over.', true);
     document.getElementById('gfName2').focus();
   }
 
+  /* Writes a plain object into the form, or resets it when passed nothing. */
+  function fillForm(d){
+    d = d || {};
+    var type = d.type === 'nonagency' ? 'nonagency' : 'agency';
+    document.getElementById('gfType').value    = type;
+    document.getElementById('gfName2').value   = d.name    || '';
+    document.getElementById('gfEmirate').value = d.emirate || EMIRATES[0];
+    document.getElementById('gfAddress').value = d.address || '';
+    document.getElementById('gfPhone').value   = d.phone   || '';
+    document.getElementById('gfHours').value   = d.hours   || '';
+    document.getElementById('gfMakes').value   = d.makes   || '';
+    document.getElementById('gfIns').value     = d.ins     || '';
+    document.getElementById('gfNotes').value   = d.notes   || '';
+    var nonAg = type === 'nonagency';
+    document.getElementById('gfInsWrap').hidden   = !nonAg;
+    document.getElementById('gfMakesWrap').hidden = nonAg;
+  }
+
+  /* Reads the form back out and stores it against the current draft key. */
+  function saveDraft(){
+    if (!draftKey) return;
+    var box = document.getElementById('gfAdd');
+    if (!box || box.hidden) return;
+    writeDraft(draftKey, {
+      type:    document.getElementById('gfType').value,
+      name:    document.getElementById('gfName2').value,
+      emirate: document.getElementById('gfEmirate').value,
+      address: document.getElementById('gfAddress').value,
+      phone:   document.getElementById('gfPhone').value,
+      hours:   document.getElementById('gfHours').value,
+      makes:   document.getElementById('gfMakes').value,
+      ins:     document.getElementById('gfIns').value,
+      notes:   document.getElementById('gfNotes').value
+    });
+  }
+
   function closeAdd(){
+    /* Deliberately does not discard the draft — closing the sheet, hitting
+       Cancel or navigating away all keep whatever was typed. Only a
+       successful submit or the Clear form button removes it. */
+    saveDraft();
     var box = document.getElementById('gfAdd');
     if (box) box.hidden = true;
+    editingId = null;
+    editingSubmissionId = '';
+    draftKey = null;
   }
 
   function list(v){
@@ -1380,6 +1517,7 @@
   }
 
   function save(){
+    var isEdit = !!editingId;
     var type = document.getElementById('gfType').value;
     var w = {
       type:     type,
@@ -1393,6 +1531,52 @@
       insurers: type === 'nonagency' ? list(document.getElementById('gfIns').value)   : []
     };
     if (!w.name){ say('A workshop name is required.', false); return; }
+
+    var btn = document.getElementById('gfSave');
+    btn.disabled = true;
+
+    if (isEdit){
+      btn.textContent = 'Saving…';
+      var editedId = editingId;
+      var editedSubmissionId = editingSubmissionId;
+      fetch(SUBMIT_ENDPOINT, {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ action: 'edit-own', id: editedSubmissionId, workshop: w })
+      })
+      .then(function(r){ return r.json(); })
+      .then(function(res){
+        if (res && res.ok){
+          dropDraft('edit_' + editedId);
+          say('Saved. Still awaiting review with your updated details.', true);
+          // Keep the locally-cached copy in step with what the server now has,
+          // so a page reload before publication still shows the edited version.
+          var saved = readLocal().map(function(x){
+            if (x.id !== editedId) return x;
+            var updated = Object.assign({}, x, w);
+            updated.id = editedId;
+            return updated;
+          });
+          writeLocal(saved);
+        } else {
+          say((res && res.error) || 'Could not save your changes.', false);
+        }
+      })
+      .catch(function(){
+        say('Could not reach the server. Your changes were not saved.', false);
+      })
+      .then(function(){
+        btn.disabled = false;
+        btn.textContent = 'Save changes';
+        setTimeout(function(){
+          closeAdd();
+          fetchPublishedData()
+            .then(function(){ mount(current, false); })
+            .catch(function(){ mount(current, false); });
+        }, 1200);
+      });
+      return;
+    }
 
     // show it to this visitor immediately, without creating a second copy
     w.id = stableWorkshopId(w);
@@ -1408,8 +1592,6 @@
     window.GF_DATA.workshops.push(added);
     window.GF_DATA.workshops.sort(function(a, b){ return a.name.localeCompare(b.name); });
 
-    var btn = document.getElementById('gfSave');
-    btn.disabled = true;
     btn.textContent = 'Sending…';
 
     fetch(SUBMIT_ENDPOINT, {
@@ -1419,7 +1601,10 @@
     })
     .then(function(r){ return r.json(); })
     .then(function(res){
-      if (res && res.ok) say('Sent for review. It is in your list now, marked as awaiting review.', true);
+      if (res && res.ok){
+        dropDraft('new');
+        say('Sent for review. It now shows in your list, blurred and marked Awaiting review, until the owner approves it.', true);
+      }
       else say((res && res.error) || 'The server rejected it, but it is saved on this device.', false);
     })
     .catch(function(){
@@ -1428,7 +1613,15 @@
     .then(function(){
       btn.disabled = false;
       btn.textContent = 'Send for review';
-      setTimeout(function(){ closeAdd(); mount(current, false); }, 1200);
+      setTimeout(function(){
+        closeAdd();
+        // Re-fetch so the list is rebuilt cleanly (deduplication, localStorage merge)
+        // before the design re-renders. Without this, the pending entry added above
+        // stays in GF_DATA.workshops AND is pushed again from localStorage on next mount.
+        fetchPublishedData()
+          .then(function(){ mount(current, false); })
+          .catch(function(){ mount(current, false); });
+      }, 1200);
     });
   }
 

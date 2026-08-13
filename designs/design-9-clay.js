@@ -52,11 +52,12 @@ function render(){
     const call = w.phone
       ? `<a class="chub go" href="${GF.firstTel(w.phone)}">Call</a>`
       : `<span class="chub off">No number on file</span>`;
-    return `<article class="card ${isAg?'':'is-nonagency'}">
+    return `<article class="card ${isAg?'':'is-nonagency'} ${w.pending?'gf-is-pending':''}">
       <div class="card-top">
         <span class="lump">${esc(initials(w.name))}</span>
         <div>
           <h2>${esc(w.name)}</h2>
+          ${GF.pendingBadge(w)}
           <p class="place"><a href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(w.address)}</a> · ${esc(w.emirate)}</p>
           <span class="badge">${isAg?'Agency':'Non-agency'}</span>
         </div>

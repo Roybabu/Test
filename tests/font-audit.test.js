@@ -1,6 +1,6 @@
 'use strict';
 const fs=require('fs'), path=require('path'), assert=require('assert');
-const root=path.join(__dirname,'..'); const core=fs.readFileSync(path.join(root,'core.js'),'utf8');
+const root=path.join(__dirname,'..'); const core=fs.readFileSync(path.join(root,'core-v4.js'),'utf8');
 const designs=fs.readdirSync(path.join(root,'css')).filter(x=>/^design-\d+-.+\.css$/.test(x));
 assert.strictEqual(designs.length,10);
 assert(core.includes('DESIGN_FONT_CSS'));

@@ -64,9 +64,10 @@ function render(){
     const detail = w.type === 'agency'
       ? `<div class="list"><b>Makes handled</b>${esc(w.makes.join(' · '))}</div>`
       : `<div class="list"><b>Insurer panels</b>${esc(w.insurers.join(' · '))}</div>`;
-    html += `<article class="item ${w.type==='nonagency'?'is-nonagency':''}">
+    html += `<article class="item ${w.type==='nonagency'?'is-nonagency':''} ${w.pending?'gf-is-pending':''}">
       <div>
         <h2>${esc(w.name)}</h2>
+        ${GF.pendingBadge(w)}
         <p class="addr"><a href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(w.address)}</a>, ${esc(w.emirate)}</p>
         ${detail}
       </div>

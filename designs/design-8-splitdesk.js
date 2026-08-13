@@ -42,13 +42,14 @@ function renderPane(w){
     return;
   }
   const isAg = w.type === 'agency';
-  paneEl.className = 'pane' + (isAg ? '' : ' is-nonagency');
+  paneEl.className = 'pane' + (isAg ? '' : ' is-nonagency') + (w.pending ? ' gf-is-pending' : '');
   const listBlock = isAg
     ? `<div><p class="dt">Makes handled</p><div class="taglist">${w.makes.map(m=>`<span class="tagx">${esc(m)}</span>`).join('')}</div></div>`
     : `<div><p class="dt">Insurer panels</p><div class="taglist">${w.insurers.map(i=>`<span class="tagx">${esc(i)}</span>`).join('')}</div></div>`;
   paneEl.innerHTML = `
     <span class="pane-kind">${isAg ? 'Agency' : 'Non-agency'}</span>
     <h2>${esc(w.name)}</h2>
+      ${GF.pendingBadge(w)}
     <p class="where"><a href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(w.address)}</a> · ${esc(w.emirate)}</p>
     <div class="dl">
       <div><p class="dt">Telephone</p>
@@ -75,7 +76,7 @@ function render(){
     return;
   }
   listEl.innerHTML = list.map((w,i) => `
-    <button class="rowbtn ${w.type==='nonagency'?'is-nonagency':''}" type="button"
+    <button class="rowbtn ${w.type==='nonagency'?'is-nonagency':''} ${w.pending?'gf-is-pending-row':''}" type="button"
             data-i="${i}" aria-current="${i===state.selected}">
       <span class="dot"></span>
       <span class="rowtext"><strong>${esc(w.name)}</strong><span>${esc(w.address)}</span></span>

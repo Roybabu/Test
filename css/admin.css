@@ -124,6 +124,9 @@
 }
 .sub-actions button:hover{ border-color:var(--ink); color:var(--ink); }
 .sub-actions button.del:hover{ border-color:var(--danger); color:var(--danger); }
+/* The remove control also appears in the verification panel, which is
+   outside .sub-actions, so the danger styling is matched there too. */
+.verification-actions button.del:hover{ border-color:var(--danger); color:var(--danger); }
 
 @media (max-width:560px){
   .sub-fields{ grid-template-columns:1fr; gap:2px; }

@@ -1,1 +1,163 @@
-[]
+[
+    {
+        "administrator": "admin",
+        "submissionId": "sub-20260811-145501-50216e",
+        "actionType": "delete",
+        "timestamp": "2026-08-11T14:58:34-04:00",
+        "previousStatus": "pending",
+        "newStatus": "deleted",
+        "metadata": []
+    },
+    {
+        "administrator": "admin",
+        "submissionId": "sub-20260811-150023-d018e9",
+        "actionType": "delete",
+        "timestamp": "2026-08-11T15:23:11-04:00",
+        "previousStatus": "pending",
+        "newStatus": "deleted",
+        "metadata": []
+    },
+    {
+        "administrator": "admin",
+        "submissionId": "",
+        "actionType": "clear",
+        "timestamp": "2026-08-11T15:23:57-04:00",
+        "previousStatus": "mixed",
+        "newStatus": "cleared",
+        "metadata": {
+            "removedCount": 0,
+            "removedSubmissionIds": []
+        }
+    },
+    {
+        "administrator": "admin",
+        "submissionId": "",
+        "actionType": "clear",
+        "timestamp": "2026-08-11T15:24:57-04:00",
+        "previousStatus": "mixed",
+        "newStatus": "cleared",
+        "metadata": {
+            "removedCount": 0,
+            "removedSubmissionIds": []
+        }
+    },
+    {
+        "administrator": "admin",
+        "submissionId": "ws_93dbbfeb",
+        "actionType": "edit",
+        "timestamp": "2026-08-11T15:32:44-04:00",
+        "previousStatus": "review",
+        "newStatus": "review",
+        "metadata": {
+            "operation": "verification",
+            "verificationStatus": "review"
+        }
+    },
+    {
+        "administrator": "admin",
+        "submissionId": "ws_93dbbfeb",
+        "actionType": "edit",
+        "timestamp": "2026-08-11T15:32:45-04:00",
+        "previousStatus": "review",
+        "newStatus": "review",
+        "metadata": {
+            "operation": "verification",
+            "verificationStatus": "review"
+        }
+    },
+    {
+        "administrator": "admin",
+        "submissionId": "sub-20260811-153742-2dba22",
+        "actionType": "delete",
+        "timestamp": "2026-08-11T15:37:59-04:00",
+        "previousStatus": "pending",
+        "newStatus": "deleted",
+        "metadata": []
+    },
+    {
+        "administrator": "admin",
+        "submissionId": "sub-20260811-153142-db0d92",
+        "actionType": "approve",
+        "timestamp": "2026-08-11T15:38:57-04:00",
+        "previousStatus": "pending",
+        "newStatus": "approved",
+        "metadata": {
+            "kind": "new"
+        }
+    },
+    {
+        "administrator": "admin",
+        "submissionId": "sub-20260811-153142-db0d92",
+        "actionType": "publish",
+        "timestamp": "2026-08-11T15:39:03-04:00",
+        "previousStatus": "approved",
+        "newStatus": "published",
+        "metadata": {
+            "workshopId": "ws_53671fa7"
+        }
+    },
+    {
+        "administrator": "admin",
+        "submissionId": "sub-20260811-152418-628ef1",
+        "actionType": "approve",
+        "timestamp": "2026-08-11T15:39:36-04:00",
+        "previousStatus": "pending",
+        "newStatus": "approved",
+        "metadata": {
+            "kind": "new"
+        }
+    },
+    {
+        "administrator": "admin",
+        "submissionId": "sub-20260811-152418-628ef1",
+        "actionType": "publish",
+        "timestamp": "2026-08-11T15:39:41-04:00",
+        "previousStatus": "approved",
+        "newStatus": "published",
+        "metadata": {
+            "workshopId": "ws_a239dad7"
+        }
+    },
+    {
+        "administrator": "admin",
+        "submissionId": "sub-20260811-153142-db0d92",
+        "actionType": "delete",
+        "timestamp": "2026-08-11T15:43:11-04:00",
+        "previousStatus": "published",
+        "newStatus": "deleted",
+        "metadata": []
+    },
+    {
+        "administrator": "admin",
+        "submissionId": "sub-20260811-152418-628ef1",
+        "actionType": "delete",
+        "timestamp": "2026-08-11T15:43:14-04:00",
+        "previousStatus": "published",
+        "newStatus": "deleted",
+        "metadata": []
+    },
+    {
+        "administrator": "admin",
+        "submissionId": "ws_53671fa7",
+        "actionType": "delete-published",
+        "timestamp": "2026-08-12T04:28:08-04:00",
+        "previousStatus": "published",
+        "newStatus": "deleted",
+        "metadata": {
+            "name": "PAL Auto",
+            "removedSubmissionIds": []
+        }
+    },
+    {
+        "administrator": "admin",
+        "submissionId": "ws_a239dad7",
+        "actionType": "delete-published",
+        "timestamp": "2026-08-12T04:28:12-04:00",
+        "previousStatus": "published",
+        "newStatus": "deleted",
+        "metadata": {
+            "name": "Aarya Auto",
+            "removedSubmissionIds": []
+        }
+    }
+]

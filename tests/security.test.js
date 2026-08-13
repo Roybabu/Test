@@ -1,8 +1,8 @@
 'use strict';
 const fs=require('fs'), path=require('path'), assert=require('assert');
 const root=path.join(__dirname,'..');
-const security=fs.readFileSync(path.join(root,'security.js'),'utf8');
-const core=fs.readFileSync(path.join(root,'core.js'),'utf8');
+const security=fs.readFileSync(path.join(root,'security-v4.js'),'utf8');
+const core=fs.readFileSync(path.join(root,'core-v4.js'),'utf8');
 const admin=fs.readFileSync(path.join(root,'admin/admin.js'),'utf8');
 const designs=fs.readdirSync(path.join(root,'designs')).filter(x=>x.endsWith('.js')).map(x=>fs.readFileSync(path.join(root,'designs',x),'utf8')).join('\n');
 assert(security.includes('escapeHTML'),'central escape function missing');
