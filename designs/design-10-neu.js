@@ -60,17 +60,19 @@ function render(){
           <span class="stamp">${isAg?'Agency':'Non-agency'}</span>
         </div>
       </div>
-      <div class="well well-address">
-        <p>Address</p>
-        <a class="where" href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(GF.fullAddress(w))}</a>
+      <div class="well-grid">
+        <div class="well well-address">
+          <p>Address</p>
+          <a class="where" href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(GF.fullAddress(w))}</a>
+        </div>
+        <div class="well well-tel">
+          <p>Phone</p>
+          ${w.phone ? GF.phoneLines(w.phone) : '<span class="where">No number on file</span>'}
+        </div>
       </div>
       <div class="well">
         <p>${isAg?'Makes handled':'Insurer panels'}</p>
         <div class="caps">${items}</div>
-      </div>
-      <div class="well well-tel">
-        <p>Phone</p>
-        ${w.phone ? GF.phoneLines(w.phone) : '<span class="where">No number on file</span>'}
       </div>
       <div class="unit-actions">${call}<button class="press" type="button" data-copy="${WORKSHOPS.indexOf(w)}">Copy details</button></div>
     </article>`;

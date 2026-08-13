@@ -61,17 +61,19 @@ function render(){
           <span class="badge">${isAg?'Agency':'Non-agency'}</span>
         </div>
       </div>
-      <div class="tray tray-address">
-        <p>Address</p>
-        <a class="place" href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(GF.fullAddress(w))}</a>
+      <div class="tray-grid">
+        <div class="tray tray-address">
+          <p>Address</p>
+          <a class="place" href="${GF.mapsHref(w)}" target="_blank" rel="noopener">${esc(GF.fullAddress(w))}</a>
+        </div>
+        <div class="tray tray-tel">
+          <p>Phone</p>
+          ${w.phone ? GF.phoneLines(w.phone) : '<span class="place">No number on file</span>'}
+        </div>
       </div>
       <div class="tray">
         <p>${isAg?'Makes handled':'Insurer panels'}</p>
         <div class="beads">${items}</div>
-      </div>
-      <div class="tray tray-tel">
-        <p>Phone</p>
-        ${w.phone ? GF.phoneLines(w.phone) : '<span class="place">No number on file</span>'}
       </div>
       <div class="card-actions">${call}<button class="chub" type="button" data-copy="${WORKSHOPS.indexOf(w)}">Copy details</button></div>
     </article>`;
