@@ -234,30 +234,6 @@ input[type="search"]::-webkit-search-results-decoration{
   animation:gfa-settle .34s cubic-bezier(.25,.8,.3,1) both;
 }
 
-/* --- 9 Clay: squash and stretch --------------------------------------- */
-@keyframes gfa-squash{
-  0%{opacity:0;transform:scale(.84) translateY(24px);}
-  52%{opacity:1;transform:scale(1.045) translateY(0);}
-  74%{transform:scale(.982);}
-  88%{transform:scale(1.008);}
-  100%{transform:scale(1);}
-}
-#stage.gf-in-clay{ animation:gfa-squash .6s cubic-bezier(.3,.9,.4,1) both; }
-#stage.gf-in-clay #list > *:nth-child(-n+8){
-  animation:gfa-squash .52s cubic-bezier(.3,.9,.4,1) both;
-}
-
-/* --- 10 Neu: surfaces rise out of the panel --------------------------- */
-@keyframes gfa-emboss{
-  0%{opacity:0;transform:scale(.988);filter:blur(7px) contrast(.86);}
-  60%{opacity:1;filter:blur(1px) contrast(.97);}
-  100%{opacity:1;transform:none;filter:none;}
-}
-#stage.gf-in-neu{ animation:gfa-emboss .5s cubic-bezier(.25,.8,.3,1) both; }
-#stage.gf-in-neu #list > *:nth-child(-n+8){
-  animation:gfa-emboss .46s cubic-bezier(.25,.8,.3,1) both;
-}
-
 /* --- stagger for the result lists ------------------------------------- */
 #stage[class*="gf-in-"] #rows > *:nth-child(2),
 #stage[class*="gf-in-"] #entries > *:nth-child(2),
