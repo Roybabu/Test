@@ -3,15 +3,15 @@
    Safe to edit: nothing else on the site uses these rules. */
 
 :root{
-  --surface:#E4E7EF;
-  --light:#FFFFFF;
-  --dark:#BFC5D4;
-  --ink:#2C3346;
-  --ink-2:#5B6379;
-  --ink-3:#8A91A5;
-  --agency:#1D7A5F;
-  --nonagency:#9A5A12;
-  --accent:#4A57C4;
+  --surface:#BFD4C7;
+  --light:#D5E1DA;
+  --dark:#97BEA6;
+  --ink:#102618;
+  --ink-2:#2F5E41;
+  --ink-3:#528B68;
+  --agency:#046C4E;
+  --nonagency:#8A4E10;
+  --accent:#046C4E;
   --accent-2:#8B96EE;
   --star:#F0A93A;
 
@@ -346,3 +346,4 @@ body #gfCall .gf-num-btn{border:0;background:var(--surface);color:var(--ink);bor
 body #gfCall .gf-num-btn.is-call{color:var(--accent);background:var(--surface);}
 body #gfCall .gf-num-btn.is-wa{color:var(--agency);background:var(--surface);}
 body #gfCall .gf-num-btn.is-off{box-shadow:var(--in-sm);color:var(--ink-3);background:var(--surface);}
+.emblem{background:transparent;box-shadow:none;padding:0;}

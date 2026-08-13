@@ -27,13 +27,7 @@ const design = {
   css: "css/design-9-neu.css",
   html: `<div class="slab">
   <header class="top">
-    <div class="emblem" aria-hidden="true">
-      <span class="emblem-plate"></span>
-      <svg class="emblem-icon" viewBox="0 0 24 24" fill="none">
-        <defs><linearGradient id="neuIconGrad" x1="0" y1="0" x2="1" y2="1"><stop offset="0" stop-color="#4A57C4"/><stop offset="1" stop-color="#8B96EE"/></linearGradient></defs>
-        <path fill="url(#neuIconGrad)" d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94z"/>
-      </svg>
-    </div>
+    <img class="emblem" src="logo.svg" alt="Garage Finder" width="62" height="62">
     <div class="top-text">
       <h1>Garage Finder</h1>
       <p>Agency &amp; non-agency workshops across the UAE</p>

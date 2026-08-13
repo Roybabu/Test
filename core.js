@@ -122,7 +122,7 @@
 
   /* Bump this whenever you re-upload changed files, so returning visitors
      get the new ones instead of a cached copy. */
-  var ASSET_V = '1';
+  var ASSET_V = '2';
 
   var ORDER = ['board','jobcard','pocket',
                'index','blocks','splitdesk','neu'];
