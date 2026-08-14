@@ -196,8 +196,13 @@ body::after{
 .insdrop-list{
   margin-top:10px;max-height:200px;overflow-y:auto;
   background:var(--surface);border-radius:14px;box-shadow:var(--in-sm);padding:6px;
-  scrollbar-width:thin;
+  scroll-behavior:smooth;-webkit-overflow-scrolling:touch;
+  scrollbar-width:thin;scrollbar-color:var(--dark) transparent;
 }
+.insdrop-list::-webkit-scrollbar{width:6px;}
+.insdrop-list::-webkit-scrollbar-track{background:transparent;margin:6px 0;}
+.insdrop-list::-webkit-scrollbar-thumb{background:var(--dark);border-radius:99px;}
+.insdrop-list::-webkit-scrollbar-thumb:hover{background:var(--ink-3);}
 .insdrop-item{
   display:block;width:100%;appearance:none;cursor:pointer;border:0;background:transparent;
   text-align:left;padding:9px 11px;border-radius:10px;
@@ -288,8 +293,14 @@ body::after{
 }
 .caps{
   display:flex;flex-wrap:wrap;align-content:flex-start;gap:8px;
-  max-height:84px;overflow-y:auto;scrollbar-width:thin;padding-right:2px;
+  max-height:84px;overflow-y:auto;padding-right:2px;
+  scroll-behavior:smooth;
+  scrollbar-width:thin;scrollbar-color:var(--dark) transparent;
 }
+.caps::-webkit-scrollbar{width:6px;}
+.caps::-webkit-scrollbar-track{background:transparent;}
+.caps::-webkit-scrollbar-thumb{background:var(--dark);border-radius:99px;}
+.caps::-webkit-scrollbar-thumb:hover{background:var(--ink-3);}
 .cap{
   background:var(--surface);border-radius:11px;padding:5px 12px;
   font-size:12.5px;font-weight:500;color:var(--ink-2);
